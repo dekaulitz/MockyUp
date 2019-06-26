@@ -1,0 +1,93 @@
+_name: test
+_desc: testMockup server
+_path: /api/v1/users
+_method: post
+_payloadExmaple: {"name":"ajo"}
+_header:
+  - name: hmac
+    isRequired: true
+    failResponse:
+      httpCode: 400
+      responseMock: {"statusCode":500,"message":"hmac is required"}
+  - name: appId
+    isRequired: true
+    failResponse:
+      httpCode: 400
+      responseMock: {"statusCode":500,"message":"appId is required"}
+_body:
+  - name: id
+    isRequired: true
+    type: integer
+    failResponse:
+      httpCode: 422
+      responseMock: {"statusCode":500,"message":"id is required"}
+    condition:
+      - when : id
+        filledBy: ajo
+        throw:
+          httpCode: 422
+          responseMock: { "statusCode":500,"message": "user already exist"}
+      - when: id
+        filledBy: fah
+        throw:
+          httpCode: 200
+          responseMock: { "statusCode":200,"message": "user already exist"}
+  - name: firstname
+    isRequired: true
+    type: string
+    failResponse:
+      httpCode: 422
+      responseMock: {"statusCode":500,"message":"firstName is required"}
+    condition:
+      - when: firstname
+        filledBy: ajo
+        throw:
+          httpCode: 422
+          responseMock: { "statusCode":500,"message": "user already exist"}
+      - when: firstname
+        filledBy: fah
+        throw:
+          httpCode: 200
+          responseMock: { "statusCode":200,"message": "user already exist"}
+  - name: lastName
+    isRequired: true
+    type: string
+    failResponse:
+      httpCode: 422
+      responseMock: {"statusCode":500,"message":"appId is required"}
+    condition:
+      - when: lastName
+        filledBy: ajo
+        throw:
+          httpCode: 422
+          responseMock: { "statusCode":500,"message": "user already exist"}
+      - when: lastName
+        filledBy: fah
+        throw:
+          httpCode: 200
+          responseMock: { "statusCode":200,"message": "user already exist"}
+  - name: email
+    isRequired: true
+    type: string
+    failResponse:
+      httpCode: 422
+      responseMock: {"statusCode":500,"message":"appId is required"}
+    condition:
+      - when: email
+        filledBy: sulaimanfahmi@gmail.com
+        throw:
+          httpCode: 422
+          responseMock: { "statusCode":500,"message": "user already exist"}
+  - name: password
+    isRequired: true
+    type: string
+    failResponse:
+      httpCode: 422
+      responseMock: {"statusCode":500,"message":"password is required"}
+    condition:
+      - when: password
+        filledBy: ajo
+        throw:
+          httpCode: 422
+          responseMock: { "statusCode":"2001","message": "less then 5 character"}
+
