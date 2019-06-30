@@ -1,7 +1,12 @@
 const _ = require('lodash')
 const IS_OBJECT = 'object'
 const IS_ARRAY_OBJECT = 'arrayobject'
-
+/**
+ * @description its required fro extracting and validating request header with header scheme from database
+ * @param collections
+ * @param requestheader
+ * @returns {Promise<*>}
+ */
 module.exports.transformHeader = async (collections, requestheader) => {
   let res = null
   _.forEach(collections, (element, index) => {
@@ -30,6 +35,12 @@ module.exports.transformHeader = async (collections, requestheader) => {
   return res
 }
 
+/**
+ * @description its required for extracting and validating the body json with body scheme from database
+ * @param body
+ * @param requestBody
+ * @returns {Promise<*>}
+ */
 async function bodyExtraction (body, requestBody) {
   let result = null
   _.forEach(body.values, (value) => {
@@ -59,6 +70,12 @@ async function bodyExtraction (body, requestBody) {
   return result
 }
 
+/**
+ * @description its required for transfrom body and validating check is body is array of object or no using same validation function bodyExtraction(collections,body)
+ * @param collections
+ * @param requestBody
+ * @returns {Promise<*>}
+ */
 module.exports.transformBody = async (collections, requestBody) => {
   let res = null
   if (collections.type.toLocaleLowerCase() === IS_ARRAY_OBJECT) {
