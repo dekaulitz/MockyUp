@@ -16,8 +16,8 @@ var bodyProperties = new Schema({
   name: { type: String },
   isRequired: { type: Boolean, default: false },
   type: { type: String },
-  failResponse: responseSchema,
-  condition: [conditionBody]
+  failMock: responseSchema,
+  conditions: [conditionBody]
 })
 
 var headerSchema = new Schema({

@@ -1,0 +1,73 @@
+# mockup helper yaml
+_name: prototype mockup server
+_desc: describe prototype mockup
+_path: /v1/api/users
+_method: get
+_header:
+  - name: hmac
+    type: string
+    isRequired: true
+    throw:
+      httpCode: 400
+      result:  {"statusCode":500,"message":"hmac is required"}
+    conditions:
+      - when:
+          filledBy: 123
+          httpCode: 400
+          result: {"statusCode":500,"message":"hmac is required"}
+      - when:
+          filledBy: 1
+          httpCode: 400
+          result: {"statusCode":500,"message":"something shit happen"}
+  - name: appId
+    type: string
+    isRequired: true
+    throw:
+      httpCode: 400
+      result: {"statusCode":500,"message":"appId is required"}
+  - name: time
+    isRequired: true
+    throw:
+      httpCode: 400
+      result: {"statusCode":500,"message":"time is required"}
+_body:
+  type: arrayObject
+  consumes: application/json
+  values:
+    - name: id
+      type: string
+      isRequired: true
+      throw:
+        httpCode: 400
+        result: {"statusCode":422,"message":"id is required"}
+      conditions:
+        - when:
+            filledBy: 1
+            httpCode: 422
+            result: {"statusCode":422,"message":"id doesnt exist"}
+    - name: name
+      type: string
+      isRequired: false
+      conditions:
+        - when:
+            filledBy: fahmi
+            httpCode: 422
+            result: {"statusCode":422,"message":"name is already exist"}
+        - when:
+            filledBy: ajo
+            httpCode: 500
+            result: {"statusCode":500,"message":"internal server error"}
+    - name: brothers
+      type: arrayObject
+      isRequired: true
+      throw:
+        httpCode: 400
+        result: {"statusCode":422,"message":"id is required"}
+_defaultResponse:
+  throw:
+    httpCode: 200
+    result: {"statusCode":200,"message":"success"}
+
+
+
+

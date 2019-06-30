@@ -18,7 +18,6 @@ app.use('/v1/mockup', require('../controllers/mockup.controller'))
 // catch 404 and forward to error handler
 
 app.use(function (err, req, res, next) {
-  res.status(500)
-  res.status(500).send(err.message)
+  next(err)
 })
 module.exports = app
