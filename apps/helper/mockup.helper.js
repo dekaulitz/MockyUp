@@ -53,9 +53,7 @@ async function bodyExtraction (body, requestBody) {
       }
     }
     if (value.conditions != null || value.conditions !== undefined) {
-
       _.forEach(value.conditions, (condition) => {
-
         if ((condition.when !== null) && (condition.when !== undefined)) {
           if (requestBody[value.name] === condition.when.filledBy) {
             stop = true
@@ -78,16 +76,19 @@ async function bodyExtraction (body, requestBody) {
  */
 module.exports.transformBody = async (collections, requestBody) => {
   let res = null
-  if (collections.type.toLocaleLowerCase() === IS_ARRAY_OBJECT) {
-    _.forEach(requestBody, (body) => {
-      res = bodyExtraction(collections, body)
-      if (res !== null) {
-        return false
-      }
-    })
+  if (collections.isRequired === true && (requestBody === undefined || requestBody.isEmpty())) {
+    res = collections.throw
   } else {
-    res = await bodyExtraction(collections, requestBody)
+    if (collections.type.toLocaleLowerCase() === IS_ARRAY_OBJECT) {
+      for (let i = 0; i < requestBody.length; i++) {
+        res = await bodyExtraction(collections, requestBody[i])
+        if (res !== null) {
+          break
+        }
+      }
+    } else {
+      res = await bodyExtraction(collections, requestBody)
+    }
   }
   return res
 }
-

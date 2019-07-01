@@ -15,14 +15,14 @@ var headerSchema = new Schema({
   name: { type: String },
   type: { type: String },
   isRequired: { type: Boolean },
-  throw: response,
+  throw: { type: Object },
   conditions: [condition]
 })
 var body = new Schema({
   name: { type: String },
   type: { type: String },
   isRequired: { type: Boolean },
-  throw: response,
+  throw: { type: Object },
   conditions: [condition]
 })
 
@@ -35,10 +35,12 @@ var mockUpv2 = new Schema({
   _body: {
     type: { type: String },
     consumens: { type: String },
-    values: [body]
+    values: [body],
+    isRequired: { type: Boolean },
+    throw: { type: Object },
   },
   _defaultResponse: {
-    throw: response
+    throw: { type: Object }
   }
 })
 const model = mongoose.model('mockup_v2', mockUpv2)

@@ -21,5 +21,15 @@ filter.transformPath = function (routePath) {
   })
   return newPath
 }
-
+/**
+ * @description this function is a prototype from object for checking object is empty
+ * @returns {boolean}
+ */
+Object.prototype.isEmpty = function() {
+  for(var key in this) {
+    if(this.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
 module.exports = filter

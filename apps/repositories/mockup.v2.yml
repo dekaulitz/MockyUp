@@ -63,6 +63,10 @@ _body:
       throw:
         httpCode: 400
         result: {"statusCode":422,"message":"id is required"}
+  isRequired: true
+  throw:
+    httpCode: 200
+    result: {"statusCode":200,"message":"success"}
 _defaultResponse:
   throw:
     httpCode: 200

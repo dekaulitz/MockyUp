@@ -330,7 +330,7 @@ describe('mockup helper transform body', () => {
         }
       ]
       let transfromBody = await mockupHelper.transformBody(properties, requestBody)
-      assert.equal(transfromBody.httpCode, 4012)
+      assert.equal(transfromBody.httpCode, 422)
     })
 
   })
