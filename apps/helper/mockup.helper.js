@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const IS_OBJECT = 'object'
 const IS_ARRAY_OBJECT = 'arrayobject'
 /**
  * @description its required fro extracting and validating request header with header scheme from database
