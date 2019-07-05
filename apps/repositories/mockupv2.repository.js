@@ -44,4 +44,23 @@ var mockUpv2 = new Schema({
   }
 })
 const model = mongoose.model('mockup_v2', mockUpv2)
+
+model.searchable = {
+  '_id': '_id',
+  'name': '_name',
+  'path': '_path'
+}
+model.aliasPaging = {
+  '_id': 'id',
+  '_name': 'name',
+  '_path': 'path'
+}
+model.pagination = function (req, callback) {
+  let pagination = new Paging()
+  pagination.select = '_id _name _desc _path'
+  pagination.model = model
+  pagination.getPagination(req, (data) => {
+    callback(data)
+  })
+}
 module.exports = model
