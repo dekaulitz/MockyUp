@@ -1,4 +1,6 @@
 const _ = require('lodash')
+const helper=require('./request.helper')
+
 const IS_ARRAY_OBJECT = 'arrayobject'
 /**
  * @description its required fro extracting and validating request header with header scheme from database
@@ -75,7 +77,7 @@ async function bodyExtraction (body, requestBody) {
  */
 module.exports.transformBody = async (collections, requestBody) => {
   let res = null
-  if (collections.isRequired === true && (requestBody === undefined || requestBody.isEmpty())) {
+  if (collections.isRequired === true && (requestBody === undefined || helper.isEmptyObject(requestBody))) {
     res = collections.throw
   } else {
     if (collections.type.toLocaleLowerCase() === IS_ARRAY_OBJECT) {

@@ -4,15 +4,17 @@ var mockup = require('./../repositories/mockupv2.repository')
 var requestHelper = require('./../helper/request.helper')
 var mockUpHelper = require('./../helper/mockup.helper')
 
-
 /**
  * {{path}}?size=1&page=1&sort=_id&query=path:v2
  * for sorting - mean desc
  */
 router.all('/', (req, res, next) => {
-  mockup.pagination(req, (data) => {
-    res.send(data)
-  })
+  setTimeout(() => {
+    console.log('berak')
+    mockup.pagination(req, (data) => {
+      res.send(data)
+    })
+  },4000)
 })
 
 router.get('/desc', (req, res, next) => {
@@ -43,7 +45,7 @@ router.all('/mocks', (req, res, next) => {
           return res.status(header.httpCode).send(header.result)
         }
       }
-      if (collection._body === null || collection._body.isEmpty()) {
+      if (collection._body === null || collection._body.isEmptyObject()) {
         let body = await mockUpHelper.transformBody(collection._body, req.body)
         if (body !== null) {
           return res.status(body.httpCode).send(body.result)
@@ -57,5 +59,5 @@ router.all('/mocks', (req, res, next) => {
     res.body('ok')
   }
 })
-//
+
 module.exports = router
