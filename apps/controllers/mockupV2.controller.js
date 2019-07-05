@@ -4,6 +4,28 @@ var mockup = require('./../repositories/mockupv2.repository')
 var requestHelper = require('./../helper/request.helper')
 var mockUpHelper = require('./../helper/mockup.helper')
 
+
+/**
+ * {{path}}?size=1&page=1&sort=_id&query=path:v2
+ * for sorting - mean desc
+ */
+router.all('/', (req, res, next) => {
+  mockup.pagination(req, (data) => {
+    res.send(data)
+  })
+})
+
+router.get('/desc', (req, res, next) => {
+  if (req.query.path != null) {
+    var transformPath = requestHelper.transformPath(req.query.path)
+    mockup.findOne({
+      '_path': transformPath
+    }).then(collection => {
+      return res.status(200).send(collection)
+    })
+  }
+})
+
 router.all('/mocks', (req, res, next) => {
   if (req.query.path != null) {
     var transformPath = requestHelper.transformPath(req.query.path)
