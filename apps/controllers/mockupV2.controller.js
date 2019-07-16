@@ -45,7 +45,7 @@ router.all('/mocks', (req, res, next) => {
           return res.status(header.httpCode).send(header.result)
         }
       }
-      if (collection._body === null || collection._body.isEmptyObject()) {
+      if (collection._body === null || requestHelper.isEmptyObject(collection._body)) {
         let body = await mockUpHelper.transformBody(collection._body, req.body)
         if (body !== null) {
           return res.status(body.httpCode).send(body.result)
