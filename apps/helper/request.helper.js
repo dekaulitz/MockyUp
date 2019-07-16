@@ -1,6 +1,11 @@
 var _ = require('lodash')
 var filter = {}
 
+/**
+ * @description this function is required for replace the *something* to *** its for searching url from database
+ * @param routePath
+ * @returns {string}
+ */
 filter.transformPath = function (routePath) {
   let urlArray = routePath.split('')
   let startRegext = false
@@ -16,5 +21,11 @@ filter.transformPath = function (routePath) {
   })
   return newPath
 }
-
+/**
+ * @description this function is a prototype from object for checking object is empty
+ * @returns {boolean}
+ */
+filter.isEmptyObject = function(object) {
+  return  Object.keys(object).length === 0;
+}
 module.exports = filter
