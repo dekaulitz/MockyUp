@@ -27,8 +27,8 @@ pagination.prototype.getPagination = async function (req, callback) {
         size: this.size,
         pageCount: Math.ceil(count / parseInt(this.size))
       }
-      callback(paging)
-    }).catch((err) => console.log(err))
-  }).catch((err) => console.log(err))
+      callback(null, paging)
+    }).catch((err) => callback(err, null))
+  }).catch((err) => callback(err, null))
 }
 module.exports = pagination

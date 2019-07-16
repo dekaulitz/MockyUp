@@ -59,8 +59,8 @@ mocks.pagination = function (req, callback) {
   let pagination = new Paging()
   pagination.select = '_id _name _desc _path'
   pagination.model = mocks
-  pagination.getPagination(req, (data) => {
-    callback(data)
+  pagination.getPagination(req, (err,data) => {
+    callback(err,data)
   })
 }
 module.exports = mocks
