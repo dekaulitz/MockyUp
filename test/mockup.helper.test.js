@@ -60,22 +60,26 @@ describe('mockup helper tranform header', () => {
         },
         'conditions': [
           {
-            'when': {
-              'filledBy': '123',
-              'httpCode': 422,
-              'result': {
-                'statusCode': 500,
-                'message': 'hmac is required'
+            '_doc': {
+              'when': {
+                'filledBy': '123',
+                'httpCode': 422,
+                'result': {
+                  'statusCode': 500,
+                  'message': 'hmac is required'
+                }
               }
             }
           },
           {
-            'when': {
-              'filledBy': '1',
-              'httpCode': 400,
-              'result': {
-                'statusCode': 500,
-                'message': 'something shit happen'
+            '_doc': {
+              'when': {
+                'filledBy': '1',
+                'httpCode': 400,
+                'result': {
+                  'statusCode': 500,
+                  'message': 'something shit happen'
+                }
               }
             }
           }
@@ -116,6 +120,7 @@ describe('mockup helper tranform header', () => {
       'time': '1'
     }
     let transfrormHeader = await mockupHelper.transformHeader(properties, requestHeader)
+    console.log(transfrormHeader)
     assert.equal(transfrormHeader.httpCode, 422)
   })
   it('transform the header with some value has condition and return http code 400', async function () {
@@ -149,12 +154,14 @@ describe('mockup helper transform body', () => {
           },
           'conditions': [
             {
-              'when': {
-                'filledBy': '12asd',
-                'httpCode': 4012,
-                'result': {
-                  'statusCode': 422,
-                  'message': 'id doesnt exist'
+              '_doc':{
+                'when': {
+                  'filledBy': '12asd',
+                  'httpCode': 4012,
+                  'result': {
+                    'statusCode': 422,
+                    'message': 'id doesnt exist'
+                  }
                 }
               }
             }
@@ -166,22 +173,26 @@ describe('mockup helper transform body', () => {
           'isRequired': false,
           'conditions': [
             {
-              'when': {
-                'filledBy': 'fahmi',
-                'httpCode': 422,
-                'result': {
-                  'statusCode': 422,
-                  'message': 'name is already exist'
+              '_doc': {
+                'when': {
+                  'filledBy': 'fahmi',
+                  'httpCode': 422,
+                  'result': {
+                    'statusCode': 422,
+                    'message': 'name is already exist'
+                  }
                 }
               }
             },
             {
-              'when': {
-                'filledBy': 'ajo',
-                'httpCode': 500,
-                'result': {
-                  'statusCode': 500,
-                  'message': 'internal server error'
+              '_doc': {
+                'when': {
+                  'filledBy': 'ajo',
+                  'httpCode': 500,
+                  'result': {
+                    'statusCode': 500,
+                    'message': 'internal server error'
+                  }
                 }
               }
             }
@@ -228,7 +239,7 @@ describe('mockup helper transform body', () => {
     })
     it('transform body with some body is throw an error', async () => {
       let requestBody = {
-        'id':'1',
+        'id': '1',
         'name': 'ajo',
         'brothers': [
           { 'name': 'asd' },
@@ -239,7 +250,7 @@ describe('mockup helper transform body', () => {
       assert.equal(transfromBody.httpCode, 500)
     })
   })
-  describe('mockup helper transfrom body with arrayObject',async () => {
+  describe('mockup helper transfrom body with arrayObject', async () => {
     let properties = {
       'type': 'arrayObject',
       'consumes': 'application/json',
@@ -257,12 +268,14 @@ describe('mockup helper transform body', () => {
           },
           'conditions': [
             {
-              'when': {
-                'filledBy': '12asd',
-                'httpCode': 4012,
-                'result': {
-                  'statusCode': 422,
-                  'message': 'id doesnt exist'
+              '_doc': {
+                'when': {
+                  'filledBy': '12asd',
+                  'httpCode': 4012,
+                  'result': {
+                    'statusCode': 422,
+                    'message': 'id doesnt exist'
+                  }
                 }
               }
             }
@@ -274,22 +287,26 @@ describe('mockup helper transform body', () => {
           'isRequired': false,
           'conditions': [
             {
-              'when': {
-                'filledBy': 'fahmi',
-                'httpCode': 422,
-                'result': {
-                  'statusCode': 422,
-                  'message': 'name is already exist'
+              '_doc': {
+                'when': {
+                  'filledBy': 'fahmi',
+                  'httpCode': 422,
+                  'result': {
+                    'statusCode': 422,
+                    'message': 'name is already exist'
+                  }
                 }
               }
             },
             {
-              'when': {
-                'filledBy': 'ajo',
-                'httpCode': 500,
-                'result': {
-                  'statusCode': 500,
-                  'message': 'internal server error'
+              '_doc': {
+                'when': {
+                  'filledBy': 'ajo',
+                  'httpCode': 500,
+                  'result': {
+                    'statusCode': 500,
+                    'message': 'internal server error'
+                  }
                 }
               }
             }
@@ -310,10 +327,10 @@ describe('mockup helper transform body', () => {
         }
       ]
     }
-    it('transfrom body with some object is throw an error',async ()=>{
+    it('transfrom body with some object is throw an error', async () => {
       let requestBody = [
         {
-          'id':'12asd',
+          'id': '12asd',
           'name': 'ajo',
           'brothers': [
             { 'name': 'asd' },
@@ -321,7 +338,7 @@ describe('mockup helper transform body', () => {
           ]
         },
         {
-          'id':'2',
+          'id': '2',
           'name': 'fahmi',
           'brothers': [
             { 'name': 'asd' },
