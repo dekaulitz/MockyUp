@@ -56,7 +56,6 @@ async function bodyExtraction (body, requestBody) {
     if (value.conditions != null || value.conditions !== undefined) {
       _.forEach(value.conditions, (condition) => {
         if ((condition._doc.when !== null) && (condition._doc.when !== undefined)) {
-          console.log(requestBody[value.name] === condition._doc.when.filledBy)
           if (requestBody[value.name] === condition._doc.when.filledBy) {
             stop = true
             result = condition._doc.when
