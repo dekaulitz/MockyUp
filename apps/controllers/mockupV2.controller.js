@@ -1,62 +1,43 @@
 var express = require('express')
 var router = express.Router()
-var mockup = require('./../repositories/mockupv2.repository')
 var requestHelper = require('./../helper/request.helper')
+var mocks = require('./../services/mockup.services')
+const mockup = require('./../repositories/mockupv2.repository')
 var mockUpHelper = require('./../helper/mockup.helper')
-
 /**
  * {{path}}?size=1&page=1&sort=_id&query=path:v2
  * for sorting - mean desc
  */
 router.all('/', (req, res, next) => {
-  setTimeout(() => {
-    console.log('berak')
-    mockup.pagination(req, (data) => {
-      res.send(data)
-    })
-  },4000)
+  mocks.pagination(req, (err, data) => {
+    if (err !== null) {
+      return res.status(500).send(err)
+    }
+    return res.status(200).send(data)
+  })
 })
 
 router.get('/desc', (req, res, next) => {
   if (req.query.path != null) {
     var transformPath = requestHelper.transformPath(req.query.path)
-    mockup.findOne({
-      '_path': transformPath
-    }).then(collection => {
-      return res.status(200).send(collection)
+    mocks.desc(transformPath, (err, data) => {
+      if (err !== null) {
+        return res.status(500).send(err)
+      }
+      return res.status(200).send(data)
     })
+  } else {
+    return res.status(404).send('data not found')
   }
 })
 
 router.all('/mocks', (req, res, next) => {
   if (req.query.path != null) {
     var transformPath = requestHelper.transformPath(req.query.path)
-    console.log(transformPath)
-    mockup.findOne({
-      '_path': transformPath,
-      '_method': req.method.toLowerCase()
-    }).then(async collection => {
-      if (collection === null) {
-        return res.send('mockup not found')
-      }
-      if (collection._header === null || collection._header.length === 0) {
-        let header = await mockUpHelper.transformHeader(collection._header, req.headers)
-        if (header != null) {
-          return res.status(header.httpCode).send(header.result)
-        }
-      }
-      if (collection._body === null || requestHelper.isEmptyObject(collection._body)) {
-        let body = await mockUpHelper.transformBody(collection._body, req.body)
-        if (body !== null) {
-          return res.status(body.httpCode).send(body.result)
-        }
-      }
-      return res.status(collection._defaultResponse.throw.httpCode).send(collection._defaultResponse.throw.result)
-    }).catch(excExtract => {
-      next(excExtract)
+    mocks.mock(transformPath, req.method.toLowerCase(), req, async (err, httpCode, data) => {
+      if (err !== null) return next(err)
+      return res.status(httpCode).send(data)
     })
-  } else {
-    res.body('ok')
   }
 })
 
