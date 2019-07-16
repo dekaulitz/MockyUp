@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const helper=require('./request.helper')
+const helper = require('./request.helper')
 
 const IS_ARRAY_OBJECT = 'arrayobject'
 /**
@@ -55,10 +55,11 @@ async function bodyExtraction (body, requestBody) {
     }
     if (value.conditions != null || value.conditions !== undefined) {
       _.forEach(value.conditions, (condition) => {
-        if ((condition.when !== null) && (condition.when !== undefined)) {
-          if (requestBody[value.name] === condition.when.filledBy) {
+        if ((condition._doc.when !== null) && (condition._doc.when !== undefined)) {
+          console.log(requestBody[value.name] === condition._doc.when.filledBy)
+          if (requestBody[value.name] === condition._doc.when.filledBy) {
             stop = true
-            result = condition.when
+            result = condition._doc.when
             return false
           }
         }
