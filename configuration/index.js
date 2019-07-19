@@ -9,10 +9,7 @@ module.exports.loadConfiguration = function (envPath) {
     host: process.env.HOST,
     port: process.env.PORT,
     database: {
-      username: process.env.MONGO_USERNAME,
-      password: process.env.MONGO_PASSWORD,
       host: process.env.MONGO_HOST,
-      schema: process.env.MONGO_DATABASE
     },
     redis: {
       host: process.env.REDIS_HOST
@@ -22,8 +19,7 @@ module.exports.loadConfiguration = function (envPath) {
 }
 
 module.exports.loadDatabase = function (config) {
-  mongoose.connect('mongodb://' + config.environment.database.host + '/' + config.environment.database.schema,
-    {
+  mongoose.connect(config.environment.database.host,{
       useNewUrlParser: true,
       poolSize: 4
     })
