@@ -1,16 +1,5 @@
 const mockValidation = require('../apps/validations/mocks.validation')
 const assert = require('chai').assert
-const expect = require('chai').expect
-const response = require('./../apps/helper/response')
-let envPath = process.env.NODE_ENV === undefined ? '.env.test' : '.env.' + process.env.NODE_ENV
-let config = require('./../configuration')
-config.loadConfiguration(envPath)
-const repository = require('./../apps/repositories/mockupv2.repository')
-const db = config.loadDatabase(config).connection
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', function () {
-  console.log('db connected')
-})
 
 let give = {}
 
