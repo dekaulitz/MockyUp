@@ -31,10 +31,10 @@ describe('mockup validation test', (done) => {
     validation.beforeInsert(give, (errValidation) => {
       assert.equal('_name is required', errValidation)
       done()
+    }).catch(reason => {
+      console.log(reason)
+      done()
     })
-  }).catch(reason => {
-    console.log(reason)
-    done()
   })
 
   it('should be error  because validation _path ', function (done) {
@@ -42,20 +42,20 @@ describe('mockup validation test', (done) => {
     validation.beforeInsert(give, (errValidation) => {
       assert.equal('_path is required', errValidation)
       done()
+    }).catch(reason => {
+      console.log(reason)
     })
 
-  }).catch(reason => {
-    console.log(reason)
   })
   it('should be error  because validation _method ', function (done) {
     give._method = null
     validation.beforeInsert(give, (errValidation) => {
       assert.equal('_method is required', errValidation)
       done()
+    }).catch(reason => {
+      console.log(reason)
+      done()
     })
-  }).catch(reason => {
-    console.log(reason)
-    done()
   })
   it('should be data already exist', function (done) {
     give._method = 'post'
