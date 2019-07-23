@@ -17,10 +17,5 @@ app.get('/', function (req, res, next) {
 app.use('/v2', require('../controllers/mockupV2.controller'))
 // catch 404 and forward to error handler
 
-app.use(function (err, req, res, next) {
-  if (err instanceof validation) {
 
-  }
-  next(err)
-})
 module.exports = app
