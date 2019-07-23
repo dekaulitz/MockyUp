@@ -46,16 +46,16 @@ describe('mockup validation test', (done) => {
       done()
     })
   })
-  it('should be data already exist', function (done) {
-    give._method = 'post'
-    give._path = '/v1/api/users'
-    validation.beforeInsert(give, (errValidation) => {
-      console.log(errValidation)
-      assert.equal('data already exist', errValidation)
-      done()
-    }).catch(reason => {
-      console.log(reason)
-      done()
-    })
-  })
+  // it('should be data already exist', function (done) {
+  //   give._method = 'post'
+  //   give._path = '/v1/api/users'
+  //   validation.beforeInsert(give, (errValidation) => {
+  //     console.log(errValidation)
+  //     assert.equal('data already exist', errValidation)
+  //     done()
+  //   }).catch(reason => {
+  //     console.log(reason)
+  //     done()
+  //   })
+  // })
 })
