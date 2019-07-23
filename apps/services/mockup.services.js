@@ -1,6 +1,7 @@
 const repository = require('./../repositories/mockupv2.repository')
-var mockUpHelper = require('./../helper/mockup.helper')
-var mocks = {}
+const mockUpHelper = require('./../helper/mockup.helper')
+const validation = require('./../validations/mocks.validation')
+const mocks = {}
 /**
  * @description listisng all data from repository
  * @param callback
@@ -17,9 +18,75 @@ mocks.lists = (callback) => {
  */
 mocks.pagination = (paging, callback) => {
   repository.pagination(paging, (err, data) => {
-    callback(err, data)
+    return callback(err, data)
   })
 }
+/**
+ * @desc for storing new mock
+ * @param body
+ * @param callback
+ */
+mocks.store = (body, callback) => {
+  let mockValidation = new validation()
+  mockValidation.beforeInsert(body, (errValidation) => {
+    if (errValidation) {
+      return callback(null, errValidation,null)
+    }
+    let model = new repository(body)
+    model.save().then(data => {
+      return callback(null,null,data)
+    }).catch(reason => {
+      return callback(reason, null,null)
+    })
+  }).catch(reason => {
+    return callback(reason, null,null)
+  })
+}
+/**
+ * @desc for showing data
+ * @param id
+ * @param callback
+ */
+mocks.show = (id, callback) => {
+  repository.findById(id).then(collection => {
+    if (collection == null) {
+      return callback(null, null)
+    }
+    return callback(null, collection)
+  }).catch(reason => {
+    return callback(reason, null)
+  })
+}
+/**
+ * @desc for update the data
+ * @param id
+ * @param body
+ * @param callback
+ */
+mocks.update = (id, body, callback) => {
+  repository.findOneAndUpdate({ _id: id }, body, {new: true}).then(collection => {
+
+    return callback(null, collection)
+  }).catch(reason => {
+    return callback(reason, null)
+  })
+}
+/**
+ * @desc for delete collection
+ * @param id
+ * @param callback
+ */
+mocks.delete=(id,callback)=>{
+  repository.deleteOne({_id:id}).then(collection=>{
+    return callback(null,collection)
+  }).catch(reason => {
+    return callback(reason, null)
+  })
+}
+
+
+
+
 /**
  * @description describe the mock
  * @param path

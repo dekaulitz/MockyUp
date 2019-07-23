@@ -1,11 +1,13 @@
 var express = require('express')
 var app = express()
 
+app.response.responseFail = require('./apps/helper/response').responseFail
+app.response.responseOk = require('./apps/helper/response').responseOK
 /*
 Load configuration
  */
 let envPath = process.env.NODE_ENV === undefined ? '.env.test' : '.env.' + process.env.NODE_ENV
-var config = require('./configuration')
+let config = require('./configuration')
 config.loadConfiguration(envPath)
 
 const db = config.loadDatabase(config).connection
@@ -14,6 +16,10 @@ db.once('open', function () {
   console.log('db connected')
 })
 app.use(require('./apps/routes'))
+
+app.use(function (req, res, next) {
+  return res.status(404).send("Sorry can't find that!")
+})
 const server = app.listen(config.environment.port, () => {
   console.log('Listen on port ' + config.environment.port)
 })
