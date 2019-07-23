@@ -19,10 +19,11 @@ module.exports.loadConfiguration = function (envPath) {
 }
 
 module.exports.loadDatabase = function (config) {
-  mongoose.connect(config.environment.database.host,{
-      useNewUrlParser: true,
-      poolSize: 4
-    })
+  mongoose.connect(config.environment.database.host, {
+    useNewUrlParser: true,
+    poolSize: 4,
+    useFindAndModify: false
+  })
     .then(db => {
       console.log('mongo connected')
     }).catch(err => console.log('Mongo connection error', err))

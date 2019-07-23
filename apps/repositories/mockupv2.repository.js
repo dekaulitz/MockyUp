@@ -2,16 +2,22 @@ const mongoose = require('mongoose')
 const Paging = require('../repositories/paging/paging')
 const Schema = mongoose.Schema
 
-var response = new Schema({
+var response = {
+  _id: { id: false },
   httpCode: { type: Number },
   result: { type: Object }
-})
+}
 var condition = new Schema({
-  filledBy: { type: Object },
-  response
+  _id: { id: false },
+  when: {
+    filledBy: { type: Object },
+    httpCode: { type: Number },
+    result: { type: Object }
+  }
 })
 
 var headerSchema = new Schema({
+  _id: { id: false },
   name: { type: String },
   type: { type: String },
   isRequired: { type: Boolean },
@@ -19,6 +25,7 @@ var headerSchema = new Schema({
   conditions: [condition]
 })
 var body = new Schema({
+  _id: { id: false },
   name: { type: String },
   type: { type: String },
   isRequired: { type: Boolean },
@@ -59,8 +66,8 @@ mocks.pagination = function (req, callback) {
   let pagination = new Paging()
   pagination.select = '_id _name _desc _path'
   pagination.model = mocks
-  pagination.getPagination(req, (err,data) => {
-    callback(err,data)
+  pagination.getPagination(req, (err, data) => {
+    callback(err, data)
   })
 }
 module.exports = mocks
