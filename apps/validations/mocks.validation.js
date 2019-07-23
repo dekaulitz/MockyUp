@@ -22,7 +22,7 @@ mocksValidation.prototype.beforeInsert = async function (properties, callback) {
   }
 
   if (this.isEmpty(properties._method)) {
-    return callback(response.getResponseFail('_method is required', response.type.VALIDATION))
+    return callback('_method is required')
   }
 
   let isExist = await repository.findOne({ _path: properties._path, _method: properties._method })
