@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const helper = require('./request.helper')
+const mockUpException = require('./../error_handler/mockup.handler')
 
 const IS_ARRAY_OBJECT = 'arrayobject'
 /**
@@ -10,10 +11,10 @@ const IS_ARRAY_OBJECT = 'arrayobject'
  */
 module.exports.transformHeader = async (collections, requestheader) => {
   let res = null
-  _.forEach(collections, (collection, index) => {
-      let element = collection._doc
+  _.forEach(collections, (element, index) => {
       let stop = false
       if (element.isRequired) {
+        if(element.name.toLowerCase() === undefined) throw new mockUpException("structure error on element.name not found")
         if (requestheader[element.name.toLowerCase()] === null || requestheader[element.name.toLowerCase()] === undefined) {
           stop = true
           res = element.throw
@@ -45,8 +46,7 @@ module.exports.transformHeader = async (collections, requestheader) => {
  */
 async function bodyExtraction (body, requestBody) {
   let result = null
-  _.forEach(body.values, (collection) => {
-    let value=collection._doc
+  _.forEach(body.values, (value) => {
     let stop = false
     if (value.isRequired) {
       if (requestBody[value.name] === null || requestBody[value.name] === undefined) {
@@ -56,8 +56,7 @@ async function bodyExtraction (body, requestBody) {
       }
     }
     if (value.conditions != null || value.conditions !== undefined) {
-      _.forEach(value.conditions, (collection) => {
-        let condition=collection._doc
+      _.forEach(value.conditions, (condition) => {
         if ((condition.when !== null) && (condition.when !== undefined)) {
           if (requestBody[value.name] === condition.when.filledBy) {
             stop = true
