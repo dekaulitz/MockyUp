@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://travis-ci.org/dekaulitz/mockup-server"><img src="https://travis-ci.org/dekaulitz/mockup-server.svg?branch=master" alt="Build Status"></a>
+  <a href="https://travis-ci.org/dekaulitz/MockyUp"><img src="https://travis-ci.org/dekaulitz/MockyUp.svg?branch=master" alt="Build Status"></a>
 </p>
 
 <h2 align="center">MockyUp</h2>

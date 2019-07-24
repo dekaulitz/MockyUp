@@ -1,6 +1,7 @@
 const repository = require('./../repositories/mockupv2.repository')
 const mockUpHelper = require('./../helper/mockup.helper')
 const validation = require('./../validations/mocks.validation')
+const requestHelper = require('../helper/request.helper')
 const mocks = {}
 /**
  * @description listisng all data from repository
@@ -48,7 +49,7 @@ mocks.store = (body, callback) => {
  * @param callback
  */
 mocks.show = (id, callback) => {
-  repository.findById(id).then(collection => {
+  repository.findById(id).lean().then(collection => {
     if (collection == null) {
       return callback(null, null)
     }
@@ -64,8 +65,7 @@ mocks.show = (id, callback) => {
  * @param callback
  */
 mocks.update = (id, body, callback) => {
-  repository.findOneAndUpdate({ _id: id }, body, {new: true}).then(collection => {
-
+  repository.findOneAndUpdate({ _id: id }, body, {new: true}).lean().then(collection => {
     return callback(null, collection)
   }).catch(reason => {
     return callback(reason, null)
@@ -110,18 +110,17 @@ mocks.mock = (path, method, req, callback) => {
   repository.findOne({
     '_path': path,
     '_method': method
-  }).then(async (data) => {
+  }).lean().then(async (data) => {
     if (data === null || data === undefined) {
       return callback(null, 200, 'mockup not found')
-
     } else {
-      if (data._header !== null || data._header.length !== 0) {
+      if (requestHelper.itsDefined(data._header) && data._header !== null && data._header.length !== 0) {
         let header = await mockUpHelper.transformHeader(data._header, req.headers)
         if (header != null) {
           return callback(null, header.httpCode, header.result)
         }
       }
-      if (data._body !== null || !requestHelper.isEmptyObject(data._body)) {
+      if (requestHelper.itsDefined(data._header) && data._body !== null && !requestHelper.isEmptyObject(data._body)) {
         let body = await mockUpHelper.transformBody(data._body, req.body)
         if (body !== null) {
           return callback(null, body.httpCode, body.result)
