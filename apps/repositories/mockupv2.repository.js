@@ -2,21 +2,17 @@ const mongoose = require('mongoose')
 const Paging = require('../repositories/paging/paging')
 const Schema = mongoose.Schema
 
-var response = {
-  _id: { id: false },
-  httpCode: { type: Number },
-  result: { type: Object }
-}
-var condition = new Schema({
+
+let condition = new Schema({
   _id: { id: false },
   when: {
     filledBy: { type: Object },
     httpCode: { type: Number },
     result: { type: Object }
   }
-})
+}, { strict: true })
 
-var headerSchema = new Schema({
+let headerSchema = new Schema({
   _id: { id: false },
   name: { type: String },
   type: { type: String },
@@ -24,32 +20,34 @@ var headerSchema = new Schema({
   throw: { type: Object },
   conditions: [condition]
 })
-var body = new Schema({
+let bodyDetail = new Schema({
   _id: { id: false },
   name: { type: String },
   type: { type: String },
   isRequired: { type: Boolean },
   throw: { type: Object },
   conditions: [condition]
-})
+}, { strict: true })
+let bodyPayload = new Schema({
+  _id: { id: false },
+  type: { type: String },
+  consumes: { type: String },
+  values: [bodyDetail],
+  isRequired: { type: Boolean },
+  throw: { type: Object },
+}, { strict: true })
 
-var mockUpv2 = new Schema({
+let mockUpv2 = new Schema({
   _name: { type: String },
   _desc: { type: String },
   _path: { type: String },
   _method: { type: String },
   _header: [headerSchema],
-  _body: {
-    type: { type: String },
-    consumens: { type: String },
-    values: [body],
-    isRequired: { type: Boolean },
-    throw: { type: Object },
-  },
+  _body: bodyPayload,
   _defaultResponse: {
     throw: { type: Object }
   }
-})
+}, { strict: true })
 const mocks = mongoose.model('mockup_v2', mockUpv2)
 
 mocks.searchable = {
