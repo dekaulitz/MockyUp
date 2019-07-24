@@ -1,6 +1,6 @@
-var createError = require('http-errors')
+let responseCode = require('./../helper/response')
 
-const validation = require('../error_handler/validationHandler')
+const validation = require('../error_handler/validation.handler')
 const express = require('express')
 var cookieParser = require('cookie-parser')
 var app = express()
@@ -16,6 +16,14 @@ app.get('/', function (req, res, next) {
 })
 app.use('/v2', require('../controllers/mockupV2.controller'))
 // catch 404 and forward to error handler
-
+app.use(function (err, req, res, next) {
+  console.log('error invoked 2' + err)
+  if (err instanceof validation) {
+    next(err.message)
+  } else if (err instanceof TypeError) {
+    return res.responseFail(responseCode.type.INTERNAL_SERVER_ERROR, err.message+" some property its not properly defined")
+  }
+  next(err)
+})
 
 module.exports = app

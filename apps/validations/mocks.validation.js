@@ -3,7 +3,7 @@ const _ = require('lodash')
 const helper = require('./../helper/request.helper')
 const response = require('./../helper/response')
 const baseValidation = require('./base.validation')
-const validation = require('../error_handler/validationHandler')
+const validation = require('../error_handler/validation.handler')
 let mocksValidation = function () {
   baseValidation.call(this)
 }
