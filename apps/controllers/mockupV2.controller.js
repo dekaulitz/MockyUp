@@ -63,7 +63,7 @@ router.get('/desc', (req, res, next) => {
 router.all('/mocks', (req, res, next) => {
   if (req.query.path != null) {
     var transformPath = requestHelper.transformPath(req.query.path)
-    mocks.mock(transformPath, req.method.toLowerCase(), req, async (err, httpCode, data) => {
+    mocks.mock(transformPath, req.method, req, async (err, httpCode, data) => {
       if (err !== null) return next(err)
       //special case for mocks
       return res.status(httpCode).send(data)
