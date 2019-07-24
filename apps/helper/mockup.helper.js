@@ -10,13 +10,10 @@ const IS_ARRAY_OBJECT = 'arrayobject'
  */
 module.exports.transformHeader = async (collections, requestheader) => {
   let res = null
-  console.log(requestheader)
   _.forEach(collections, (collection, index) => {
       let element = collection._doc
       let stop = false
       if (element.isRequired) {
-        console.log(element.name.toLowerCase())
-        console.log(requestheader[element.name.toLowerCase()])
         if (requestheader[element.name.toLowerCase()] === null || requestheader[element.name.toLowerCase()] === undefined) {
           stop = true
           res = element.throw
@@ -86,7 +83,7 @@ module.exports.transformBody = async (collections, requestBody) => {
   if (collections.isRequired === true && (requestBody === undefined || helper.isEmptyObject(requestBody))) {
     res = collections.throw
   } else {
-    if (collections.type.toLocaleLowerCase() === IS_ARRAY_OBJECT) {
+    if (collections.type.toLowerCase() === IS_ARRAY_OBJECT) {
       for (let i = 0; i < requestBody.length; i++) {
         res = await bodyExtraction(collections, requestBody[i])
         if (res !== null) {
