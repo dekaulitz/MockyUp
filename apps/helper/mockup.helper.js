@@ -10,10 +10,14 @@ const IS_ARRAY_OBJECT = 'arrayobject'
  */
 module.exports.transformHeader = async (collections, requestheader) => {
   let res = null
-  _.forEach(collections, (element, index) => {
+  console.log(requestheader)
+  _.forEach(collections, (collection, index) => {
+      let element = collection._doc
       let stop = false
       if (element.isRequired) {
-        if (requestheader[element.name] === null || requestheader[element.name] === undefined) {
+        console.log(element.name.toLowerCase())
+        console.log(requestheader[element.name.toLowerCase()])
+        if (requestheader[element.name.toLowerCase()] === null || requestheader[element.name.toLowerCase()] === undefined) {
           stop = true
           res = element.throw
           return false
@@ -44,7 +48,8 @@ module.exports.transformHeader = async (collections, requestheader) => {
  */
 async function bodyExtraction (body, requestBody) {
   let result = null
-  _.forEach(body.values, (value) => {
+  _.forEach(body.values, (collection) => {
+    let value=collection._doc
     let stop = false
     if (value.isRequired) {
       if (requestBody[value.name] === null || requestBody[value.name] === undefined) {
@@ -54,11 +59,12 @@ async function bodyExtraction (body, requestBody) {
       }
     }
     if (value.conditions != null || value.conditions !== undefined) {
-      _.forEach(value.conditions, (condition) => {
-        if ((condition._doc.when !== null) && (condition._doc.when !== undefined)) {
-          if (requestBody[value.name] === condition._doc.when.filledBy) {
+      _.forEach(value.conditions, (collection) => {
+        let condition=collection._doc
+        if ((condition.when !== null) && (condition.when !== undefined)) {
+          if (requestBody[value.name] === condition.when.filledBy) {
             stop = true
-            result = condition._doc.when
+            result = condition.when
             return false
           }
         }
