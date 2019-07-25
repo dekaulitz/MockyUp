@@ -7,7 +7,7 @@ const responseCode = require('./../helper/response')
  * {{path}}?size=1&page=1&sort=_id&query=path:v2
  * for sorting - mean desc
  */
-router.all('/', (req, res, next) => {
+router.all('/mocks/', (req, res, next) => {
   mocks.pagination(req, (err, data) => {
     console.log(err)
     if (err !== null) {
@@ -23,13 +23,7 @@ router.post('/mocks/register', (req, res, next) => {
     return res.responseOk(responseCode.type.SUCCESS, data, 'success')
   })
 })
-router.get('/mocks/:id', (req, res, next) => {
-  mocks.show(req.params.id, (err, data) => {
-    if (err != null) return res.responseFail(responseCode.type.INTERNAL_SERVER_ERROR, err.message)
-    if (data == null) return res.responseFail(responseCode.type.DATA_NOT_FOUND, 'mocks not found')
-    return res.responseOk(responseCode.type.SUCCESS, data, 'success')
-  })
-})
+
 router.post('/mocks/:id/update', (req, res, next) => {
   mocks.update(req.params.id, req.body, (err, data) => {
     if (err != null) return next(err)
@@ -44,7 +38,7 @@ router.get('/mocks/:id/delete', (req, res, next) => {
   })
 })
 
-router.get('/desc', (req, res, next) => {
+router.get('/mocks/desc', (req, res, next) => {
   if (req.query.path != null) {
     let transformPath = requestHelper.transformPath(req.query.path)
     mocks.desc(transformPath, (err, data) => {
@@ -58,7 +52,7 @@ router.get('/desc', (req, res, next) => {
   }
 })
 
-router.all('/mocks', (req, res, next) => {
+router.all('/mocks/mocking', (req, res, next) => {
   if (req.query.path != null) {
     let transformPath = requestHelper.transformPath(req.query.path)
     mocks.mock(transformPath, req.method, req, async (err, httpCode, data) => {
@@ -70,5 +64,11 @@ router.all('/mocks', (req, res, next) => {
     return res.responseFail(responseCode.type.DATA_NOT_FOUND, 'mocks not found')
   }
 })
-
+router.get('/mocks/:id', (req, res, next) => {
+  mocks.show(req.params.id, (err, data) => {
+    if (err != null) return res.responseFail(responseCode.type.INTERNAL_SERVER_ERROR, err.message)
+    if (data == null) return res.responseFail(responseCode.type.DATA_NOT_FOUND, 'mocks not found')
+    return res.responseOk(responseCode.type.SUCCESS, data, 'success')
+  })
+})
 module.exports = router

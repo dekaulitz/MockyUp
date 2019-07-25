@@ -1,0 +1,412 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "MockyUp for your mock server",
+    "version":  "v.0.1-beta",
+    "title": "MockyUp the Mocks"
+  },
+  "tags": [
+    {
+      "name": "mocks",
+      "description": "MockyUp API Mocks"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/mocks/": {
+      "get": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "listing mocks",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CategoryResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "VoteRequest": {
+      "type": "object",
+      "properties": {
+        "ArticleID": {
+          "type": "integer",
+          "example": 360021592892
+        },
+        "Value": {
+          "type": "integer",
+          "description": "1 is up/yes/good, 0 is down/no/bad",
+          "enum": [
+            0,
+            1
+          ],
+          "example": 1
+        }
+      }
+    },
+    "CategoryResponse": {
+      "type": "object",
+      "properties": {
+        "OvoHeaderTitle": {
+          "type": "string",
+          "description": "Used for WebUI Header",
+          "example": "Pusat Bantuan"
+        },
+        "Categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Category"
+          }
+        }
+      }
+    },
+    "SubcategoryResponse": {
+      "type": "object",
+      "properties": {
+        "OvoHeaderTitle": {
+          "type": "string",
+          "description": "Used for WebUI Header",
+          "example": "Pusat Bantuan"
+        },
+        "Subcategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subcategory"
+          }
+        }
+      }
+    },
+    "ArticleResponse": {
+      "type": "object",
+      "properties": {
+        "OvoHeaderTitle": {
+          "type": "string",
+          "description": "Used for WebUI Header",
+          "example": "Pusat Bantuan"
+        },
+        "Articles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Article"
+          }
+        }
+      }
+    },
+    "SearchResponse": {
+      "type": "object",
+      "properties": {
+        "OvoHeaderTitle": {
+          "type": "string",
+          "description": "Used for WebUI Header",
+          "example": "Pencarian"
+        },
+        "Articles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Article"
+          }
+        }
+      }
+    },
+    "GetFormResponse": {
+      "type": "object",
+      "properties": {
+        "Customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "OvoHeaderTitle": {
+          "type": "string",
+          "description": "Used for WebUI Header",
+          "example": "Pusat Bantuan"
+        },
+        "Transaction": {
+          "$ref": "#/definitions/TransactionHistory"
+        }
+      }
+    },
+    "TransactionHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "Data": {
+          "$ref": "#/definitions/TransactionHistory"
+        }
+      }
+    },
+    "TransactionHistoriesResponse": {
+      "type": "object",
+      "properties": {
+        "Data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionHistory"
+          }
+        }
+      }
+    },
+    "HealthResponse": {
+      "type": "object",
+      "properties": {
+        "Service": {
+          "description": "this OVO Help Center API status",
+          "type": "object",
+          "properties": {
+            "Code": {
+              "type": "integer",
+              "description": "status code",
+              "example": 200
+            },
+            "Status": {
+              "type": "string",
+              "enum": [
+                "OK",
+                "Service Unavailable"
+              ],
+              "description": "status in string",
+              "example": "OK"
+            }
+          }
+        },
+        "Zendesk": {
+          "description": "Connection to Zendesk",
+          "type": "object",
+          "properties": {
+            "Code": {
+              "type": "integer",
+              "description": "status code",
+              "example": 200
+            },
+            "Status": {
+              "type": "string",
+              "enum": [
+                "OK",
+                "Service Unavailable"
+              ],
+              "description": "status in string",
+              "example": "OK"
+            }
+          }
+        },
+        "Astina": {
+          "description": "Connection to Astina",
+          "type": "object",
+          "properties": {
+            "Code": {
+              "type": "integer",
+              "description": "status code",
+              "example": 200
+            },
+            "Status": {
+              "type": "string",
+              "enum": [
+                "OK",
+                "Service Unavailable"
+              ],
+              "description": "status in string",
+              "example": "OK"
+            }
+          }
+        },
+        "Wallet": {
+          "description": "Connection to Astina",
+          "type": "object",
+          "properties": {
+            "Code": {
+              "type": "integer",
+              "description": "status code",
+              "example": 200
+            },
+            "Status": {
+              "type": "string",
+              "enum": [
+                "OK",
+                "Service Unavailable"
+              ],
+              "description": "status in string",
+              "example": "OK"
+            }
+          }
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int64",
+          "example": 360001360831
+        },
+        "Name": {
+          "type": "string",
+          "example": "Paybill"
+        },
+        "Description": {
+          "type": "string",
+          "format": "url",
+          "description": "link to icon",
+          "example": "https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.4.8/collection/icon/svg/ios-boat.svg"
+        }
+      }
+    },
+    "Subcategory": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int64",
+          "example": 360001360831
+        },
+        "Name": {
+          "type": "string",
+          "example": "Paybill"
+        },
+        "Category_ID": {
+          "type": "integer",
+          "format": "url",
+          "example": "360001360831"
+        }
+      }
+    },
+    "Article": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int64",
+          "example": 360001360831
+        },
+        "Title": {
+          "type": "string",
+          "description": "FAQ question",
+          "example": "Bagaimana melakukan transaksi di merchant?"
+        },
+        "Name": {
+          "type": "string",
+          "description": "FAQ question",
+          "example": "Bagaimana melakukan transaksi di merchant?"
+        },
+        "Body": {
+          "type": "string",
+          "description": "FAQ answer in inner HTML format",
+          "example": "<p>Pembayaran menggunakan OVO dapat dilakukan melalui:</p> <ul> <li>Scan Barcode OVO ID</li> <li>Scan QR Code</li> <li>Push to Pay EDC</li> <li>Scan to Pay (Skyparking)</li> </ul>"
+        }
+      }
+    },
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "MobilePhoneNumber": {
+          "type": "string",
+          "example": "0806999777444"
+        },
+        "Email": {
+          "type": "string",
+          "example": "0806999777444@mailinator.com"
+        },
+        "IsEmailVerified": {
+          "type": "boolean",
+          "default": false,
+          "example": true
+        },
+        "Fullname": {
+          "type": "string",
+          "example": "Darma Widya"
+        },
+        "OvoID": {
+          "type": "string",
+          "example": "0018001518658844"
+        }
+      }
+    },
+    "TransactionHistory": {
+      "type": "object",
+      "properties": {
+        "Card_no": {
+          "type": "string",
+          "example": "800955xxxxxx6001"
+        },
+        "Category_id": {
+          "type": "integer",
+          "example": 6
+        },
+        "Category_name": {
+          "type": "string",
+          "example": "others"
+        },
+        "Desc1": {
+          "type": "string",
+          "example": "Transfer Ke Lol Lol"
+        },
+        "Desc2": {
+          "type": "string",
+          "example": "Transfer Keluar"
+        },
+        "Desc3": {
+          "type": "string",
+          "example": "Lol Lol"
+        },
+        "Icon_url": {
+          "type": "string",
+          "example": "1"
+        },
+        "Merchant_id": {
+          "type": "string",
+          "example": "1"
+        },
+        "Merchant_invoice": {
+          "type": "string",
+          "example": "TRF-e7e9857b3d1103db8f665068e03d5308ba2ecd10"
+        },
+        "Merchant_name": {
+          "type": "string",
+          "example": "OVO"
+        },
+        "Name": {
+          "type": "string",
+          "example": "nessa"
+        },
+        "Status": {
+          "type": "string",
+          "example": "SUCCESS"
+        },
+        "Transaction_amount": {
+          "type": "number",
+          "example": 12500
+        },
+        "Transaction_date": {
+          "type": "string",
+          "example": "2019-02-19"
+        },
+        "Transaction_time": {
+          "type": "string",
+          "example": "13:41:15"
+        },
+        "Transaction_type": {
+          "type": "string",
+          "example": "TRANSFER"
+        },
+        "Transaction_type_id": {
+          "type": "integer",
+          "example": 12
+        },
+        "Ui_type": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    }
+  }
+}
