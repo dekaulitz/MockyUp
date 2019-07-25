@@ -21,7 +21,7 @@ app.use(function (err, req, res, next) {
   if (err instanceof validation) {
     next(err.message)
   } else if (err instanceof TypeError) {
-    return res.responseFail(responseCode.type.INTERNAL_SERVER_ERROR, err.message+" some property its not properly defined")
+    return res.responseFail(responseCode.type.INTERNAL_SERVER_ERROR, err.message + ' some property its not properly defined')
   }
   next(err)
 })

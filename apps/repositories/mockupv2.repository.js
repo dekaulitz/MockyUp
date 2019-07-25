@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const Paging = require('../repositories/paging/paging')
 const Schema = mongoose.Schema
 
-
 let condition = new Schema({
   _id: { id: false },
   when: {
@@ -34,7 +33,7 @@ let bodyPayload = new Schema({
   consumes: { type: String },
   values: [bodyDetail],
   isRequired: { type: Boolean },
-  throw: { type: Object },
+  throw: { type: Object }
 }, { strict: true })
 
 let mockUpv2 = new Schema({
