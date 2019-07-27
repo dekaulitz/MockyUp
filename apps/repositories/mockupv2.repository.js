@@ -52,12 +52,14 @@ const mocks = mongoose.model('mockup_v2', mockUpv2)
 mocks.searchable = {
   '_id': '_id',
   'name': '_name',
-  'path': '_path'
+  'path': '_path',
+  'method': '_method'
 }
 mocks.aliasPaging = {
   '_id': 'id',
   '_name': 'name',
-  '_path': 'path'
+  '_path': 'path',
+  '_method': 'method'
 }
 mocks.pagination = function (req, callback) {
   let pagination = new Paging()

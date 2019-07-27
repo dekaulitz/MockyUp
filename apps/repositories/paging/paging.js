@@ -23,8 +23,8 @@ pagination.prototype.getPagination = async function (req, callback) {
       let paging = {
         rows: data,
         rowCount: count,
-        page: this.page,
-        size: this.size,
+        page: parseInt(this.page),
+        size: parseInt(this.size),
         pageCount: Math.ceil(count / parseInt(this.size))
       }
       callback(null, paging)
