@@ -1,17 +1,17 @@
-<p align="center">
+<p align="left">
   <a href="https://travis-ci.org/dekaulitz/MockyUp"><img src="https://travis-ci.org/dekaulitz/MockyUp.svg?branch=master" alt="Build Status"></a>
 </p>
 
-<h2 align="center">MockyUp</h2>
+<h2 align="left">MockyUp</h2>
 Mockyup its a mockup server build under node.js for generating mockup response that usually used by frontend enginer for build an application.
 
-###Introduction
+##Introduction
 MockyUp build with <a href="https://nodejs.org" alt="node js">node.js</a> and <a href="https://expressjs.com/">express.js</a> framework with flexible noSql mongodb
 that aiming for build mockup contract for integration service with easy and readable. With eazy structure that helps for generating contract as fast as possible for fast development.
 Main features:
 - Header validation with default response and custom response.
 - Body validation with default response and custom response
-###How to use
+##How to use
 Edit .env.test with your environment and run for development
 
 ```
@@ -26,7 +26,15 @@ for testing
 npm run test
 ```
 
-<h2 align="center">Mockups Structure</h2>
+##Swagger Documentation
+After the server run please visit the swagger and create some mocks.
+```
+http://localhost:7070/docs/swagger/ 
+```
+
+
+
+<h2 align="left">Mockups Structure</h2>
 
 | field | Description |
 |---------|-------------|
@@ -38,7 +46,7 @@ npm run test
 |_defaultResponse| Default response that will be throw if the requrement has been filled
 
 
-###Example
+##Example
 This is an example of structure of mockup contract
 ```
 _name: prototype mockup server
