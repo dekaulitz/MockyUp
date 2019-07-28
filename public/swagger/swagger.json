@@ -607,33 +607,33 @@
                 "result": {
                   "statusCode": 40012,
                   "message": "firstname is required"
-                },
-                "conditions": [
-                  {
-                    "when": {
-                      "filledBy": "fahmi",
-                      "httpCode": 400,
-                      "result": {
-                        "statusCode": 4002,
-                        "message": "user already exist"
-                      }
+                }
+              },
+              "conditions": [
+                {
+                  "when": {
+                    "filledBy": "fahmi",
+                    "httpCode": 400,
+                    "result": {
+                      "statusCode": 4002,
+                      "message": "user already exist"
                     }
-                  },
-                  {
-                    "when": {
-                      "filledBy": "ajo",
-                      "httpCode": 400,
-                      "result": {
-                        "statusCode": 4002,
-                        "message": "user already block",
-                        "meta": {
-                          "debugId": "123-123-123"
-                        }
+                  }
+                },
+                {
+                  "when": {
+                    "filledBy": "ajo",
+                    "httpCode": 400,
+                    "result": {
+                      "statusCode": 4002,
+                      "message": "user already block",
+                      "meta": {
+                        "debugId": "123-123-123"
                       }
                     }
                   }
-                ]
-              }
+                }
+              ]
             },
             {
               "name": "email",
