@@ -1,6 +1,6 @@
-const repository = require('./../repositories/mockupv2.repository')
+const Repository = require('./../repositories/mockupv2.repository')
 const mockUpHelper = require('./../helper/mockup.helper')
-const validation = require('./../validations/mocks.validation')
+const Validation = require('./../validations/mocks.validation')
 const requestHelper = require('../helper/request.helper')
 const mocks = {}
 /**
@@ -8,7 +8,7 @@ const mocks = {}
  * @param callback
  */
 mocks.lists = (callback) => {
-  repository.find((err, docs) => {
+  Repository.find((err, docs) => {
     callback(err, docs)
   })
 }
@@ -18,7 +18,7 @@ mocks.lists = (callback) => {
  * @param callback
  */
 mocks.pagination = (paging, callback) => {
-  repository.pagination(paging, (err, data) => {
+  Repository.pagination(paging, (err, data) => {
     return callback(err, data)
   })
 }
@@ -28,19 +28,19 @@ mocks.pagination = (paging, callback) => {
  * @param callback
  */
 mocks.store = (body, callback) => {
-  let mockValidation = new validation()
-  mockValidation.beforeInsert(body, (errValidation) => {
+  let mockValidation = new Validation()
+  mockValidation.beforeInsert(body, (err, errValidation) => {
     if (errValidation) {
-      return callback(null, errValidation,null)
+      return callback(null, errValidation, null)
     }
-    let model = new repository(body)
+    let model = new Repository(body)
     model.save().then(data => {
-      return callback(null,null,data)
+      return callback(null, null, data)
     }).catch(reason => {
-      return callback(reason, null,null)
+      return callback(reason, null, null)
     })
   }).catch(reason => {
-    return callback(reason, null,null)
+    return callback(reason, null, null)
   })
 }
 /**
@@ -49,7 +49,7 @@ mocks.store = (body, callback) => {
  * @param callback
  */
 mocks.show = (id, callback) => {
-  repository.findById(id).lean().then(collection => {
+  Repository.findById(id).lean().then(collection => {
     if (collection == null) {
       return callback(null, null)
     }
@@ -65,7 +65,7 @@ mocks.show = (id, callback) => {
  * @param callback
  */
 mocks.update = (id, body, callback) => {
-  repository.findOneAndUpdate({ _id: id }, body, {new: true}).lean().then(collection => {
+  Repository.findOneAndUpdate({ _id: id }, body, { new: true }).lean().then(collection => {
     return callback(null, collection)
   }).catch(reason => {
     return callback(reason, null)
@@ -76,16 +76,13 @@ mocks.update = (id, body, callback) => {
  * @param id
  * @param callback
  */
-mocks.delete=(id,callback)=>{
-  repository.deleteOne({_id:id}).then(collection=>{
-    return callback(null,collection)
+mocks.delete = (id, callback) => {
+  Repository.deleteOne({ _id: id }).then(collection => {
+    return callback(null, collection)
   }).catch(reason => {
     return callback(reason, null)
   })
 }
-
-
-
 
 /**
  * @description describe the mock
@@ -93,7 +90,7 @@ mocks.delete=(id,callback)=>{
  * @param callback
  */
 mocks.desc = (path, callback) => {
-  repository.findOne({
+  Repository.findOne({
     '_path': path
   }, (err, data) => {
     callback(err, data)
@@ -107,7 +104,7 @@ mocks.desc = (path, callback) => {
  * @param callback
  */
 mocks.mock = (path, method, req, callback) => {
-  repository.findOne({
+  Repository.findOne({
     '_path': path,
     '_method': method
   }).lean().then(async (data) => {

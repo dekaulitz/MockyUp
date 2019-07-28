@@ -1,6 +1,6 @@
 const _ = require('lodash')
 const helper = require('./request.helper')
-const mockUpException = require('./../error_handler/mockup.handler')
+const MockUpException = require('./../error_handler/mockup.handler')
 
 const IS_ARRAY_OBJECT = 'arrayobject'
 /**
@@ -12,28 +12,28 @@ const IS_ARRAY_OBJECT = 'arrayobject'
 module.exports.transformHeader = async (collections, requestheader) => {
   let res = null
   _.forEach(collections, (element, index) => {
-      let stop = false
-      if (element.isRequired) {
-        if(element.name.toLowerCase() === undefined) throw new mockUpException("structure error on element.name not found")
-        if (requestheader[element.name.toLowerCase()] === null || requestheader[element.name.toLowerCase()] === undefined) {
-          stop = true
-          res = element.throw
-          return false
-        }
-        if (element.conditions != null || element.conditions !== undefined) {
-          _.forEach(element.conditions, (condition) => {
-            if ((condition.when !== null) && (condition.when !== undefined)) {
-              if (requestheader[element.name] === condition.when.filledBy) {
-                stop = true
-                res = condition.when
-                return false
-              }
-            }
-          })
-        }
+    let stop = false
+    if (element.isRequired) {
+      if (element.name.toLowerCase() === undefined) throw new MockUpException('structure error on element.name not found')
+      if (requestheader[element.name.toLowerCase()] === null || requestheader[element.name.toLowerCase()] === undefined) {
+        stop = true
+        res = element.throw
+        return false
       }
-      if (stop) return false
+      if (element.conditions != null || element.conditions !== undefined) {
+        _.forEach(element.conditions, (condition) => {
+          if ((condition.when !== null) && (condition.when !== undefined)) {
+            if (requestheader[element.name] === condition.when.filledBy) {
+              stop = true
+              res = condition.when
+              return false
+            }
+          }
+        })
+      }
     }
+    if (stop) return false
+  }
   )
   return res
 }

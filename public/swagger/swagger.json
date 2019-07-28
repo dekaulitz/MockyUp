@@ -1,0 +1,803 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "MockyUp for your mock server",
+    "version": "v.0.1-beta",
+    "title": "MockyUp the Mocks"
+  },
+  "tags": [
+    {
+      "name": "mocks",
+      "description": "this for registering and modified the mock endpoint"
+    },
+    {
+      "name": "mocking",
+      "description": "this for test your mocking try on postman or else"
+    }
+  ],
+  "paths": {
+    "/mocks": {
+      "get": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "listing all mocks",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "size",
+            "description": "size of data its can be optional",
+            "schema": {
+              "type": "integer",
+              "default": "10"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "size of data its can be optional",
+            "schema": {
+              "type": "integer",
+              "default": "1"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "the property its reserved from backend if there is - on the front its mean sort by desc and if no its mean sort by asc",
+            "schema": {
+              "type": "string",
+              "enum": ["-_id","-_method","-_path","_id","_method","_path"]
+            }
+          },
+          {
+            "in":"query",
+            "name": "q",
+            "description": "if you want to search using syntact like _id:5d3abdce02de128f7722f15a",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseListMocks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{id}": {
+      "get": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "show detail of mocks",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseMofMocks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/desc": {
+      "get": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "show detail of mocks",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "describing the mock endpoint",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseMofMocks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{id}/delete": {
+      "get": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "delete the mocks",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseSuccessDelete"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/register": {
+      "post": {
+        "tags": [
+          "mocks"
+        ],
+        "summary": "register new mocks",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mocksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseMofMocks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{id}/update": {
+      "post": {
+        "tags": [
+          "mocks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "summary": "update mocks by id",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mocksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responseMofMocks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/mocking": {
+      "get": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      },
+      "delete": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      },
+      "post": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      },
+      "put": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      },
+      "options": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      },
+      "patch": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this is special case depending on you mocking do it on postman or else",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "the endpoint of your mock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "responseListMocks": {
+        "type": "object",
+        "properties": {
+          "httpCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "meta": {
+            "type": "string",
+            "format": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/listOfMOcks"
+          }
+        }
+      },
+      "responseSuccessDelete": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "integer"
+          },
+          "ok": {
+            "type": "integer"
+          },
+          "deletedCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "responseMofMocks": {
+        "type": "object",
+        "properties": {
+          "httpCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "meta": {
+            "type": "string",
+            "format": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/mocks"
+          }
+        }
+      },
+      "mocks": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "_name": {
+            "type": "string"
+          },
+          "_desc": {
+            "type": "string"
+          },
+          "_path": {
+            "type": "string",
+            "description": "Entrypoint of the mocks"
+          },
+          "_method": {
+            "type": "string",
+            "description": "Method of the mocks",
+            "enum": [
+              "POST",
+              "GET",
+              "DELETE",
+              "PUT",
+              "PATCH",
+              "OPTIONS"
+            ]
+          },
+          "_header": {
+            "type": "object"
+          },
+          "_body": {
+            "$ref": "#/components/schemas/_body"
+          },
+          "_defaultResponse": {
+            "type": "object",
+            "description": "you can pass json object, this aim to you can pass json to this"
+          }
+        },
+        "required": [
+          "_name",
+          "_desc",
+          "_path",
+          "_method",
+          "_defaultResponse"
+        ]
+      },
+      "mocksRequest": {
+        "type": "object",
+        "properties": {
+          "_name": {
+            "type": "string",
+            "example": "test new Mocks"
+          },
+          "_desc": {
+            "type": "string",
+            "example":"this for testing the mocks"
+          },
+          "_path": {
+            "type": "string",
+            "description": "Entrypoint of the mocks",
+            "example":"/api/v1/register"
+          },
+          "_method": {
+            "type": "string",
+            "description": "Method of the mocks",
+            "example":"POST",
+            "enum": [
+              "POST",
+              "GET",
+              "DELETE",
+              "PUT",
+              "PATCH",
+              "OPTIONS"
+            ]
+          },
+          "_header": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/_header"
+            }
+          },
+          "_body": {
+            "$ref": "#/components/schemas/_body"
+          },
+          "_defaultResponse": {
+            "example":{
+              "throw": {
+                "httpCode": 200,
+                "result": {
+                  "name": "fahmi sulaiman",
+                  "email": "fahmi.sulaiman@ovo.id",
+                  "address": "SCBD"
+                }
+              }
+            }
+            }
+        },
+        "required": [
+          "_name",
+          "_desc",
+          "_path",
+          "_method",
+          "_defaultResponse"
+        ]
+      },
+      "_header": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name of field of header"
+          },
+          "type": {
+            "type": "string",
+            "description": "type header you can set string for now this is for future development"
+          },
+          "isRequired": {
+            "type": "boolean",
+            "description": "this is flaging the header is required or optional",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "throw": {
+            "$ref": "#/components/schemas/throw"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/conditions"
+            }
+          }
+        },
+        "example":   {
+          "name": "signature",
+          "isRequired": true,
+          "throw": {
+            "httpCode": 400,
+            "result": {
+              "statusCode": 5001,
+              "message": "hmac is required"
+            }
+          },
+          "conditions": [
+            {
+              "when": {
+                "filledBy": "test_hmac",
+                "httpCode": 400,
+                "result": {
+                  "statusCode": 4001,
+                  "message": "invalid hmac"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "_body": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "object",
+              "arrayObject"
+            ]
+          },
+          "consumes": {
+            "type": "string",
+            "default": "application/json"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/bodyDetail"
+            }
+          }
+        },
+        "example": {
+          "type": "object",
+          "consumes": "application/json",
+          "values": [
+            {
+              "name": "firstName",
+              "type": "string",
+              "isRequired": true,
+              "throw": {
+                "httpCode": 400,
+                "result": {
+                  "statusCode": 40012,
+                  "message": "firstname is required"
+                },
+                "conditions": [
+                  {
+                    "when": {
+                      "filledBy": "fahmi",
+                      "httpCode": 400,
+                      "result": {
+                        "statusCode": 4002,
+                        "message": "user already exist"
+                      }
+                    }
+                  },
+                  {
+                    "when": {
+                      "filledBy": "ajo",
+                      "httpCode": 400,
+                      "result": {
+                        "statusCode": 4002,
+                        "message": "user already block",
+                        "meta": {
+                          "debugId": "123-123-123"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "email",
+              "type": "string",
+              "isRequired": true,
+              "throw": {
+                "httpCode": 400,
+                "result": {
+                  "statusCode": 5003,
+                  "message": "email is required"
+                }
+              },
+              "conditions": [
+                {
+                  "when": {
+                    "filledBy": "fahmi.sulaiman@ovo.id",
+                    "httpCode": 422,
+                    "result": {
+                      "statusCode": 4002,
+                      "message": "email already registered"
+                    }
+                  }
+                },
+                {
+                  "when": {
+                    "filledBy": "ajo@gmail.com",
+                    "httpCode": 500,
+                    "result": {
+                      "statusCode": 4002,
+                      "message": "email not valid"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "address",
+              "type": "string",
+              "isRequired": false,
+              "throw": null,
+              "conditions": [
+                {
+                  "when": {
+                    "filledBy": "Menara kuningan",
+                    "httpCode": 400,
+                    "result": {
+                      "statusCode": 4001,
+                      "message": "location already blocked"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "isRequired": true,
+          "throw": {
+            "httpCode": 400,
+            "result": {
+              "statusCode": 5000,
+              "message": "internal server error",
+              "meta": {
+                "timestamp": 123123123123,
+                "status": false
+              }
+            }
+          }
+        }
+      },
+      "bodyDetail": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "fieldName"
+          },
+          "type": {
+            "type": "string"
+          },
+          "isRequired": {
+            "type": "boolean",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "throw": {
+            "$ref": "#/components/schemas/throw"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/conditions"
+            }
+          }
+        }
+      },
+      "conditions": {
+        "properties": {
+          "when": {
+            "type": "object",
+            "properties": {
+              "filledBy": {
+                "type": "string",
+                "description": "this is the condition value that will compare"
+              },
+              "httpCode": {
+                "type": "integer",
+                "description": "the http status when the filledBy its match"
+              },
+              "result": {
+                "type": "object",
+                "description": "this is the response json"
+              }
+            }
+          }
+        }
+      },
+      "throw": {
+        "type": "object",
+        "description": "you can pass json object, this aim to you can pass json to this, when its will be call when the requirement falls like isRequired",
+        "properties": {
+        }
+      },
+      "listOfMOcks": {
+        "type": "object",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "id of mocks"
+                },
+                "_name": {
+                  "type": "string"
+                },
+                "_desc": {
+                  "type": "string"
+                },
+                "_path": {
+                  "type": "string"
+                },
+                "_method": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "rowCount": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "pageCount": {
+            "type": "integer"
+          }
+        }
+      }
+
+    }
+  }
+}
