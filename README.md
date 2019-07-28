@@ -6,12 +6,14 @@
 Mockyup its a mockup server build under node.js for generating mockup response that usually used by frontend enginer for build an application.
 
 <h2 align="left">Introduction</h2>
-MockyUp build with <a href="https://nodejs.org" alt="node js">node.js</a> and <a href="https://expressjs.com/">express.js</a> framework with flexible noSql mongodb
-that aiming for build mockup contract for integration service with easy and readable. With eazy structure that helps for generating contract as fast as possible for fast development.
+
+MockyUp build with <a href="https://nodejs.org" alt="node js">node.js</a> and <a href="https://expressjs.com/">express.js</a> framework with flexible noSql mongodbthat aiming for build mockup contract for integration service with easy and readable.  With eazy structure that helps for generating contract as fast as possible for fast development.
+
 Main features:
 - Header validation with default response and custom response.
-- Body validation with default response and custom response
-<h2 align="left">How to use</h2>
+- Body validation with default response and custom response.
+
+<h2>How to use</h2>
 Edit .env.test with your environment and run for development
 
 ```
@@ -27,12 +29,12 @@ npm run test
 ```
 
 <h2 align="left">Swagger Documentation</h2>
+
 After the server run please visit the swagger and create some mocks.
+
 ```
 http://localhost:7070/docs/swagger/ 
 ```
-
-
 
 <h2 align="left">Mockups Structure</h2>
 
@@ -47,7 +49,9 @@ http://localhost:7070/docs/swagger/
 
 
 <h2 align="left">Example</h2>
+
 This is an example of structure of mockup contract
+
 ```
 _name: prototype mockup server
 _desc: describe prototype mockup
@@ -133,6 +137,7 @@ _header:
           httpCode: 400
           result: {"statusCode":500,"message":"hmac is required"}
 ```
+
 The structure above determaining the property and the condition if ``isRequired`` its empty its will be throw with ``httpCode 400``
 and response ``{"statusCode":500,"message":"hmac is required"}`` but when has a condition and the ``is_required`` 
 is fulfilled its steping to the conditions. if hmac filled by 123.123123-123123 its will be throw ``httpCode 400`` 
