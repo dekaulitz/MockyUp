@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="LogToFile" fileName="logs/application.log">
+            <JsonLayout complete="false" compact="false">
+                <KeyValuePair key="_id" value="%uuid{TIME}" />
+                <KeyValuePair key="timestamp" value="${date:yyyy-MM-dd hh:mm:ss}" />
+            </JsonLayout>
+        </File>
+        <RollingFile name="XMLRollingfileAppender"
+                     fileName="logs/app.log"
+                     filePattern="logs/application-%d{yyyy-MM-dd}-%i.log.gz">
+            <Policies>
+                <SizeBasedTriggeringPolicy size="17 kB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework.boot" level="error" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="CONSOLE_JSON_APPENDER" level="info" additivity="false">
+            <AppenderRef ref="LogToFile" />
+        </Logger>
+        <Logger name="XMLRollingfileAppender" level="info" additivity="false">
+            <AppenderRef ref="XMLRollingfileAppender" />
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>

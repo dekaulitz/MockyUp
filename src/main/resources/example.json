@@ -1,0 +1,35 @@
+[
+  {
+    "x-examples": {
+      "x-header-including": [
+        {
+          "x-if-header": {
+            "app-id": "1233212"
+          },
+          "x-headers-response": {
+            "httpCode": 500,
+            "response": {
+              "statusCode": 500,
+              "message": "internal server error"
+            }
+          }
+        },
+        {
+          "x-if-header": {
+            "signature": "1233212"
+          },
+          "x-headers-response": {
+            "httpCode": 500,
+            "response": {
+              "statusCode": 601,
+              "message": "internal server error"
+            }
+          }
+        }
+      ],
+      "x-path-including": [],
+      "x-query-including": [],
+      "x-body-including": []
+    }
+  }
+]
