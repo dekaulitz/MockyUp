@@ -47,12 +47,10 @@ public class MockControllers {
         }
         return map;
     }
-
     @GetMapping(value = "/")
     public ResponseEntity greeting() {
         return ResponseEntity.ok("mock example");
     }
-
     @RequestMapping(value = "/mocks/mocking/{id}", method = {RequestMethod.OPTIONS, RequestMethod.DELETE,
             RequestMethod.POST, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.PATCH, RequestMethod.PUT,
             RequestMethod.TRACE},
@@ -136,8 +134,6 @@ public class MockControllers {
                                 String[] queryStrings = request.getQueryString().split("\\?");
                                 Map<String, String> q = decodeQueryString(queryStrings[1]);
                                 for (Map.Entry<String, String> qmap : q.entrySet()) {
-                                    log.info(qmap.getKey());
-                                    log.info(qmap.getValue());
                                     if ((qmap.getKey().equals(mockExample.getProperty().get(NAME_PROPERTY))) &&
                                             (qmap.getValue().equals(mockExample.getProperty().get(VALUE_PROPERTY)))) {
                                         return new ResponseEntity<>(mockExample.getResponse().getResponse(),
