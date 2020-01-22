@@ -127,7 +127,7 @@ public class MockControllers {
      * @return
      * @desc get mocking detail
      */
-    @RequestMapping(value = "/mocks/{id}", method = RequestMethod.GET,
+    @GetMapping(value = "/mocks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body) {
@@ -190,7 +190,7 @@ public class MockControllers {
      * @return
      * @desc delete mock by id
      */
-    @RequestMapping(value = "/mocks/{id}", method = RequestMethod.DELETE,
+    @DeleteMapping(value = "/mocks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity deleteByMockId(@PathVariable String id) {
