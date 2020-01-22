@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.models;
+package com.github.dekaulitz.mockyup.helpers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
