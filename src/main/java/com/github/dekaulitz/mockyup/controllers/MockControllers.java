@@ -170,16 +170,13 @@ public class MockControllers {
             mockEntities.setDescription(body.getDescription());
             mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
             MockEntities mock = mocksModel.storeMock(mockEntities);
-            MockVmodel mockResponseVmodel = new MockVmodel();
-            mockResponseVmodel.setId(mock.getId());
-            mockResponseVmodel.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
-            mockResponseVmodel.setDescription(mockEntities.getDescription());
-            mockResponseVmodel.setTitle(mockEntities.getTitle());
-            return ResponseEntity.ok(mockResponseVmodel);
+            body.setId(mock.getId());
+            body.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
+            return ResponseEntity.ok(body);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error(e);
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
