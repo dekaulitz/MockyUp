@@ -1,4 +1,4 @@
-<h2 align="left">MOCKY Up</h2>
+<h2 align="left">MOCKYUP</h2>
 MockyUp is a mockup server that release with java version that following OASOPENAPI version 3.xx. You can easyly to integration your swagger documentation with this mockup server with injecting some vendor extension for generating some example.
 
 <h2 align="left">Stack</h2>
