@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.helpers.MockExample;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -36,7 +35,7 @@ public class MocksModel {
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
         MockExample mock;
-        OpenAPI openAPI = (OpenAPI) Json.mapper().readValue(mockEntities.get().getSpec(), OpenAPI.class);
+        OpenAPI openAPI = Json.mapper().readValue(mockEntities.get().getSpec(), OpenAPI.class);
         for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
             String s = entry.getKey();
             PathItem pathItem = entry.getValue();
