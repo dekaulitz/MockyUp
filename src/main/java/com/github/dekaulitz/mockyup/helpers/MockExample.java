@@ -57,7 +57,7 @@ public class MockExample {
      * @return
      * @throws JsonProcessingException
      */
-    public static MockExample generateResponseBody(HttpServletRequest request, List<Map<String, Object>> extension, String body) throws JsonProcessingException {
+    public static MockExample    generateResponseBody(HttpServletRequest request, List<Map<String, Object>> extension, String body) throws JsonProcessingException {
         if (request.getMethod().equals(HttpMethod.POST.toString()) || request.getMethod().equals(HttpMethod.PATCH.toString())
                 || request.getMethod().equals(HttpMethod.PUT.toString()))
             for (Map<String, Object> stringObjectMap : extension) {
@@ -104,11 +104,13 @@ public class MockExample {
         for (Map<String, Object> stringObjectMap : extension) {
             MockExample mockExample = Json.mapper().convertValue(stringObjectMap, MockExample.class);
             String[] queryStrings = request.getQueryString().split("\\?");
-            Map<String, String> q = decodeQueryString(queryStrings[1]);
-            for (Map.Entry<String, String> qmap : q.entrySet()) {
-                if ((qmap.getKey().equals(mockExample.getProperty().get(MockExample.NAME_PROPERTY))) &&
-                        (qmap.getValue().equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY)))) {
-                    return mockExample;
+            if(queryStrings.length>1){
+                Map<String, String> q = decodeQueryString(queryStrings[1]);
+                for (Map.Entry<String, String> qmap : q.entrySet()) {
+                    if ((qmap.getKey().equals(mockExample.getProperty().get(MockExample.NAME_PROPERTY))) &&
+                            (qmap.getValue().equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY)))) {
+                        return mockExample;
+                    }
                 }
             }
         }
