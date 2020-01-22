@@ -1,228 +1,228 @@
 {
-    "openapi": "3.0.2",
-    "info": {
-        "description": "Mockup server base on openAPI vers 3.xx",
-        "version": "1",
-        "title": "Mockup Server | MockyUp",
-        "termsOfService": "",
-        "contact": {
-            "email": "sulaimanfahmi@gmail.com"
-        }
-    },
-    "servers": [
-        {
-            "url": "{http}://localhost:8080",
-            "variables": {
-                "http": {
-                    "description": "entry point The Data Set API is accessible via https and http",
-                    "enum": [
-                        "http",
-                        "https"
-                    ],
-                    "default": "http"
-                }
-            }
-        }
-    ],
-    "tags": [
-        {
-            "name": "Mocks",
-            "description": "Modification mocks example data "
-        },
-        {
-            "name": "Mocks Mocking",
-            "description": "Request for mocking response",
-            "externalDocs": {
-                "description": "follow this guide for mocking the example",
-                "url": "https://github.com/dekaulitz/MockyUp/wiki/Mockup-response-on-MockyUp-version-2-java-version"
-            }
-        },
-        {
-            "name": "Docs",
-            "description": "show swagger docs"
-        }
-    ],
-    "paths": {
-        "/": {
-            "get": {
-                "tags": [
-                    "Docs"
-                ],
-                "summary": "Get swagger documentation",
-                "operationId": "MockControllers.greeting",
-                "responses": {
-                    "200": {
-                        "description": "response when successfully get swagger docs",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/mockResponse"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/mocks": {
-            "post": {
-                "tags": [
-                    "Mocks"
-                ],
-                "summary": "Storing mocks",
-                "operationId": "MockControllers.storeMocksEntity",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "response when mock successfully registered",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Mocks"
-                ],
-                "parameters": [],
-                "summary": "get all mocks",
-                "operationId": "MockControllers.mocks",
-                "responses": {
-                    "200": {
-                        "description": "response when mock successfully call",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/mockResponse"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/mocks/{id}": {
-            "get": {
-                "tags": [
-                    "Mocks"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "description": "id from mongodb collection",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "summary": "get mock detail",
-                "operationId": "MockControllers.mockById",
-                "responses": {
-                    "200": {
-                        "description": "response when mock successfully call",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Mocks"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "description": "id from mongodb collection",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "summary": "delete by mock id",
-                "operationId": "MockControllers.deleteByMockId",
-                "responses": {
-                    "200": {
-                        "description": "response when mock successfully call",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "mockRequest": {
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "description": "you mock title"
-                    },
-                    "description": {
-                        "type": "string",
-                        "description": "your mock description"
-                    },
-                    "spec": {
-                        "type": "object",
-                        "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                    }
-                }
-            },
-            "mockResponse": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "description": "id from mongodb"
-                    },
-                    "title": {
-                        "type": "string",
-                        "description": "you mock title"
-                    },
-                    "description": {
-                        "type": "string",
-                        "description": "your mock description"
-                    },
-                    "spec": {
-                        "type": "object",
-                        "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                    }
-                }
-            }
-        }
+  "openapi": "3.0.2",
+  "info": {
+    "description": "Mockup server base on openAPI vers 3.xx",
+    "version": "1",
+    "title": "Mockup Server | MockyUp",
+    "termsOfService": "",
+    "contact": {
+      "email": "sulaimanfahmi@gmail.com"
     }
+  },
+  "servers": [
+    {
+      "url": "{http}://localhost:8080",
+      "variables": {
+        "http": {
+          "description": "entry point The Data Set API is accessible via https and http",
+          "enum": [
+            "http",
+            "https"
+          ],
+          "default": "http"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Mocks",
+      "description": "Modification mocks example data "
+    },
+    {
+      "name": "Mocks Mocking",
+      "description": "Request for mocking response",
+      "externalDocs": {
+        "description": "follow this guide for mocking the example",
+        "url": "https://github.com/dekaulitz/MockyUp/wiki/Mockup-response-on-MockyUp-version-2-java-version"
+      }
+    },
+    {
+      "name": "Docs",
+      "description": "show swagger docs"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Docs"
+        ],
+        "summary": "Get swagger documentation",
+        "operationId": "MockControllers.greeting",
+        "responses": {
+          "200": {
+            "description": "response when successfully get swagger docs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/mockResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks": {
+      "post": {
+        "tags": [
+          "Mocks"
+        ],
+        "summary": "Storing mocks",
+        "operationId": "MockControllers.storeMocksEntity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mockRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response when mock successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mockResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Mocks"
+        ],
+        "parameters": [],
+        "summary": "get all mocks",
+        "operationId": "MockControllers.mocks",
+        "responses": {
+          "200": {
+            "description": "response when mock successfully call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/mockResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{id}": {
+      "get": {
+        "tags": [
+          "Mocks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "id from mongodb collection",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "get mock detail",
+        "operationId": "MockControllers.mockById",
+        "responses": {
+          "200": {
+            "description": "response when mock successfully call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mockResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Mocks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "id from mongodb collection",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "delete by mock id",
+        "operationId": "MockControllers.deleteByMockId",
+        "responses": {
+          "200": {
+            "description": "response when mock successfully call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mockResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "mockRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "you mock title"
+          },
+          "description": {
+            "type": "string",
+            "description": "your mock description"
+          },
+          "spec": {
+            "type": "object",
+            "description": "you swagger spec here as json must be on openapi version 3.x.x"
+          }
+        }
+      },
+      "mockResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id from mongodb"
+          },
+          "title": {
+            "type": "string",
+            "description": "you mock title"
+          },
+          "description": {
+            "type": "string",
+            "description": "your mock description"
+          },
+          "spec": {
+            "type": "object",
+            "description": "you swagger spec here as json must be on openapi version 3.x.x"
+          }
+        }
+      }
+    }
+  }
 }
