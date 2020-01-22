@@ -6,7 +6,7 @@ This project build under spring boot framework with spring data mongodb and <a h
 
 <h2 align="left"><b>Documentation</b></h2>
 <h4>Requirement</h4>
-Pre requirement you must have :
+Pre requirement you must have:
  * Monngodb 
  * Java absolutely at least 1.8 version
  * Postman
@@ -24,7 +24,7 @@ java -jar target/mockyup-0.0.1-SNAPSHOT.jar
 ```
 
 <h4>How to Add Example on Swagger OAS 3</h4>
-On Openapi version 3 (OAS3) there is some feature that called vendor extension.<br/><br/>
+On Openapi version 3 (OAS3) there is some feature that called vendor extension.
 so im just adding new extension fields:
 * `x-examples` new extension for add examples
 * `x-header-including` new extenstion sub from `x-examples` related with the headers example
