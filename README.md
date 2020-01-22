@@ -11,6 +11,11 @@ Pre requirement you must have:
  * Java absolutely at least 1.8 version
  * Postman
 
+Sometimes you want bullet points:
+
+* Start a line with a star
+* Profit!
+
 <h4>How to run it</h4>
 Changes your applicatio.properties if you have different configuration of mongodb installment.
 
@@ -26,6 +31,7 @@ java -jar target/mockyup-0.0.1-SNAPSHOT.jar
 <h4>How to Add Example on Swagger OAS 3</h4>
 On Openapi version 3 (OAS3) there is some feature that called vendor extension.
 so im just adding new extension fields:
+
 * `x-examples` new extension for add examples
 * `x-header-including` new extenstion sub from `x-examples` related with the headers example
 * `x-path-including` new extension sub from `x-examples` related with paths example
