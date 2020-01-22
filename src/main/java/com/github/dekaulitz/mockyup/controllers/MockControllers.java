@@ -88,7 +88,7 @@ public class MockControllers {
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e);
-            return new ResponseEntity<>(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
