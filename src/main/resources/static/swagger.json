@@ -34,7 +34,7 @@
       "description": "Request for mocking response",
       "externalDocs": {
         "description": "follow this guide for mocking the example",
-        "url": "https://github.com/dekaulitz/MockyUp/wiki/Mockup-response-on-MockyUp-version-2-java-version"
+        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
       }
     },
     {
