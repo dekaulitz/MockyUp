@@ -85,11 +85,10 @@ public class MockControllers {
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e);
-            return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -116,7 +115,6 @@ public class MockControllers {
                 mockResponseVmodels.add(mockResponseVmodel);
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage(), e.getCause());
-                e.printStackTrace();
                 ResponseEntity.badRequest().body(e.getMessage());
             }
         }
@@ -143,11 +141,10 @@ public class MockControllers {
             return ResponseEntity.ok(mockResponseVmodel);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e);
-            return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -158,25 +155,34 @@ public class MockControllers {
      * @desc storing the mocks
      */
     @PostMapping(value = "/mocks")
-    public ResponseEntity<MockVmodel> storeMocksEntity(@RequestBody MockVmodel body) throws JsonProcessingException {
-        SwaggerParseResult result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
-        OpenAPI openAPI = result.getOpenAPI();
-        Paths newPath = new Paths();
-        openAPI.getPaths().forEach((s, pathItem) -> {
-            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-        });
-        openAPI.setPaths(newPath);
-        MockEntities mockEntities = new MockEntities();
-        mockEntities.setTitle(body.getTitle());
-        mockEntities.setDescription(body.getDescription());
-        mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
-        MockEntities mock = mocksModel.storeMock(mockEntities);
-        MockVmodel mockResponseVmodel = new MockVmodel();
-        mockResponseVmodel.setId(mock.getId());
-        mockResponseVmodel.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
-        mockResponseVmodel.setDescription(mockEntities.getDescription());
-        mockResponseVmodel.setTitle(mockEntities.getTitle());
-        return ResponseEntity.ok(mockResponseVmodel);
+    public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
+        SwaggerParseResult result = null;
+        try {
+            result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
+            OpenAPI openAPI = result.getOpenAPI();
+            Paths newPath = new Paths();
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+            });
+            openAPI.setPaths(newPath);
+            MockEntities mockEntities = new MockEntities();
+            mockEntities.setTitle(body.getTitle());
+            mockEntities.setDescription(body.getDescription());
+            mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
+            MockEntities mock = mocksModel.storeMock(mockEntities);
+            MockVmodel mockResponseVmodel = new MockVmodel();
+            mockResponseVmodel.setId(mock.getId());
+            mockResponseVmodel.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
+            mockResponseVmodel.setDescription(mockEntities.getDescription());
+            mockResponseVmodel.setTitle(mockEntities.getTitle());
+            return ResponseEntity.ok(mockResponseVmodel);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            log.error(e);
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -193,11 +199,10 @@ public class MockControllers {
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e);
-            return new ResponseEntity<>(e.getStackTrace(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
 
