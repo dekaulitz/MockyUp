@@ -7,9 +7,10 @@ This project build under spring boot framework with spring data mongodb and <a h
 <h2 align="left"><b>Documentation</b></h2>
 <h4>Requirement</h4>
 Pre requirement you must have:
- * Monngodb 
- * Java absolutely at least 1.8 version
- * Postman
+
+* Monngodb 
+* Java absolutely at least 1.8 version
+* Postman
 
 
 <h4>How to run it</h4>
