@@ -3,7 +3,7 @@ package com.github.dekaulitz.mockyup.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.helpers.MockExample;
+import com.github.dekaulitz.mockyup.models.MockExample;
 import com.github.dekaulitz.mockyup.models.MocksModel;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
