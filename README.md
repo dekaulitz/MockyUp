@@ -11,10 +11,6 @@ Pre requirement you must have:
  * Java absolutely at least 1.8 version
  * Postman
 
-Sometimes you want bullet points:
-
-* Start a line with a star
-* Profit!
 
 <h4>How to run it</h4>
 Changes your applicatio.properties if you have different configuration of mongodb installment.
