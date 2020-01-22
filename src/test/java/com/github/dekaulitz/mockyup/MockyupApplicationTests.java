@@ -1,13 +1,10 @@
 package com.github.dekaulitz.mockyup;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.dekaulitz.mockyup.models.MockExample;
+import com.github.dekaulitz.mockyup.helpers.MockExample;
 import io.swagger.util.Json;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
-
-import java.util.Arrays;
 
 //@SpringBootTest
 class MockyupApplicationTests {

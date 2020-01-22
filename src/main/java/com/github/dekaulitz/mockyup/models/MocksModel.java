@@ -3,9 +3,9 @@ package com.github.dekaulitz.mockyup.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
+import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.helpers.MockExample;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
-import io.swagger.codegen.v3.service.exception.NotFoundException;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -31,7 +31,7 @@ public class MocksModel {
         return mockRepositories.findAll();
     }
 
-    public MockExample getMock(HttpServletRequest request, String _id, String[] originalPathUri, String body) throws JsonProcessingException {
+    public MockExample getMockMocking(HttpServletRequest request, String _id, String[] originalPathUri, String body) throws NotFoundException, JsonProcessingException {
         Optional<MockEntities> mockEntities = mockRepositories.findById(_id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
@@ -120,7 +120,20 @@ public class MocksModel {
 
     }
 
-    public void deleteMock(String _id) {
+    public MockEntities getMockById(String _id) throws NotFoundException {
+        Optional<MockEntities> mockEntities = mockRepositories.findById(_id);
+        if (!mockEntities.isPresent()) {
+            throw new NotFoundException("mocks not found");
+        }
+        return mockEntities.get();
+    }
+
+    public void deleteMock(String _id) throws NotFoundException {
+        Optional<MockEntities> mockEntities = mockRepositories.findById(_id);
+        if (!mockEntities.isPresent()) {
+            throw new NotFoundException("mocks not found");
+        }
+        mockRepositories.deleteById(mockEntities.get().getId());
     }
 
 
