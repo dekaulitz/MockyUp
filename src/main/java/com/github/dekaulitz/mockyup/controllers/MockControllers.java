@@ -76,10 +76,9 @@ public class MockControllers {
     public ResponseEntity mockingPath(@RequestParam(value = "path", required = false) String path,
                                       @PathVariable String id, @RequestBody(required = false) String body,
                                       HttpServletRequest request) {
-        String[] originalPathUri = path.split("\\?");
         MockExample mock = null;
         try {
-            mock = mocksModel.getMockMocking(request, id, originalPathUri, body);
+            mock = mocksModel.getMockMocking(request,path, id, body);
             if (mock != null)
                 return this.generateMockResponseEntity(mock);
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
@@ -156,20 +155,8 @@ public class MockControllers {
      */
     @PostMapping(value = "/mocks")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
-        SwaggerParseResult result = null;
         try {
-            result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
-            OpenAPI openAPI = result.getOpenAPI();
-            Paths newPath = new Paths();
-            openAPI.getPaths().forEach((s, pathItem) -> {
-                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-            });
-            openAPI.setPaths(newPath);
-            MockEntities mockEntities = new MockEntities();
-            mockEntities.setTitle(body.getTitle());
-            mockEntities.setDescription(body.getDescription());
-            mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
-            MockEntities mock = mocksModel.storeMock(mockEntities);
+            MockEntities mock = mocksModel.storeMock(body);
             body.setId(mock.getId());
             body.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
             return ResponseEntity.ok(body);

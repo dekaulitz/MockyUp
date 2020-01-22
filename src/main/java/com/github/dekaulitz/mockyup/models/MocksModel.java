@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
+import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
+import io.swagger.parser.OpenAPIParser;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.Paths;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +34,8 @@ public class MocksModel {
         return mockRepositories.findAll();
     }
 
-    public MockExample getMockMocking(HttpServletRequest request, String _id, String[] originalPathUri, String body) throws NotFoundException, JsonProcessingException {
+    public MockExample getMockMocking(HttpServletRequest request, String path, String _id, String body) throws NotFoundException, JsonProcessingException {
+        String[] originalPathUri = path.split("\\?");
         Optional<MockEntities> mockEntities = mockRepositories.findById(_id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
@@ -111,7 +116,18 @@ public class MocksModel {
         return null;
     }
 
-    public MockEntities storeMock(MockEntities mockEntities) {
+    public MockEntities storeMock(MockVmodel body) throws JsonProcessingException {
+        SwaggerParseResult result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
+        OpenAPI openAPI = result.getOpenAPI();
+        Paths newPath = new Paths();
+        openAPI.getPaths().forEach((s, pathItem) -> {
+            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+        });
+        openAPI.setPaths(newPath);
+        MockEntities mockEntities = new MockEntities();
+        mockEntities.setTitle(body.getTitle());
+        mockEntities.setDescription(body.getDescription());
+        mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
         return mockRepositories.save(mockEntities);
     }
 
