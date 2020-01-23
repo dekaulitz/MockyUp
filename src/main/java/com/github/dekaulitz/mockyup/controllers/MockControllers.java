@@ -2,16 +2,15 @@ package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
-import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
+import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.MockExample;
 import com.github.dekaulitz.mockyup.models.MocksModel;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
-import io.swagger.parser.OpenAPIParser;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
-import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -157,10 +156,16 @@ public class MockControllers {
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
         try {
             MockEntities mock = mocksModel.storeMock(body);
+            Paths newPath = new Paths();
             body.setId(mock.getId());
-            body.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
+            OpenAPI openAPI=Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
+            });
+            openAPI.setPaths(newPath);
+            body.setSpec(openAPI);
             return ResponseEntity.ok(body);
-        } catch (JsonProcessingException e) {
+        } catch (InvalidMockException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

@@ -202,7 +202,20 @@ so im just adding new extension fields:
                                     }
                                 }
                             }
-                        	]
+                        	],
+                        "x-default": {
+                          "property": {},
+                          "response": {
+                            "httpCode": 404,
+                            "response": {
+                              "statusCode": 4004,
+                              "message": "data not found",
+                              "data": {
+                                "default": "x-response default"
+                              }
+                            }
+                          }
+                        }
                     },
                     "responses": {
                         ..your swagger response
@@ -242,3 +255,10 @@ example for hit example above:
         --data-raw '{
         	"firstName":"fahmi"
         }'`
+- default `curl --location --request POST 'localhost:8080/mocks/mocking/5e29322f98a1c001699467a1?path=/api/v1.0/registration/admin2?from=indonesia1' \
+           --header 'app-id: 123321s' \
+           --header 'signature: 123321s' \
+           --header 'Content-Type: application/json' \
+           --data-raw '{
+           	"firstName":"faahmi"
+           }'`

@@ -3,7 +3,8 @@ package com.github.dekaulitz.mockyup.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
-import com.github.dekaulitz.mockyup.errorHandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
+import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.parser.OpenAPIParser;
@@ -70,13 +71,13 @@ public class MocksModel {
                 if (openApiPath.equals(String.join("/", regexPath))) {
                     JsonNode jsonNode = Json.mapper().valueToTree(pathItem);
                     Operation ops = Json.mapper().treeToValue(jsonNode.get(request.getMethod().toLowerCase()), Operation.class);
-                    Map<String, List<Map<String, Object>>> examples = (Map<String, List<Map<String, Object>>>) ops.getExtensions().get(MockExample.X_EXAMPLES);
-                    for (Map.Entry<String, List<Map<String, Object>>> extension : examples.entrySet()) {
+                    Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockExample.X_EXAMPLES);
+                    for (Map.Entry<String, Object> extension : examples.entrySet()) {
                        /*
                        if there some example on headers will check every field on request header and mapping with example
                         */
                         if (extension.getKey().equals(MockExample.X_HEADERS)) {
-                            mock = MockExample.generateResponseHeader(request, extension.getValue());
+                            mock = MockExample.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
                             if (mock != null) {
                                 return mock;
                             }
@@ -85,7 +86,7 @@ public class MocksModel {
                          if there some example on body will check every field on request body and mapping with example
                          */
                         if (extension.getKey().equals(MockExample.x_BODY)) {
-                            mock = MockExample.generateResponseBody(request, extension.getValue(), body);
+                            mock = MockExample.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
                             if (mock != null) {
                                 return mock;
                             }
@@ -94,7 +95,7 @@ public class MocksModel {
                          if there some example on path will check every field on request body and mapping with example
                          */
                         if (extension.getKey().equals(MockExample.x_PATH)) {
-                            mock = MockExample.generateResponnsePath(request, extension.getValue(), openAPIPaths, paths);
+                            mock = MockExample.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
                             if (mock != null) {
                                 return mock;
                             }
@@ -104,7 +105,13 @@ public class MocksModel {
                          if there some on query on path will check every field on request body and mapping with example
                          */
                         if (extension.getKey().equals(MockExample.x_QUERY)) {
-                            mock = MockExample.generateResponnseQuery(request, extension.getValue());
+                            mock = MockExample.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
+                            if (mock != null) {
+                                return mock;
+                            }
+                        }
+                        if(extension.getKey().equals(MockExample.x_DEFAULT)){
+                            mock=MockExample.generateResponseDefault(extension.getValue());
                             if (mock != null) {
                                 return mock;
                             }
@@ -116,19 +123,24 @@ public class MocksModel {
         return null;
     }
 
-    public MockEntities storeMock(MockVmodel body) throws JsonProcessingException {
-        SwaggerParseResult result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
-        OpenAPI openAPI = result.getOpenAPI();
-        Paths newPath = new Paths();
-        openAPI.getPaths().forEach((s, pathItem) -> {
-            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-        });
-        openAPI.setPaths(newPath);
-        MockEntities mockEntities = new MockEntities();
-        mockEntities.setTitle(body.getTitle());
-        mockEntities.setDescription(body.getDescription());
-        mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
-        return mockRepositories.save(mockEntities);
+    public MockEntities storeMock(MockVmodel body) throws InvalidMockException {
+        SwaggerParseResult result = null;
+        try {
+            result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
+            OpenAPI openAPI = result.getOpenAPI();
+            Paths newPath = new Paths();
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+            });
+            openAPI.setPaths(newPath);
+            MockEntities mockEntities = new MockEntities();
+            mockEntities.setTitle(body.getTitle());
+            mockEntities.setDescription(body.getDescription());
+            mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
+            return mockRepositories.save(mockEntities);
+        } catch (JsonProcessingException e) {
+            throw new InvalidMockException("invalid mock exception "+e.getMessage());
+        }
     }
 
     public void updateMock(String _id, MockEntities mockEntities) {

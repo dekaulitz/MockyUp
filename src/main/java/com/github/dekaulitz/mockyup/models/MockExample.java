@@ -32,6 +32,7 @@ public class MockExample {
     public static final String x_PATH = "x-path-including";
     public static final String x_QUERY = "x-query-including";
     public static final String x_BODY = "x-body-including";
+    public static final String x_DEFAULT = "x-default";
 
     /**
      * @param request
@@ -117,6 +118,16 @@ public class MockExample {
         return null;
     }
 
+    /**
+     * @desc generate default response
+     * @param value
+     * @return
+     */
+    public static MockExample generateResponseDefault(Object value) {
+        MockExample mockExample = Json.mapper().convertValue(value, MockExample.class);
+        return mockExample;
+    }
+
     private static Map<String, String> decodeQueryString(String query) {
         String[] params = query.split("\\&");
         Map<String, String> map = new HashMap<String, String>();
@@ -127,4 +138,6 @@ public class MockExample {
         }
         return map;
     }
+
+
 }
