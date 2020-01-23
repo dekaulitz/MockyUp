@@ -28,6 +28,8 @@ public class MockEntities implements Serializable {
     private String version;
     @Field
     private String spec;
+    @Field
+    private String swagger;
 
 
 }

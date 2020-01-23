@@ -1,6 +1,8 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log4j2
@@ -77,16 +80,19 @@ public class MockControllers {
                                       HttpServletRequest request) {
         MockExample mock = null;
         try {
-            mock = mocksModel.getMockMocking(request,path, id, body);
+            mock = mocksModel.getMockMocking(request, path, id, body);
             if (mock != null)
                 return this.generateMockResponseEntity(mock);
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InvalidMockException | JsonProcessingException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error(e);
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -128,14 +134,16 @@ public class MockControllers {
     @GetMapping(value = "/mocks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body) {
+    public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body, @RequestParam(value = "spec", required = false) boolean spec) {
         try {
             MockEntities mock = mocksModel.getMockById(id);
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setId(mock.getId());
-            mockResponseVmodel.setSpec(Json.mapper().readValue(mock.getSpec(), OpenAPI.class));
+            mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             mockResponseVmodel.setDescription(mock.getDescription());
             mockResponseVmodel.setTitle(mock.getTitle());
+            if (spec)
+                return ResponseEntity.ok(mockResponseVmodel.getSpec());
             return ResponseEntity.ok(mockResponseVmodel);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
@@ -163,7 +171,7 @@ public class MockControllers {
                 newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
             });
             openAPI.setPaths(newPath);
-            body.setSpec(openAPI);
+            body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(body);
         } catch (InvalidMockException e) {
             log.error(e.getMessage());

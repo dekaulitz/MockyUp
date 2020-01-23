@@ -35,7 +35,7 @@ public class MocksModel {
         return mockRepositories.findAll();
     }
 
-    public MockExample getMockMocking(HttpServletRequest request, String path, String _id, String body) throws NotFoundException, JsonProcessingException {
+    public MockExample getMockMocking(HttpServletRequest request, String path, String _id, String body) throws NotFoundException, JsonProcessingException, InvalidMockException {
         String[] originalPathUri = path.split("\\?");
         Optional<MockEntities> mockEntities = mockRepositories.findById(_id);
         if (!mockEntities.isPresent())
@@ -71,7 +71,9 @@ public class MocksModel {
                 if (openApiPath.equals(String.join("/", regexPath))) {
                     JsonNode jsonNode = Json.mapper().valueToTree(pathItem);
                     Operation ops = Json.mapper().treeToValue(jsonNode.get(request.getMethod().toLowerCase()), Operation.class);
+                    if (ops.getExtensions() == null) throw new NotFoundException("no extension found");
                     Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockExample.X_EXAMPLES);
+                    if (examples == null) throw new NotFoundException("no mock example found");
                     for (Map.Entry<String, Object> extension : examples.entrySet()) {
                        /*
                        if there some example on headers will check every field on request header and mapping with example
@@ -110,8 +112,8 @@ public class MocksModel {
                                 return mock;
                             }
                         }
-                        if(extension.getKey().equals(MockExample.x_DEFAULT)){
-                            mock=MockExample.generateResponseDefault(extension.getValue());
+                        if (extension.getKey().equals(MockExample.x_DEFAULT)) {
+                            mock = MockExample.generateResponseDefault(extension.getValue());
                             if (mock != null) {
                                 return mock;
                             }
@@ -126,6 +128,10 @@ public class MocksModel {
     public MockEntities storeMock(MockVmodel body) throws InvalidMockException {
         SwaggerParseResult result = null;
         try {
+            MockEntities mockEntities = new MockEntities();
+            mockEntities.setSwagger(Json.mapper().writeValueAsString(body.getSpec()));
+            mockEntities.setTitle(body.getTitle());
+            mockEntities.setDescription(body.getDescription());
             result = new OpenAPIParser().readContents(Json.mapper().writeValueAsString(body.getSpec()), null, null);
             OpenAPI openAPI = result.getOpenAPI();
             Paths newPath = new Paths();
@@ -133,13 +139,10 @@ public class MocksModel {
                 newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
             });
             openAPI.setPaths(newPath);
-            MockEntities mockEntities = new MockEntities();
-            mockEntities.setTitle(body.getTitle());
-            mockEntities.setDescription(body.getDescription());
             mockEntities.setSpec(Json.mapper().writeValueAsString(openAPI));
             return mockRepositories.save(mockEntities);
         } catch (JsonProcessingException e) {
-            throw new InvalidMockException("invalid mock exception "+e.getMessage());
+            throw new InvalidMockException("invalid mock exception " + e.getMessage());
         }
     }
 

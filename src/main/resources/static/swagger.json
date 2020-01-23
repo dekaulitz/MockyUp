@@ -134,6 +134,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "spec",
+            "required": false,
+            "description": "id from mongodb collection",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "summary": "get mock detail",
@@ -163,6 +172,9 @@
             "description": "id from mongodb collection",
             "schema": {
               "type": "string"
+            },
+            "x-examples": {
+
             }
           }
         ],

@@ -4,7 +4,21 @@
       {
         "property": {
           "name": "app-id",
-          "value": "123321"
+          "value": null
+        },
+        "response": {
+          "httpCode": 500,
+          "response": {
+            "statusCode": 500,
+            "message": "internal server error",
+            "timestamp": 12321123123
+          }
+        }
+      },
+      {
+        "property": {
+          "name": "app-id",
+          "value": "123123"
         },
         "response": {
           "httpCode": 500,
