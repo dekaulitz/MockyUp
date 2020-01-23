@@ -113,6 +113,20 @@ so im just adding new extension fields:
                                         "timestamp":12321123123
                                     }
                                 }
+                            },
+                            {
+                                "property": {
+                                	"name":"app-id",
+                                	"value": null
+                                },
+                                "response": {
+                                    "httpCode": 500,
+                                    "response": {
+                                        "statusCode": 500,
+                                        "message": "app-id required",
+                                        "timestamp":12321123123
+                                    }
+                                }
                             }
                         ],
                         "x-path-including": [
