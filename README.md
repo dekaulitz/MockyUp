@@ -38,6 +38,7 @@ so im just adding new extension fields:
 * `x-path-including` new extension sub from `x-examples` related with paths example
 * `x-body-including` new extension sub from `x-examples` related with body example
 * `x-query-including` new extension sub from `x-examples` related with query example
+* `x-default` new extension sub from `x-examples` related with default example
 
 <h4>Example structures</h4> 
 
