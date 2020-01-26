@@ -3,7 +3,7 @@
     "x-header-including": [
       {
         "property": {
-          "name": "app-id",
+          "name": "Authrozation",
           "value": null
         },
         "response": {
@@ -121,7 +121,7 @@
     "x-default": {
       "property": {},
       "response": {
-        "httpCode": 404,
+        "httpCode": 200,
         "response": {
           "statusCode": 4004,
           "message": "data not found",

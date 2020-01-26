@@ -172,14 +172,49 @@
             "description": "id from mongodb collection",
             "schema": {
               "type": "string"
-            },
-            "x-examples": {
-
             }
           }
         ],
         "summary": "delete by mock id",
         "operationId": "MockControllers.deleteByMockId",
+        "responses": {
+          "200": {
+            "description": "response when mock successfully call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mockResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "update mock by id",
+        "tags": [
+          "Mocks"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "id from mongodb collection",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/mockRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "response when mock successfully call",
