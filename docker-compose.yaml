@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  mockup:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_HOST=mongodb://host.docker.internal:27017/mongoDbTest
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
