@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Slf4j
 public class MockExample {
     @Getter
     @Setter

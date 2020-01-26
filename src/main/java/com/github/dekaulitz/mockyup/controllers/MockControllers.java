@@ -163,7 +163,7 @@ public class MockControllers {
             MockEntities mock = mocksModel.storeMock(body);
             Paths newPath = new Paths();
             body.setId(mock.getId());
-            OpenAPI openAPI=Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
+            OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
             openAPI.getPaths().forEach((s, pathItem) -> {
                 newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
             });
@@ -191,6 +191,28 @@ public class MockControllers {
         try {
             mocksModel.deleteMock(id);
             return ResponseEntity.ok().build();
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error(e);
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/mocks/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateMockById(@PathVariable String id, @RequestBody MockVmodel body) {
+        try {
+            MockEntities mock = mocksModel.updateMock(id, body);
+            Paths newPath = new Paths();
+            body.setId(mock.getId());
+            OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
+            });
+            openAPI.setPaths(newPath);
+            body.setSpec(Json.mapper().readTree(mock.getSwagger()));
+            return ResponseEntity.ok(body);
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);

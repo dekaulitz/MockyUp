@@ -85,7 +85,7 @@ public class MocksModel {
             throw new NotFoundException("mocks not found");
         }
         this.setEntity(body, mockEntities.get());
-        mockRepositories.insert(mockEntities.get());
+        mockRepositories.save(mockEntities.get());
         return mockEntities.get();
     }
 
