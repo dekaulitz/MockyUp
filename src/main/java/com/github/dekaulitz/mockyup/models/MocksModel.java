@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.parser.OpenAPIParser;

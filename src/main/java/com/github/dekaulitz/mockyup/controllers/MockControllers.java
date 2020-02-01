@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.models.MockExample;
 import com.github.dekaulitz.mockyup.models.MocksModel;
+import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
@@ -149,6 +149,14 @@ public class MockControllers {
             log.error(e);
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    @GetMapping(value = "/health",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity healthCheck() {
+        return ResponseEntity.ok().build();
     }
 
     /**

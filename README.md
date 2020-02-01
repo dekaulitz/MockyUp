@@ -8,7 +8,7 @@ This project build under spring boot framework with spring data mongodb and <a h
 <h4>Requirement</h4>
 Pre requirement you must have:
 
-* Monngodb 
+* Monngodb
 * Java absolutely at least 1.8 version
 * Postman
 
@@ -20,7 +20,7 @@ For build the jar and downloading the library
 ```
 mvn install
 ```
-for running the jar 
+for running the jar
 ```
 java -jar target/mockyup-0.0.1-SNAPSHOT.jar
 ```
@@ -28,6 +28,8 @@ for check swagger docs url
 ```
 http://localhost:8080
 ```
+
+
 
 <h4>How to Add Example on Swagger OAS 3</h4>
 On Openapi version 3 (OAS3) there is some feature that called vendor extension.
@@ -40,7 +42,7 @@ so im just adding new extension fields:
 * `x-query-including` new extension sub from `x-examples` related with query example
 * `x-default` new extension sub from `x-examples` related with default example
 
-<h4>Example structures</h4> 
+<h4>Example structures</h4>
 
 ```
 ..some swagger structure
@@ -143,7 +145,7 @@ so im just adding new extension fields:
                                         "data":{
                                            "name":"admin1",
                                            "email":"test from admin type"
-                                       }                    
+                                       }
                                     }
                                 }
                             },
@@ -238,7 +240,7 @@ so im just adding new extension fields:
                 }
             }
         },
-..some swagger 
+..some swagger
 ```
 For generating the mocks, mockyup generate by order which is if the some header already match with the mocks criteria its will throw the response. ordering the response its deplending how you put `x-examples` value.
 
