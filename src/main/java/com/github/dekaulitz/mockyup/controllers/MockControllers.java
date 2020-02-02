@@ -11,10 +11,15 @@ import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +39,13 @@ public class MockControllers {
     private final MockRepositories mockRepositories;
     @Autowired
     private final MocksModel mocksModel;
+    @Autowired
+    private final MongoTemplate mongoTemplate;
 
-    public MockControllers(MockRepositories mockRepositories, MocksModel mocksModel) {
+    public MockControllers(MockRepositories mockRepositories, MocksModel mocksModel, MongoTemplate mongoTemplate) {
         this.mockRepositories = mockRepositories;
         this.mocksModel = mocksModel;
+        this.mongoTemplate = mongoTemplate;
     }
 
     /**
@@ -72,7 +80,7 @@ public class MockControllers {
             RequestMethod.TRACE},
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity mockingPath(@RequestParam(value = "path", required = false) String path,
+    public ResponseEntity mockingPath(@NonNull @RequestParam(value = "path") String path,
                                       @PathVariable String id, @RequestBody(required = false) String body,
                                       HttpServletRequest request) {
         MockExample mock = null;
@@ -156,7 +164,19 @@ public class MockControllers {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity healthCheck() {
-        return ResponseEntity.ok().build();
+        try {
+            BsonDocument b = new BsonDocument();
+            b.put("ping", new BsonString("1"));
+            Document doc = mongoTemplate.getDb().runCommand(b);
+            if (doc.get("ok").equals(1.0)) {
+                return ResponseEntity.ok("up");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e.getCause());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
     /**
