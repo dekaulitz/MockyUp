@@ -11,7 +11,24 @@
   },
   "servers": [
     {
-      "url": "{http}://localhost:8080",
+      "url": "{scheme}://192.10.180{port}",
+      "variables": {
+        "scheme": {
+          "description": "entry point The Data Set API is accessible via https and http",
+          "enum": [
+            "http",
+            "https"
+          ],
+          "default": "https"
+        },
+        "port": {
+          "description": "port",
+          "default": "?test=123123"
+        }
+      }
+    },
+    {
+      "url": "{http}://localhost:8080?TEST=asdasdsdasd",
       "variables": {
         "http": {
           "description": "entry point The Data Set API is accessible via https and http",
