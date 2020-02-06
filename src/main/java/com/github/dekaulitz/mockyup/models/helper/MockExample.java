@@ -128,9 +128,6 @@ public class MockExample {
             throwInvalidMockExample(mockExample, X_QUERY);
             String cleanQueryString = java.net.URLDecoder.decode(request.getQueryString(), String.valueOf(StandardCharsets.UTF_8));
             String[] queryStrings = cleanQueryString.split("\\?");
-            if (cleanQueryString.contains(mockExample.getProperty().get(MockExample.NAME_PROPERTY) + "=" + mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
-                return mockExample;
-            }
             if (queryStrings.length > 1) {
                 Map<String, String> q = decodeQueryString(queryStrings[1]);
                 for (Map.Entry<String, String> qmap : q.entrySet()) {
@@ -146,8 +143,13 @@ public class MockExample {
             } else {
                 if (mockExample.getProperty().get(VALUE_PROPERTY) == null) {
                     return mockExample;
+                } else {
+                    if (cleanQueryString.contains(mockExample.getProperty().get(MockExample.NAME_PROPERTY) + "=" + mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
+                        return mockExample;
+                    }
                 }
             }
+
         }
         return null;
     }

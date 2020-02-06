@@ -50,7 +50,7 @@ BuildImageDocker() {
 
 RunningAsDocker() {
   BuildImageDocker
-  docker run -it -e DATABASE_HOST=$DATABASE_HOST -e SERVER_PORT=$SERVER_PORT -e WEB_LOG_LEVEL=$WEB_LOG_LEVEL -e LOG_LEVEL=$LOG_LEVEL -p 8080:$SERVER_PORT mockup:latest
+  docker run -itd --name mockup_app -e DATABASE_HOST=$DATABASE_HOST -e SERVER_PORT=$SERVER_PORT -e WEB_LOG_LEVEL=$WEB_LOG_LEVEL -e LOG_LEVEL=$LOG_LEVEL -p 8080:$SERVER_PORT mockup:latest
 }
 
 #check application command run is exist or no
@@ -63,6 +63,10 @@ if [ ! -z ${RUN+x} ]; then
     RunningAsDocker
   elif [ $RUN == "build-image" ]; then
     BuildImageDocker
+  else
+    CheckFile
+    echo "argument not available, we use run jar as default for now!!"
+    RunningAsJar
   fi
 else
   CheckFile
