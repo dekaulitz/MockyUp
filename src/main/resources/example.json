@@ -1,35 +1,121 @@
-[
-  {
-    "x-examples": {
-      "x-header-including": [
-        {
-          "x-if-header": {
-            "app-id": "1233212"
-          },
-          "x-headers-response": {
-            "httpCode": 500,
-            "response": {
-              "statusCode": 500,
-              "message": "internal server error"
-            }
-          }
+{
+  "x-examples": {
+    "x-header-including": [
+      {
+        "property": {
+          "name": "app-id",
+          "value": "123321"
         },
-        {
-          "x-if-header": {
-            "signature": "1233212"
-          },
-          "x-headers-response": {
-            "httpCode": 500,
-            "response": {
-              "statusCode": 601,
-              "message": "internal server error"
+        "response": {
+          "httpCode": 500,
+          "response": {
+            "statusCode": 500,
+            "message": "internal server error",
+            "timestamp": 12321123123
+          }
+        }
+      }
+    ],
+    "x-path-including": [
+      {
+        "property": {
+          "name": "type",
+          "value": "admin"
+        },
+        "response": {
+          "httpCode": 200,
+          "response": {
+            "statusCode": 200,
+            "data": {
+              "name": "admin1",
+              "email": "test from admin type"
             }
           }
         }
-      ],
-      "x-path-including": [],
-      "x-query-including": [],
-      "x-body-including": []
+      },
+      {
+        "property": {
+          "name": "type",
+          "value": "docs"
+        },
+        "response": {
+          "httpCode": 200,
+          "response": {
+            "statusCode": 4300,
+            "message": "dosc success"
+          }
+        }
+      }
+    ],
+    "x-query-including": [
+      {
+        "property": {
+          "name": "from",
+          "value": "indonesia"
+        },
+        "response": {
+          "httpCode": 200,
+          "response": {
+            "statusCode": 4300,
+            "message": "qName success",
+            "httpCode": 200
+          }
+        }
+      },
+      {
+        "property": {
+          "name": "from",
+          "value": "1"
+        },
+        "response": {
+          "httpCode": 200,
+          "response": {
+            "statusCode": 4300,
+            "message": "qValue success"
+          }
+        }
+      }
+    ],
+    "x-body-including": [
+      {
+        "property": {
+          "name": "firstName",
+          "value": "fahmi"
+        },
+        "response": {
+          "httpCode": 200,
+          "response": {
+            "statusCode": 4300,
+            "message": "success"
+          }
+        }
+      },
+      {
+        "property": {
+          "name": "firstName",
+          "value": "test"
+        },
+        "response": {
+          "httpCode": 404,
+          "response": {
+            "statusCode": 4004,
+            "message": "data not found"
+          }
+        }
+      }
+    ],
+    "x-default": {
+      "property": {},
+      "response": {
+        "httpCode": 200,
+        "response": {
+          "statusCode": 4004,
+          "message": "data not found",
+          "data": {
+            "default": "x-response default"
+          }
+        }
+      }
     }
   }
-]
+}
