@@ -4,15 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.models.MocksModel;
+import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
-import com.github.dekaulitz.mockyup.repositories.MockRepositories;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
 import lombok.NonNull;
-import lombok.extern.log4j.Log4j2;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
 import org.bson.Document;
@@ -33,19 +31,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@Log4j2
-public class MockControllers {
-    @Autowired
-    private final MockRepositories mockRepositories;
-    @Autowired
-    private final MocksModel mocksModel;
+//@Log4j2
+public class MockControllers extends BaseController {
     @Autowired
     private final MongoTemplate mongoTemplate;
 
-    public MockControllers(MockRepositories mockRepositories, MocksModel mocksModel, MongoTemplate mongoTemplate) {
-        this.mockRepositories = mockRepositories;
-        this.mocksModel = mocksModel;
+    @Autowired
+    private final MockModel mockModel;
+
+    public MockControllers(MongoTemplate mongoTemplate, MockModel mockModel) {
         this.mongoTemplate = mongoTemplate;
+        this.mockModel = mockModel;
     }
 
     /**
@@ -55,7 +51,7 @@ public class MockControllers {
      */
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> greeting() throws IOException {
-        Resource resource = new ClassPathResource("/static/swagger.json");
+        Resource resource = new ClassPathResource("/public/swagger.json");
         InputStreamReader isReader = new InputStreamReader(resource.getInputStream());
         BufferedReader reader = new BufferedReader(isReader);
         StringBuffer sb = new StringBuffer();
@@ -85,7 +81,7 @@ public class MockControllers {
                                       HttpServletRequest request) {
         MockExample mock = null;
         try {
-            mock = mocksModel.getMockMocking(request, path, id, body);
+            mock = this.mockModel.getMockMocking(request, path, id, body);
             if (mock != null)
                 return this.generateMockResponseEntity(mock);
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
@@ -96,7 +92,7 @@ public class MockControllers {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -108,7 +104,7 @@ public class MockControllers {
     @GetMapping(value = "/mocks")
     public ResponseEntity<List<MockVmodel>> mocks() {
         List<MockVmodel> mockResponseVmodels = new ArrayList<>();
-        for (MockEntities mockEntities : mocksModel.getMocks()) {
+        for (MockEntities mockEntities : this.mockModel.all()) {
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setId(mockEntities.getId());
             mockResponseVmodel.setDescription(mockEntities.getDescription());
@@ -141,7 +137,7 @@ public class MockControllers {
     )
     public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body, @RequestParam(value = "spec", required = false) boolean spec) {
         try {
-            MockEntities mock = mocksModel.getMockById(id);
+            MockEntities mock = this.mockModel.getById(id);
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setId(mock.getId());
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
@@ -154,7 +150,7 @@ public class MockControllers {
             log.error(e.getMessage());
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
@@ -188,7 +184,7 @@ public class MockControllers {
     @PostMapping(value = "/mocks")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
         try {
-            MockEntities mock = mocksModel.storeMock(body);
+            MockEntities mock = this.mockModel.save(body);
             Paths newPath = new Paths();
             body.setId(mock.getId());
             OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
@@ -199,10 +195,10 @@ public class MockControllers {
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(body);
         } catch (InvalidMockException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -217,13 +213,13 @@ public class MockControllers {
     )
     public ResponseEntity deleteByMockId(@PathVariable String id) {
         try {
-            mocksModel.deleteMock(id);
+            this.mockModel.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
@@ -231,7 +227,7 @@ public class MockControllers {
     @PutMapping(value = "/mocks/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateMockById(@PathVariable String id, @RequestBody MockVmodel body) {
         try {
-            MockEntities mock = mocksModel.updateMock(id, body);
+            MockEntities mock = this.mockModel.updateByID(id, body);
             Paths newPath = new Paths();
             body.setId(mock.getId());
             OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
@@ -245,17 +241,8 @@ public class MockControllers {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
-    }
-
-    /**
-     * @param mock
-     * @return
-     * @desc generate mock response base mock data
-     */
-    private ResponseEntity<Object> generateMockResponseEntity(MockExample mock) {
-        return new ResponseEntity<>(mock.getResponse().getResponse(), HttpStatus.valueOf(mock.getResponse().getHttpCode()));
     }
 }

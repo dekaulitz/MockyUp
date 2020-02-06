@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MockResponse {
+public class MockResponseModel {
     private int httpCode;
     private Object response;
 }

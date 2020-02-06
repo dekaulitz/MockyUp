@@ -3,7 +3,7 @@ package com.github.dekaulitz.mockyup.models.helper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
-import com.github.dekaulitz.mockyup.models.MockResponse;
+import com.github.dekaulitz.mockyup.models.MockResponseModel;
 import io.swagger.util.Json;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,8 @@ import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,19 +24,19 @@ public class MockExample {
     @Getter
     @Setter
     private Map<String, Object> property;
-    @Getter
-    @Setter
-    private MockResponse response;
+    public static final String X_PATH = "x-path-including";
 
     public final static String NAME_PROPERTY = "name";
     public final static String VALUE_PROPERTY = "value";
 
     public static final String X_EXAMPLES = "x-examples";
     public static final String X_HEADERS = "x-header-including";
-    public static final String x_PATH = "x-path-including";
-    public static final String x_QUERY = "x-query-including";
-    public static final String x_BODY = "x-body-including";
-    public static final String x_DEFAULT = "x-default";
+    public static final String X_QUERY = "x-query-including";
+    public static final String X_BODY = "x-body-including";
+    public static final String X_DEFAULT = "x-default";
+    @Getter
+    @Setter
+    private MockResponseModel response;
 
     /**
      * @param request
@@ -74,7 +76,7 @@ public class MockExample {
             for (Map<String, Object> stringObjectMap : extension) {
                 JsonNode requestBody = Json.mapper().readTree(body);
                 MockExample mockExample = Json.mapper().convertValue(stringObjectMap, MockExample.class);
-                throwInvalidMockExample(mockExample, x_BODY);
+                throwInvalidMockExample(mockExample, X_BODY);
                 String bodyRequest = requestBody.findPath((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY)).asText();
                 if (!bodyRequest.isEmpty()) {
                     if (bodyRequest.equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
@@ -100,7 +102,7 @@ public class MockExample {
     public static MockExample generateResponnsePath(HttpServletRequest request, List<Map<String, Object>> extension, String[] openAPIPaths, String[] paths) throws InvalidMockException {
         for (Map<String, Object> stringObjectMap : extension) {
             MockExample mockExample = Json.mapper().convertValue(stringObjectMap, MockExample.class);
-            throwInvalidMockExample(mockExample, x_PATH);
+            throwInvalidMockExample(mockExample, X_PATH);
             for (int i = 0; i < openAPIPaths.length; i++) {
                 if (!openAPIPaths[i].equals(paths[i])) {
                     if (openAPIPaths[i].contains((CharSequence) mockExample.getProperty().get(MockExample.NAME_PROPERTY))) {
@@ -120,11 +122,15 @@ public class MockExample {
      * @return
      * @desc generate response query base on query
      */
-    public static MockExample generateResponnseQuery(HttpServletRequest request, List<Map<String, Object>> extension) throws InvalidMockException {
+    public static MockExample generateResponnseQuery(HttpServletRequest request, List<Map<String, Object>> extension) throws InvalidMockException, UnsupportedEncodingException {
         for (Map<String, Object> stringObjectMap : extension) {
             MockExample mockExample = Json.mapper().convertValue(stringObjectMap, MockExample.class);
-            throwInvalidMockExample(mockExample, x_QUERY);
-            String[] queryStrings = request.getQueryString().split("\\?");
+            throwInvalidMockExample(mockExample, X_QUERY);
+            String cleanQueryString = java.net.URLDecoder.decode(request.getQueryString(), String.valueOf(StandardCharsets.UTF_8));
+            String[] queryStrings = cleanQueryString.split("\\?");
+            if (cleanQueryString.contains(mockExample.getProperty().get(MockExample.NAME_PROPERTY) + "=" + mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
+                return mockExample;
+            }
             if (queryStrings.length > 1) {
                 Map<String, String> q = decodeQueryString(queryStrings[1]);
                 for (Map.Entry<String, String> qmap : q.entrySet()) {
@@ -153,14 +159,15 @@ public class MockExample {
      */
     public static MockExample generateResponseDefault(Object value) throws InvalidMockException {
         MockExample mockExample = Json.mapper().convertValue(value, MockExample.class);
-        throwInvalidMockExample(mockExample, x_BODY);
+        throwInvalidMockExample(mockExample, X_BODY);
         return mockExample;
     }
 
-    private static Map<String, String> decodeQueryString(String query) {
+    private static Map<String, String> decodeQueryString(String query) throws InvalidMockException {
         String[] params = query.split("\\&");
         Map<String, String> map = new HashMap<String, String>();
         for (String param : params) {
+            if (param.split("=").length <= 1) throw new InvalidMockException("Invalid query format");
             String name = param.split("=")[0];
             String value = param.split("=")[1];
             map.put(name, value);
