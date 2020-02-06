@@ -28,7 +28,11 @@ for check swagger docs url
 ```
 http://localhost:8080
 ```
-
+swagger ui
+For swagger ui  we are using custom swagger ui that for enable mockup path
+```
+http://localhost:8080/docs-swagger/index.html
+```
 
 
 <h4>How to Add Example on Swagger OAS 3</h4>
