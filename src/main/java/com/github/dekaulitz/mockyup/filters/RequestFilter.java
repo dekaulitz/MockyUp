@@ -22,8 +22,9 @@ import java.util.*;
 @Data
 public class RequestFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(RequestFilter.class);
-    private final static String responseId = "responseId";
-    private final static String clientIp = "clientIp";
+    private final String REQUEST_ID = "requestId";
+    private final String CLIENT_ID = "clientIp";
+    private final String REQUEST_TIME = "requestTime";
 
 
     @Override
@@ -32,23 +33,25 @@ public class RequestFilter extends OncePerRequestFilter {
         long start = System.currentTimeMillis();
         try {
             final String token = getxRequestID(request);
-            MDC.put(clientIp, getClientIP(request));
-            MDC.put(responseId, getLocalHostName() + "-" + token);
-            if (!StringUtils.isEmpty(responseId)) {
-                response.addHeader(responseId, getLocalHostName() + "-" + token);
+            MDC.put(CLIENT_ID, getClientIP(request));
+            MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
+            if (!StringUtils.isEmpty(REQUEST_ID)) {
+                response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
             }
             chain.doFilter(request, response);
+            MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
             log.info("{}", LogsMapper.logRequest(getRequestHeaders(request)));
         } finally {
-            MDC.remove(clientIp);
-            MDC.remove(responseId);
+            MDC.remove(CLIENT_ID);
+            MDC.remove(REQUEST_ID);
+            MDC.remove(REQUEST_TIME);
         }
     }
 
     private String getxRequestID(final HttpServletRequest request) {
         final String token;
-        if (!StringUtils.isEmpty(responseId) && !StringUtils.isEmpty(request.getHeader(responseId))) {
-            token = request.getHeader(responseId);
+        if (!StringUtils.isEmpty(REQUEST_ID) && !StringUtils.isEmpty(request.getHeader(REQUEST_ID))) {
+            token = request.getHeader(REQUEST_ID);
         } else {
             token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
         }

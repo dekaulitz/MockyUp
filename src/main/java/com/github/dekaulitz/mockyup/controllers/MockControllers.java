@@ -102,7 +102,7 @@ public class MockControllers extends BaseController {
      * @desc listing all mocks
      */
     @GetMapping(value = "/mocks")
-    public ResponseEntity<List<MockVmodel>> mocks() {
+    public ResponseEntity mocks() {
         List<MockVmodel> mockResponseVmodels = new ArrayList<>();
         for (MockEntities mockEntities : this.mockModel.all()) {
             MockVmodel mockResponseVmodel = new MockVmodel();
@@ -118,9 +118,9 @@ public class MockControllers extends BaseController {
                 openAPI.setPaths(newPath);
                 mockResponseVmodel.setSpec(openAPI);
                 mockResponseVmodels.add(mockResponseVmodel);
-            } catch (JsonProcessingException e) {
-                log.error(e.getMessage(), e.getCause());
-                ResponseEntity.badRequest().body(e.getMessage());
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return ResponseEntity.ok(mockResponseVmodels);
@@ -150,8 +150,8 @@ public class MockControllers extends BaseController {
             log.error(e.getMessage());
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e.getMessage(), e.getCause());
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -170,8 +170,8 @@ public class MockControllers extends BaseController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e.getCause());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -198,8 +198,8 @@ public class MockControllers extends BaseController {
             log.error(e.getMessage(), e.getCause());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.error(e.getMessage(), e.getCause());
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -219,8 +219,8 @@ public class MockControllers extends BaseController {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e.getMessage(), e.getCause());
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -241,8 +241,8 @@ public class MockControllers extends BaseController {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(e.getMessage(), e.getCause());
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

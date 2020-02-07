@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -73,8 +74,8 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         mockRepositories.deleteById(mockEntities.get().getId());
     }
 
-    public MockExample getMockMocking(HttpServletRequest request, String path, String _id, String body) throws Exception {
-        Optional<MockEntities> mockEntities = this.mockRepositories.findById(_id);
+    public MockExample getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
+        Optional<MockEntities> mockEntities = this.mockRepositories.findById(id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
         String[] originalPathUri = path.split("\\?");

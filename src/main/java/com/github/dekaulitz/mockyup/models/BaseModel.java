@@ -49,35 +49,29 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
         Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockExample.X_EXAMPLES);
         if (examples == null) throw new NotFoundException("no mock example found");
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
-            if (extension.getKey().equals(MockExample.X_HEADERS)) {
-                mock = MockExample.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
-                if (mock != null) {
-                    return mock;
-                }
-            }
-            if (extension.getKey().equals(MockExample.X_BODY)) {
-                mock = MockExample.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
-                if (mock != null) {
-                    return mock;
-                }
-            }
-            if (extension.getKey().equals(MockExample.X_PATH)) {
-                mock = MockExample.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
-                if (mock != null) {
-                    return mock;
-                }
-            }
-            if (extension.getKey().equals(MockExample.X_QUERY)) {
-                mock = MockExample.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
-                if (mock != null) {
-                    return mock;
-                }
-            }
-            if (extension.getKey().equals(MockExample.X_DEFAULT)) {
-                mock = MockExample.generateResponseDefault(extension.getValue());
-                if (mock != null) {
-                    return mock;
-                }
+            switch (extension.getKey()) {
+                case MockExample.X_PATH:
+                    mock = MockExample.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
+                    if (mock != null) return mock;
+                    break;
+                case MockExample.X_HEADERS:
+                    mock = MockExample.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
+                    if (mock != null) return mock;
+                    break;
+                case MockExample.X_QUERY:
+                    mock = MockExample.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
+                    if (mock != null) return mock;
+                    break;
+                case MockExample.X_BODY:
+                    mock = MockExample.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
+                    if (mock != null) return mock;
+                    break;
+                case MockExample.X_DEFAULT:
+                    mock = MockExample.generateResponseDefault(extension.getValue());
+                    if (mock != null) return mock;
+                    break;
+                default:
+                    mock = null;
             }
         }
         return mock;

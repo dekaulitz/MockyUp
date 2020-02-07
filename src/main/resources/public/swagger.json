@@ -1537,7 +1537,7 @@
           "200": {
             "description": "response when mock successfully call",
             "content": {
-              "text/*": {
+              "application/json": {
               }
             }
           }

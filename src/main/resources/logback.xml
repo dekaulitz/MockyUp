@@ -20,15 +20,24 @@
         <file>${LOGS}/application.log</file>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <timestamp>
-                    <fieldName>timestamp</fieldName>
-                </timestamp>
-                <nestedField>
-                    <fieldName>fields</fieldName>
-                    <providers>
-                        <logLevel/>
-                    </providers>
-                </nestedField>
+                <timestamp/>
+                <loggerName/>
+                <threadName/>
+                <logLevel/>
+                <callerData/>
+                <stackTrace/>
+                <context/>
+                <mdc/>
+                <tags/>
+                <logstashMarkers/>
+                <arguments/>
+                <pattern>
+                    <pattern>
+                        {
+                        "json_message": "#asJson{%message}"
+                        }
+                    </pattern>
+                </pattern>
             </providers>
         </encoder>
         <rollingPolicy
@@ -49,7 +58,7 @@
     </root>
 
     <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.github.dekaulitz.mockyup" level="info" additivity="false">
+    <logger name="com.github.dekaulitz.mockyup" level="error" additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>
