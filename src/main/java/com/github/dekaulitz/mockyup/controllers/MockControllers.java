@@ -86,10 +86,10 @@ public class MockControllers extends BaseController {
                 return this.generateMockResponseEntity(mock);
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (InvalidMockException | JsonProcessingException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -218,6 +218,22 @@ public class MockControllers extends BaseController {
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/mocks/{id}/spec", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getMockSpecById(@PathVariable String id) {
+        try {
+            MockEntities mock = this.mockModel.getById(id);
+            MockVmodel mockResponseVmodel = new MockVmodel();
+            mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
+            return ResponseEntity.ok(mockResponseVmodel.getSpec());
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
