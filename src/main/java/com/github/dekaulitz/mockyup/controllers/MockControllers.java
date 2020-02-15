@@ -1,11 +1,13 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
+import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -17,6 +19,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +42,8 @@ public class MockControllers extends BaseController {
     @Autowired
     private final MockModel mockModel;
 
-    public MockControllers(MongoTemplate mongoTemplate, MockModel mockModel) {
+    public MockControllers(LogsMapper logsMapper, MongoTemplate mongoTemplate, MockModel mockModel) {
+        super(logsMapper);
         this.mongoTemplate = mongoTemplate;
         this.mockModel = mockModel;
     }
@@ -183,6 +187,7 @@ public class MockControllers extends BaseController {
      */
     @PostMapping(value = "/mocks")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
+        log.info("{}", body);
         try {
             MockEntities mock = this.mockModel.save(body);
             Paths newPath = new Paths();
@@ -193,6 +198,7 @@ public class MockControllers extends BaseController {
             });
             openAPI.setPaths(newPath);
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
+
             return ResponseEntity.ok(body);
         } catch (InvalidMockException e) {
             log.error(e.getMessage(), e.getCause());
@@ -256,6 +262,19 @@ public class MockControllers extends BaseController {
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/mocks/page", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getMocksPagination(
+            Pageable pageable,
+            @RequestParam(value = "q", required = false) String q) {
+        try {
+            MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q);
+            return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

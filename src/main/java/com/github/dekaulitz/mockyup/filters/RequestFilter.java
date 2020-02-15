@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -25,7 +26,12 @@ public class RequestFilter extends OncePerRequestFilter {
     private final String REQUEST_ID = "requestId";
     private final String CLIENT_ID = "clientIp";
     private final String REQUEST_TIME = "requestTime";
+    @Autowired
+    private final LogsMapper logsMapper;
 
+    public RequestFilter(LogsMapper logsMapper) {
+        this.logsMapper = logsMapper;
+    }
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
@@ -40,7 +46,7 @@ public class RequestFilter extends OncePerRequestFilter {
             }
             chain.doFilter(request, response);
             MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
-            log.info("{}", LogsMapper.logRequest(getRequestHeaders(request)));
+            log.info("{}", this.logsMapper.logRequest(getRequestHeaders(request)));
         } finally {
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);

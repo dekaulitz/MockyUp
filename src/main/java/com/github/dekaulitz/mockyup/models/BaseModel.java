@@ -16,6 +16,7 @@ import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -77,4 +78,17 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
         return mock;
     }
 
+    protected Criteria getSearchParameter(String q) {
+        Criteria criteria = null;
+        if (q != null) {
+            String[] search = q.split(":");
+            if (search.length == 2 && !search[1].isEmpty()) {
+                if (search[0].equals("_id") || search[0].equals("id")) {
+                    criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
+                } else
+                    criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
+            }
+        }
+        return criteria;
+    }
 }
