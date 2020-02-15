@@ -20,7 +20,10 @@ public class ConfigurationHandler implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/docs-swagger/**").addResourceLocations(
+        registry.addResourceHandler("/mocks/docs-swagger/**").addResourceLocations(
                 "classpath:/public/");
+        registry.addResourceHandler("/mocks/ui/static/**").addResourceLocations(
+                "classpath:templates/");
     }
+
 }
