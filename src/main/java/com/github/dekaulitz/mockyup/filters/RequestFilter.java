@@ -39,19 +39,20 @@ public class RequestFilter extends OncePerRequestFilter {
             throws java.io.IOException, ServletException {
         long start = System.currentTimeMillis();
         final String token = getxRequestID(request);
-        MDC.put(CLIENT_ID, getClientIP(request));
-        MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
         if (!StringUtils.isEmpty(REQUEST_ID)) {
             response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
         }
         chain.doFilter(request, response);
-        MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
+        final String requestTime = (System.currentTimeMillis() - start) + "ms";
         Map<String, Object> req = new HashMap<>();
         req.put("headers", getRequestHeaders(request));
         req.put("endpoint", request.getRequestURI());
         req.put("method", request.getMethod());
         req.put("responseStatus", response.getStatus());
         CompletableFuture.runAsync(() -> {
+            MDC.put(CLIENT_ID, getClientIP(request));
+            MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
+            MDC.put(REQUEST_TIME, requestTime);
             log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);
