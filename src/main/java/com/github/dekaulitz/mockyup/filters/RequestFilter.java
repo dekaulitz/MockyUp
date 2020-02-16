@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Data
@@ -37,21 +38,25 @@ public class RequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
             throws java.io.IOException, ServletException {
         long start = System.currentTimeMillis();
-        try {
-            final String token = getxRequestID(request);
-            MDC.put(CLIENT_ID, getClientIP(request));
-            MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
-            if (!StringUtils.isEmpty(REQUEST_ID)) {
-                response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
-            }
-            chain.doFilter(request, response);
-            MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
-            log.info("{}", this.logsMapper.logRequest(getRequestHeaders(request)));
-        } finally {
+        final String token = getxRequestID(request);
+        MDC.put(CLIENT_ID, getClientIP(request));
+        MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
+        if (!StringUtils.isEmpty(REQUEST_ID)) {
+            response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
+        }
+        chain.doFilter(request, response);
+        MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
+        Map<String, Object> req = new HashMap<>();
+        req.put("headers", getRequestHeaders(request));
+        req.put("endpoint", request.getRequestURI());
+        req.put("method", request.getMethod());
+        req.put("responseStatus", response.getStatus());
+        CompletableFuture.runAsync(() -> {
+            log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);
             MDC.remove(REQUEST_TIME);
-        }
+        });
     }
 
     private String getxRequestID(final HttpServletRequest request) {

@@ -115,19 +115,21 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
             if (openAPIPaths.length == paths.length) {
                 // converting request path to original for searching data
                 for (int i = 0; i < openAPIPaths.length; i++) {
+                    //checking path parameter
                     if (!openAPIPaths[i].equals(paths[i])) {
                         if (openAPIPaths[i].contains("*")) {
                             regexPath[i] = openAPIPaths[i];
                         }
                     } else {
-                        regexPath[i] = openAPIPaths[i];
+                        //this is for checking wildcard with path parameter
+                        if (!paths[i].contains("*") && openAPIPaths[i].equals(paths[i])) {
+                            regexPath[i] = openAPIPaths[i];
+                        }
                     }
                 }
+                //check if current openapi path equal with regexpath (path)
                 if (openApiPath.equals(String.join("/", regexPath)))
                     return getMockResponse(pathItem, request, body, openAPIPaths, paths);
-                else {
-                    return getMockResponse(pathItem, request, body, openAPIPaths, paths);
-                }
             }
         }
         return null;
