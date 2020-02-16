@@ -40,8 +40,8 @@ RunningAsJar() {
   exit
 }
 BuildImageDocker() {
-  mvn install
   if [ -z "${DOCKERFILE+x}" ]; then
+    mvn install
     docker build -t $APPLICATION_NAME:latest .
   else
     docker build -t ${APPLICATION_NAME}:latest -f ${DOCKERFILE} .
