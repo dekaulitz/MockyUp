@@ -53,7 +53,7 @@ public class MockControllers extends BaseController {
      * @throws IOException
      * @desc showing swagger doc
      */
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/mocks/docs", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> greeting() throws IOException {
         Resource resource = new ClassPathResource("/public/swagger.json");
         InputStreamReader isReader = new InputStreamReader(resource.getInputStream());
@@ -105,7 +105,7 @@ public class MockControllers extends BaseController {
      * @return
      * @desc listing all mocks
      */
-    @GetMapping(value = "/mocks")
+    @GetMapping(value = "/mocks/list")
     public ResponseEntity mocks() {
         List<MockVmodel> mockResponseVmodels = new ArrayList<>();
         for (MockEntities mockEntities : this.mockModel.all()) {
@@ -159,33 +159,13 @@ public class MockControllers extends BaseController {
         }
     }
 
-
-    @GetMapping(value = "/health",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity healthCheck() {
-        try {
-            BsonDocument b = new BsonDocument();
-            b.put("ping", new BsonString("1"));
-            Document doc = mongoTemplate.getDb().runCommand(b);
-            if (doc.get("ok").equals(1.0)) {
-                return ResponseEntity.ok("up");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     /**
      * @param body
      * @return
      * @throws JsonProcessingException
      * @desc storing the mocks
      */
-    @PostMapping(value = "/mocks")
+    @PostMapping(value = "/mocks/store")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
         log.info("{}", body);
         try {
@@ -209,6 +189,27 @@ public class MockControllers extends BaseController {
         }
     }
 
+    @GetMapping(value = "/health",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity healthCheck() {
+        try {
+            BsonDocument b = new BsonDocument();
+            b.put("ping", new BsonString("1"));
+            Document doc = mongoTemplate.getDb().runCommand(b);
+            if (doc.get("ok").equals(1.0)) {
+                return ResponseEntity.ok("up");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
     /**
      * @param id
      * @return
@@ -229,7 +230,6 @@ public class MockControllers extends BaseController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping(value = "/mocks/{id}/spec", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMockSpecById(@PathVariable String id) {
         try {

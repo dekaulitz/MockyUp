@@ -61,7 +61,7 @@
     }
   ],
   "paths": {
-    "/": {
+    "/mocks/docs": {
       "get": {
         "tags": [
           "Docs"
@@ -94,7 +94,7 @@
         }
       }
     },
-    "/mocks": {
+    "/mocks/store": {
       "post": {
         "tags": [
           "Mocks"
@@ -451,7 +451,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/mocks/list": {
       "get": {
         "tags": [
           "Mocks"
@@ -1922,6 +1924,9 @@
     },
     "/mocks/{id}/spec": {
       "get": {
+        "tags": [
+          "Mocks"
+        ],
         "summary": "get spec swagger by mongodbId",
         "operationId": "getMockSpecById",
         "parameters": [
@@ -2272,6 +2277,9 @@
     },
     "/mocks/page": {
       "get": {
+        "tags": [
+          "Mocks"
+        ],
         "summary": "get paging",
         "operationId": "MockControllers.getMocksPagination",
         "parameters": [
