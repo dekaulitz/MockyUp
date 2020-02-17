@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-set +o histexpand
 #set variable from args
 for i in "$@"; do
   case ${i} in
