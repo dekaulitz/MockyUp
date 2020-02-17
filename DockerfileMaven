@@ -1,10 +1,9 @@
-FROM maven:3.5-jdk-8 AS build
-COPY src /app/src
-COPY pom.xml /app/src
-RUN mvn -f /app/src/pom.xml clean package
+FROM maven:3.6.3-ibmjava-8-alpine AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
 
 FROM openjdk:8-alpine
-COPY --from=build /app/src/target/mockyup-0.0.1-SNAPSHOT.jar /usr/app/app.jar
+COPY --from=build /home/app/target/mockyup-0.0.1-SNAPSHOT.jar /usr/app/app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/app/app.jar"]
-clear
