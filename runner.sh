@@ -24,7 +24,7 @@ done
 CheckFile() {
   if [ ! -z "${ENVIRONMENT+x}" ]; then
     echo "load configuration from "${ENVIRONMENT}
-    ENVIRONMENT=".env."${ENVIRONMENT}
+    ENVIRONMENT=${ENVIRONMENT}
   else
     echo "-env or --environment argument not available, we use default variable value 'dev' for now!!"
     ENVIRONMENT=".env.dev"
