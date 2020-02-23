@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-set +o histexpand
 #set variable from args
 for i in "$@"; do
   case ${i} in
@@ -26,7 +24,7 @@ done
 CheckFile() {
   if [ ! -z "${ENVIRONMENT+x}" ]; then
     echo "load configuration from "${ENVIRONMENT}
-    ENVIRONMENT=".env."${ENVIRONMENT}
+    ENVIRONMENT=${ENVIRONMENT}
   else
     echo "-env or --environment argument not available, we use default variable value 'dev' for now!!"
     ENVIRONMENT=".env.dev"
@@ -40,8 +38,8 @@ RunningAsJar() {
   exit
 }
 BuildImageDocker() {
-  mvn install
   if [ -z "${DOCKERFILE+x}" ]; then
+    mvn install
     docker build -t $APPLICATION_NAME:latest .
   else
     docker build -t ${APPLICATION_NAME}:latest -f ${DOCKERFILE} .

@@ -161,7 +161,7 @@ public class MockExample {
      */
     public static MockExample generateResponseDefault(Object value) throws InvalidMockException {
         MockExample mockExample = Json.mapper().convertValue(value, MockExample.class);
-        throwInvalidMockExample(mockExample, X_BODY);
+        throwInvalidMockExample(mockExample, X_DEFAULT);
         return mockExample;
     }
 
