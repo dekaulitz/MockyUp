@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,7 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
                     if (mock != null) return mock;
                     break;
                 case MockExample.X_DEFAULT:
-                    mock = MockExample.generateResponseDefault(extension.getValue());
+                    mock = MockExample.generateResponseDefault((LinkedHashMap<String,Object>)extension.getValue());
                     if (mock != null) return mock;
                     break;
                 default:
