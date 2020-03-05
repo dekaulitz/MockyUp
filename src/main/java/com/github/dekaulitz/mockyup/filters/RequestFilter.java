@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Data
@@ -25,27 +27,37 @@ public class RequestFilter extends OncePerRequestFilter {
     private final String REQUEST_ID = "requestId";
     private final String CLIENT_ID = "clientIp";
     private final String REQUEST_TIME = "requestTime";
+    @Autowired
+    private final LogsMapper logsMapper;
 
+    public RequestFilter(LogsMapper logsMapper) {
+        this.logsMapper = logsMapper;
+    }
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
             throws java.io.IOException, ServletException {
         long start = System.currentTimeMillis();
-        try {
-            final String token = getxRequestID(request);
+        final String token = getxRequestID(request);
+        if (!StringUtils.isEmpty(REQUEST_ID)) {
+            response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
+        }
+        chain.doFilter(request, response);
+        final String requestTime = (System.currentTimeMillis() - start) + "ms";
+        Map<String, Object> req = new HashMap<>();
+        req.put("headers", getRequestHeaders(request));
+        req.put("endpoint", request.getRequestURI());
+        req.put("method", request.getMethod());
+        req.put("responseStatus", response.getStatus());
+        CompletableFuture.runAsync(() -> {
             MDC.put(CLIENT_ID, getClientIP(request));
             MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
-            if (!StringUtils.isEmpty(REQUEST_ID)) {
-                response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
-            }
-            chain.doFilter(request, response);
-            MDC.put(REQUEST_TIME, (System.currentTimeMillis() - start) + "ms");
-            log.info("{}", LogsMapper.logRequest(getRequestHeaders(request)));
-        } finally {
+            MDC.put(REQUEST_TIME, requestTime);
+            log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);
             MDC.remove(REQUEST_TIME);
-        }
+        });
     }
 
     private String getxRequestID(final HttpServletRequest request) {

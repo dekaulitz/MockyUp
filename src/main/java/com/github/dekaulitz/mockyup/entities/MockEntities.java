@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 
-@Document
+@Document(collection = "mockup")
 @Getter
 @Setter
 @NoArgsConstructor

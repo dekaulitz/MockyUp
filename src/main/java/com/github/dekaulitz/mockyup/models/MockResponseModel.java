@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class MockResponseModel {
     private int httpCode;
     private Object response;
+    private HashMap<String, Object> headers;
 }
