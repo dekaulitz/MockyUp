@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -82,12 +83,14 @@ public class MockControllers extends BaseController {
     )
     public ResponseEntity mockingPath(@NonNull @RequestParam(value = "path") String path,
                                       @PathVariable String id, @RequestBody(required = false) String body,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request, HttpServletResponse response) {
         MockExample mock = null;
         try {
             mock = this.mockModel.getMockMocking(request, path, id, body);
             if (mock != null)
+            {
                 return this.generateMockResponseEntity(mock);
+            }
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (NotFoundException e) {
             log.error(e.getMessage(), e);
