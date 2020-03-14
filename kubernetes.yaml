@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-mockup
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: local-mock
+  template:
+    metadata:
+      labels:
+        app: local-mock
+    spec:
+      containers:
+        - name: local-mock
+          image: mockup:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APPLICATION_NAME
+              value: "mockup"
+            - name: DATABASE_HOST
+              value: "mongodb://host.docker.internal:27017/mongoDbTest"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: WEB_LOG_LEVEL
+              value: "debug"
+            - name: LOG_LEVEL
+              value: "info"
+
