@@ -11,14 +11,10 @@ public class UiController extends BaseController {
         super(logsMapper);
     }
 
-    @GetMapping(value = "/mocks")
+    @GetMapping(value = "/")
     public String loadUi() {
         return "index";
     }
 
-    @GetMapping(value = "/mocks/swagger")
-    public String swagger() {
-        return "swagger";
-    }
 
 }
