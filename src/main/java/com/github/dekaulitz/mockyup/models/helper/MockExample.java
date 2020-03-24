@@ -47,7 +47,7 @@ public class MockExample {
      */
     public static MockExample generateResponseHeader(HttpServletRequest request, List<Map<String, Object>> extension) throws InvalidMockException {
         for (Map<String, Object> stringObjectMap : extension) {
-            MockExample mockExample= new MockExample();
+            MockExample mockExample = new MockExample();
             mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
             mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
             throwInvalidMockExample(mockExample, X_HEADERS);
@@ -78,18 +78,23 @@ public class MockExample {
                 || request.getMethod().equals(HttpMethod.PUT.toString()))
             for (Map<String, Object> stringObjectMap : extension) {
                 JsonNode requestBody = Json.mapper().readTree(body);
-                MockExample mockExample= new MockExample();
+                MockExample mockExample = new MockExample();
                 mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
                 mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
                 throwInvalidMockExample(mockExample, X_BODY);
-                String bodyRequest = requestBody.findPath((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY)).asText();
-                if (!bodyRequest.isEmpty()) {
-                    if (bodyRequest.equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
-                        return mockExample;
-                    }
-                } else {
-                    if (mockExample.getProperty().get(VALUE_PROPERTY) == null) {
-                        return mockExample;
+                boolean isBodyExist = requestBody.has((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY));
+                if (isBodyExist) {
+                    String bodyRequest = requestBody.findPath((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY)).asText();
+                    if (bodyRequest != null) {
+                        if (!bodyRequest.isEmpty()) {
+                            if (bodyRequest.equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
+                                return mockExample;
+                            }
+                        } else {
+                            if (mockExample.getProperty().get(VALUE_PROPERTY) == null) {
+                                return mockExample;
+                            }
+                        }
                     }
                 }
             }
@@ -106,7 +111,7 @@ public class MockExample {
      */
     public static MockExample generateResponnsePath(HttpServletRequest request, List<Map<String, Object>> extension, String[] openAPIPaths, String[] paths) throws InvalidMockException {
         for (Map<String, Object> stringObjectMap : extension) {
-            MockExample mockExample= new MockExample();
+            MockExample mockExample = new MockExample();
             mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
             mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
 
@@ -132,7 +137,7 @@ public class MockExample {
      */
     public static MockExample generateResponnseQuery(HttpServletRequest request, List<Map<String, Object>> extension) throws InvalidMockException, UnsupportedEncodingException {
         for (Map<String, Object> stringObjectMap : extension) {
-            MockExample mockExample= new MockExample();
+            MockExample mockExample = new MockExample();
             mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
             mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
             throwInvalidMockExample(mockExample, X_QUERY);
@@ -169,8 +174,8 @@ public class MockExample {
      * @return
      * @desc generate default response
      */
-    public static MockExample generateResponseDefault(LinkedHashMap<String,Object> value) throws InvalidMockException {
-        MockExample mockExample= new MockExample();
+    public static MockExample generateResponseDefault(LinkedHashMap<String, Object> value) throws InvalidMockException {
+        MockExample mockExample = new MockExample();
         mockExample.setProperty(JsonMapper.mapper().convertValue(value.get("property"), Map.class));
         mockExample.setResponse(JsonMapper.mapper().convertValue(value.get("response"), MockResponseModel.class));
         throwInvalidMockExample(mockExample, X_DEFAULT);
