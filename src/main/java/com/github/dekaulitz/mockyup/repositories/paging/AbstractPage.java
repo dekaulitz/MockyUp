@@ -66,6 +66,7 @@ public abstract class AbstractPage<T> implements BasePage, Serializable {
             query.addCriteria(this.criteria);
             count.addCriteria(this.criteria);
         }
+        query.fields().include("_id").include("title").include("description");
         query.with(pageable);
         this.size = pageable.getPageSize();
         this.rows = mongoTemplate.find(query, entityClass);

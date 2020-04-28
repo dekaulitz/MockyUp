@@ -31,8 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 //@Log4j2
@@ -110,27 +108,7 @@ public class MockControllers extends BaseController {
      */
     @GetMapping(value = "/mocks/list")
     public ResponseEntity mocks() {
-        List<MockVmodel> mockResponseVmodels = new ArrayList<>();
-        for (MockEntities mockEntities : this.mockModel.all()) {
-            MockVmodel mockResponseVmodel = new MockVmodel();
-            mockResponseVmodel.setId(mockEntities.getId());
-            mockResponseVmodel.setDescription(mockEntities.getDescription());
-            mockResponseVmodel.setTitle(mockEntities.getTitle());
-            try {
-                OpenAPI openAPI = Json.mapper().readValue(mockEntities.getSpec(), OpenAPI.class);
-                Paths newPath = new Paths();
-                openAPI.getPaths().forEach((s, pathItem) -> {
-                    newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
-                });
-                openAPI.setPaths(newPath);
-                mockResponseVmodel.setSpec(openAPI);
-                mockResponseVmodels.add(mockResponseVmodel);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-        return ResponseEntity.ok(mockResponseVmodels);
+        return ResponseEntity.ok(this.mockModel.all());
     }
 
     /**

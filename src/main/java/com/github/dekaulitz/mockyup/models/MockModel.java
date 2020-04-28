@@ -14,6 +14,7 @@ import io.swagger.v3.oas.models.PathItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,9 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     @Override
     public List<MockEntities> all() {
-        return this.mockRepositories.findAll();
+        Query query = new Query();
+        query.fields().include("_id").include("title").include("description");
+        return mongoTemplate.find(query, MockEntities.class);
     }
 
     @Override
