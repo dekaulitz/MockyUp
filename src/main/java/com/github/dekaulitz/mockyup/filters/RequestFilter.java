@@ -40,7 +40,7 @@ public class RequestFilter extends OncePerRequestFilter {
         long start = System.currentTimeMillis();
         final String token = getxRequestID(request);
         if (!StringUtils.isEmpty(REQUEST_ID)) {
-            response.addHeader(REQUEST_ID, getLocalHostName() + "-" + token);
+            response.addHeader(REQUEST_ID,  token);
         }
         chain.doFilter(request, response);
         final String requestTime = (System.currentTimeMillis() - start) + "ms";
@@ -51,7 +51,7 @@ public class RequestFilter extends OncePerRequestFilter {
         req.put("responseStatus", response.getStatus());
         CompletableFuture.runAsync(() -> {
             MDC.put(CLIENT_ID, getClientIP(request));
-            MDC.put(REQUEST_ID, getLocalHostName() + "-" + token);
+            MDC.put(REQUEST_ID, token);
             MDC.put(REQUEST_TIME, requestTime);
             log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
@@ -88,18 +88,6 @@ public class RequestFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilterErrorDispatch() {
         return false;
-    }
-
-    private String getLocalHostName() {
-        InetAddress ip;
-        try {
-            ip = InetAddress.getLocalHost();
-            return ip.getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            log.error(e.getMessage(), e);
-        }
-        return null;
     }
 
     private Map<String, Object> getRequestHeaders(HttpServletRequest request) {
