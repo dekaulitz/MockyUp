@@ -2,13 +2,14 @@ package com.github.dekaulitz.mockyup.models.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.models.MockResponseModel;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import io.swagger.util.Json;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;

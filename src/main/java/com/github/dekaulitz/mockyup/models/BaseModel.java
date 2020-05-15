@@ -25,6 +25,15 @@ import java.util.List;
 import java.util.Map;
 
 abstract class BaseModel<M, M1> implements Model<M, M1> {
+
+    interface Transform<M, M1> {
+        M transform(M1 v);
+    }
+
+    protected M transform(M1 b, Transform fobj) {
+        return (M) fobj.transform(b);
+    }
+
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     public void setMockEntity(MockVmodel body, MockEntities mockEntities) throws JsonProcessingException {
@@ -69,7 +78,7 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
                     if (mock != null) return mock;
                     break;
                 case MockExample.X_DEFAULT:
-                    mock = MockExample.generateResponseDefault((LinkedHashMap<String,Object>)extension.getValue());
+                    mock = MockExample.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue());
                     if (mock != null) return mock;
                     break;
                 default:
@@ -92,4 +101,6 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
         }
         return criteria;
     }
+
+
 }

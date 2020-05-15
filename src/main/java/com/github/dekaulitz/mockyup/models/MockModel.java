@@ -5,7 +5,7 @@ import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
-import com.github.dekaulitz.mockyup.repositories.MockRepositories;
+import com.github.dekaulitz.mockyup.repositories.MockRepository;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.models.PathItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,25 +26,23 @@ import java.util.Optional;
 public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     @Autowired
-    private final MockRepositories mockRepositories;
+    private final MockRepository mockRepository;
     @Autowired
     private final MongoTemplate mongoTemplate;
 
-    public MockModel(MockRepositories mockRepositories, MongoTemplate mongoTemplate) {
-        this.mockRepositories = mockRepositories;
+    public MockModel(MockRepository mockRepository, MongoTemplate mongoTemplate) {
+        this.mockRepository = mockRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
     @Override
     public List<MockEntities> all() {
-        Query query = new Query();
-        query.fields().include("_id").include("title").include("description");
-        return mongoTemplate.find(query, MockEntities.class);
+        return this.mockRepository.findAll();
     }
 
     @Override
     public MockEntities getById(String id) throws NotFoundException {
-        Optional<MockEntities> mockEntities = this.mockRepositories.findById(id);
+        Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException("mocks not found");
         }
@@ -57,7 +54,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         try {
             MockEntities mockEntities = new MockEntities();
             this.setMockEntity(view, mockEntities);
-            return this.mockRepositories.save(mockEntities);
+            return this.mockRepository.save(mockEntities);
         } catch (JsonProcessingException e) {
             throw new InvalidMockException("invalid mock exception " + e.getMessage());
         }
@@ -65,22 +62,22 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     @Override
     public MockEntities updateByID(String id, MockVmodel view) throws NotFoundException, JsonProcessingException {
-        Optional<MockEntities> mockEntities = mockRepositories.findById(id);
+        Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException("mocks not found");
         }
         this.setMockEntity(view, mockEntities.get());
-        mockRepositories.save(mockEntities.get());
+        mockRepository.save(mockEntities.get());
         return mockEntities.get();
     }
 
     @Override
     public void deleteById(String id) throws NotFoundException {
-        Optional<MockEntities> mockEntities = this.mockRepositories.findById(id);
+        Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException("mocks not found");
         }
-        mockRepositories.deleteById(mockEntities.get().getId());
+        mockRepository.deleteById(mockEntities.get().getId());
     }
 
     @Override
@@ -94,7 +91,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
 
     public MockExample getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
-        Optional<MockEntities> mockEntities = this.mockRepositories.findById(id);
+        Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
         String[] originalPathUri = path.split("\\?");
