@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends MongoRepository<UserEntities, String> {
+    UserEntities findFirstByUsername(String userName);
+
+    UserEntities findByIdAndUsername(String id, String username);
+
+    boolean existsByUsername(String username);
 }

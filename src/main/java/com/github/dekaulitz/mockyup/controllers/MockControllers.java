@@ -2,13 +2,16 @@ package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
+import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
+import com.github.dekaulitz.mockyup.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
+import com.github.dekaulitz.mockyup.vmodels.UserMocks;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
@@ -24,6 +27,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +59,7 @@ public class MockControllers extends BaseController {
      * @throws IOException
      * @desc showing swagger doc
      */
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/docs", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> greeting() throws IOException {
         Resource resource = new ClassPathResource("/public/swagger.json");
@@ -108,6 +114,7 @@ public class MockControllers extends BaseController {
      * @return
      * @desc listing all mocks
      */
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/list")
     public ResponseEntity mocks() {
         return ResponseEntity.ok(this.mockModel.all());
@@ -119,17 +126,33 @@ public class MockControllers extends BaseController {
      * @return
      * @desc get mocking detail
      */
-    @GetMapping(value = "/mocks/{id}",
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @GetMapping(value = "/mocks/{id}/detail",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body, @RequestParam(value = "spec", required = false) boolean spec) {
         try {
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             MockEntities mock = this.mockModel.getById(id);
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setId(mock.getId());
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             mockResponseVmodel.setDescription(mock.getDescription());
             mockResponseVmodel.setTitle(mock.getTitle());
+            //check if the user is exist
+            if (mock.getUsers() != null) {
+                List<UserMocks> userMockss = new ArrayList<>();
+                for (UserMocksEntities userMocksEntities : mock.getUsers()) {
+                    if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())) {
+                        UserMocks userMocks = new UserMocks();
+                        userMocks.setUserId(userMocksEntities.getUserId());
+                        userMocks.setAccess(userMocksEntities.getAccess());
+                        userMockss.add(userMocks);
+                        break;
+                    }
+                }
+                mockResponseVmodel.setUsers(userMockss);
+            }
             if (spec)
                 return ResponseEntity.ok(mockResponseVmodel.getSpec());
             return ResponseEntity.ok(mockResponseVmodel);
@@ -148,11 +171,13 @@ public class MockControllers extends BaseController {
      * @throws JsonProcessingException
      * @desc storing the mocks
      */
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @PostMapping(value = "/mocks/store")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
         log.info("{}", body);
         try {
-            MockEntities mock = this.mockModel.save(body);
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            MockEntities mock = this.mockModel.save(body, authenticationProfileModel);
             Paths newPath = new Paths();
             body.setId(mock.getId());
             OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
@@ -192,18 +217,19 @@ public class MockControllers extends BaseController {
     }
 
 
-
     /**
      * @param id
      * @return
      * @desc delete mock by id
      */
-    @DeleteMapping(value = "/mocks/{id}",
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
+    @DeleteMapping(value = "/mocks/{id}/delete",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity deleteByMockId(@PathVariable String id) {
         try {
-            this.mockModel.deleteById(id);
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            this.mockModel.deleteById(id, authenticationProfileModel);
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             log.error(e.getMessage());
@@ -213,6 +239,8 @@ public class MockControllers extends BaseController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/spec", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMockSpecById(@PathVariable String id) {
         try {
@@ -229,10 +257,12 @@ public class MockControllers extends BaseController {
         }
     }
 
-    @PutMapping(value = "/mocks/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
+    @PutMapping(value = "/mocks/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateMockById(@PathVariable String id, @RequestBody MockVmodel body) {
         try {
-            MockEntities mock = this.mockModel.updateByID(id, body);
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            MockEntities mock = this.mockModel.updateByID(id, body, authenticationProfileModel);
             Paths newPath = new Paths();
             body.setId(mock.getId());
             OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
@@ -251,12 +281,14 @@ public class MockControllers extends BaseController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/page", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMocksPagination(
             Pageable pageable,
             @RequestParam(value = "q", required = false) String q) {
         try {
-            MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q);
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q, authenticationProfileModel);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

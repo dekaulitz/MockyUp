@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.models.PathItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +52,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     }
 
     @Override
-    public MockEntities save(MockVmodel view) throws InvalidMockException {
+    public MockEntities save(MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
         try {
             MockEntities mockEntities = new MockEntities();
             this.setMockEntity(view, mockEntities);
@@ -61,7 +63,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     }
 
     @Override
-    public MockEntities updateByID(String id, MockVmodel view) throws NotFoundException, JsonProcessingException {
+    public MockEntities updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, JsonProcessingException {
         Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException("mocks not found");
@@ -72,7 +74,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     }
 
     @Override
-    public void deleteById(String id) throws NotFoundException {
+    public void deleteById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException("mocks not found");
@@ -81,10 +83,15 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     }
 
     @Override
-    public MockEntitiesPage paging(Pageable pageable, String q) {
+    public MockEntitiesPage paging(Pageable pageable, String q, AuthenticationProfileModel authenticationProfileModel) {
         MockEntitiesPage basePage = new MockEntitiesPage();
         basePage.setConnection(mongoTemplate);
+        //add search query param
         basePage.addCriteria(q);
+        //selected field
+        basePage.getQuery().fields().include("_id").include("title").include("description").include("users");
+        //add additional criteria or custom criteria
+        basePage.addAdditionalCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
         basePage.setPageable(pageable).build(MockEntities.class);
         return basePage;
     }

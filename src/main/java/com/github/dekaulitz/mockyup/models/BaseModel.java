@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
+import com.github.dekaulitz.mockyup.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,14 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
         });
         openAPI.setPaths(newPath);
         mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+        List<UserMocksEntities> users = new ArrayList<>();
+        body.getUsers().forEach(userMocks -> {
+            UserMocksEntities user = new UserMocksEntities();
+            user.setAccess(userMocks.getAccess());
+            user.setUserId(userMocks.getUserId());
+            users.add(user);
+        });
+        mockEntities.setUsers(users);
     }
 
     public MockExample getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths)

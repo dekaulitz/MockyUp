@@ -48,19 +48,23 @@ public class MockExample {
      */
     public static MockExample generateResponseHeader(HttpServletRequest request, List<Map<String, Object>> extension) throws InvalidMockException {
         for (Map<String, Object> stringObjectMap : extension) {
-            MockExample mockExample = new MockExample();
-            mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
-            mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
-            throwInvalidMockExample(mockExample, X_HEADERS);
-            String requestHeader = request.getHeader((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY));
-            if (requestHeader != null) {
-                if (requestHeader.equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
-                    return mockExample;
+            try {
+                MockExample mockExample = new MockExample();
+                mockExample.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
+                mockExample.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
+                throwInvalidMockExample(mockExample, X_HEADERS);
+                String requestHeader = request.getHeader((String) mockExample.getProperty().get(MockExample.NAME_PROPERTY));
+                if (requestHeader != null) {
+                    if (requestHeader.equals(mockExample.getProperty().get(MockExample.VALUE_PROPERTY))) {
+                        return mockExample;
+                    }
+                } else {
+                    if (mockExample.getProperty().get(VALUE_PROPERTY) == null) {
+                        return mockExample;
+                    }
                 }
-            } else {
-                if (mockExample.getProperty().get(VALUE_PROPERTY) == null) {
-                    return mockExample;
-                }
+            } catch (Exception e) {
+                throw new InvalidMockException("invalid mocks exception " + e.getMessage());
             }
         }
         return null;

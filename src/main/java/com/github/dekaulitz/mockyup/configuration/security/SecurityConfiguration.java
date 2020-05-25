@@ -39,7 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 new AntPathRequestMatcher("/mocks/**/update"),
                 new AntPathRequestMatcher("/mocks/**/delete"),
                 new AntPathRequestMatcher("/mocks/store"),
-                new AntPathRequestMatcher("/mocks/**/detail")
+                new AntPathRequestMatcher("/mocks/**/detail"),
+                new AntPathRequestMatcher("/mocks/**/spec"),
+                new AntPathRequestMatcher("/mocks/addUser"),
+                new AntPathRequestMatcher("/mocks/users"),
+                new AntPathRequestMatcher("/mocks/user/**/update"),
+                new AntPathRequestMatcher("/mocks/user/**/detail")
         )));
         filter.setAuthenticationSuccessHandler(new SecurityAuthenticationSuccess());
         return filter;

@@ -2,11 +2,13 @@ package com.github.dekaulitz.mockyup.entities;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "mockup")
 @Getter
@@ -29,6 +31,9 @@ public class MockEntities implements Serializable {
     private String spec;
     @Field
     private String swagger;
+    @Field
+    @Indexed
+    private List<UserMocksEntities> users;
 
     private Date createdDate;
 

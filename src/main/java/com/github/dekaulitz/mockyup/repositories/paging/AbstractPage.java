@@ -33,7 +33,9 @@ public abstract class AbstractPage<T> implements BasePage, Serializable {
     private Criteria criteria;
     private MongoTemplate mongoTemplate;
     private Pageable pageable;
-
+    @Getter
+    private Query query = new Query();
+    private Query count = new Query();
 
     @Autowired
     @Override
@@ -59,14 +61,18 @@ public abstract class AbstractPage<T> implements BasePage, Serializable {
         }
     }
 
+    //add additional criteria
+    public void addAdditionalCriteria(Criteria criteria) {
+        query.addCriteria(criteria);
+        count.addCriteria(criteria);
+    }
+
     public void build(Class<T> entityClass) {
-        Query count = new Query();
-        Query query = new Query();
-        if (this.criteria != null) {
-            query.addCriteria(this.criteria);
-            count.addCriteria(this.criteria);
+
+        if (criteria != null) {
+            query.addCriteria(criteria);
+            count.addCriteria(criteria);
         }
-        query.fields().include("_id").include("title").include("description");
         query.with(pageable);
         this.size = pageable.getPageSize();
         this.rows = mongoTemplate.find(query, entityClass);

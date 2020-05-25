@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.vmodels;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +17,7 @@ public class MockVmodel {
     @NotNull
     private String projectId;
     private Object spec;
+
+    private List<UserMocks> users;
 }
+

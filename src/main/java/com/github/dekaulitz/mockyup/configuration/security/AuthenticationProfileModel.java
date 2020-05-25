@@ -1,17 +1,28 @@
 package com.github.dekaulitz.mockyup.configuration.security;
 
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@NoArgsConstructor
+
 public class AuthenticationProfileModel implements UserDetails {
 
     private String _id;
-    private final String username;
-    private final List<GrantedAuthority> grantedAuthorities;
+
+    public List<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
+    }
+
+    @Setter
+    private String username;
+    @Setter
+    private List<GrantedAuthority> grantedAuthorities;
 
     public AuthenticationProfileModel(String userId, String username, List<GrantedAuthority> grantedAuthorities) {
         this.username = username;

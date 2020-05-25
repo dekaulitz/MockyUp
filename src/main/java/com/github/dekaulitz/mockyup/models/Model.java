@@ -1,9 +1,11 @@
 package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.repositories.paging.AbstractPage;
+import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -13,11 +15,11 @@ public interface Model<T, V> {
 
     T getById(String id) throws NotFoundException;
 
-    T save(V view) throws InvalidMockException;
+    T save(MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException;
 
-    T updateByID(String id, V view) throws NotFoundException, JsonProcessingException;
+    T updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, JsonProcessingException;
 
-    AbstractPage<T> paging(Pageable pageable, String q);
+    AbstractPage<T> paging(Pageable pageable, String q, AuthenticationProfileModel userId);
 
-    void deleteById(String id) throws NotFoundException;
+    void deleteById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException;
 }
