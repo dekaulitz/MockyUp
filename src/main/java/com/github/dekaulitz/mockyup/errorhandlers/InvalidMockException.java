@@ -1,6 +1,10 @@
 package com.github.dekaulitz.mockyup.errorhandlers;
 
+import lombok.Getter;
+
 public class InvalidMockException extends Exception {
+    @Getter
+    private ErrorModel errorModel;
 
     public InvalidMockException() {
     }
@@ -19,5 +23,10 @@ public class InvalidMockException extends Exception {
 
     public InvalidMockException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public InvalidMockException(ErrorModel errorModel) {
+        super(errorModel.getErrorMessage());
+        this.errorModel = errorModel;
     }
 }

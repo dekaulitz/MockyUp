@@ -8,19 +8,20 @@ import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.UserModel;
 import com.github.dekaulitz.mockyup.repositories.paging.UserEntitiesPage;
+import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UserLoginVmodel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @RestController
@@ -38,14 +39,20 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.doLogin(vmodel));
         } catch (UnathorizedAccess unathorizedAccess) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(unathorizedAccess.getMessage());
+            return this.handlingErrorResponse(unathorizedAccess.getErrorModel(), unathorizedAccess);
         } catch (UnsupportedEncodingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return this.handlingErrorResponse(null, e);
         }
     }
 
-    @GetMapping(value = "/mocks/logout", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void logOut() {
+    @GetMapping(value = "/mocks/auth/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> logOut(HttpServletRequest request) {
+        try {
+            String authorization = JwtManager.getAuthorizationHeader(request);
+            return ResponseEntity.ok(this.userModel.refreshToken(authorization));
+        } catch (UnsupportedEncodingException e) {
+            return this.handlingErrorResponse(null, e);
+        }
     }
 
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
@@ -60,7 +67,7 @@ public class UserControllers extends BaseController {
                     .username(userEntities.getUsername()).build();
             return ResponseEntity.ok(registrationResponseVmodel);
         } catch (DuplicateDataEntry duplicateDataEntry) {
-            return ResponseEntity.badRequest().body(duplicateDataEntry.getMessage());
+            return this.handlingErrorResponse(duplicateDataEntry.getErrorModel(), duplicateDataEntry);
         }
 
     }
@@ -74,8 +81,7 @@ public class UserControllers extends BaseController {
             UserEntitiesPage pagingVmodel = this.userModel.paging(pageable, q);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -85,8 +91,7 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.listUsers(q));
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -96,9 +101,9 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
         } catch (DuplicateDataEntry duplicateDataEntry) {
-            return new ResponseEntity<>(duplicateDataEntry.getMessage(), HttpStatus.BAD_REQUEST);
+            return this.handlingErrorResponse(duplicateDataEntry.getErrorModel(), duplicateDataEntry);
         } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         }
     }
 
@@ -109,8 +114,7 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.getUserById(id));
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         }
     }
 

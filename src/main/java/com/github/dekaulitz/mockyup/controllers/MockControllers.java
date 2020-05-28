@@ -93,20 +93,16 @@ public class MockControllers extends BaseController {
         MockExample mock = null;
         try {
             mock = this.mockModel.getMockMocking(request, path, id, body);
-            if (mock != null)
-            {
+            if (mock != null) {
                 return this.generateMockResponseEntity(mock);
             }
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
         } catch (NotFoundException e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (InvalidMockException | JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (InvalidMockException invalidMock) {
+            return this.handlingErrorResponse(invalidMock.getErrorModel(), invalidMock);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -157,11 +153,9 @@ public class MockControllers extends BaseController {
                 return ResponseEntity.ok(mockResponseVmodel.getSpec());
             return ResponseEntity.ok(mockResponseVmodel);
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -189,11 +183,9 @@ public class MockControllers extends BaseController {
 
             return ResponseEntity.ok(body);
         } catch (InvalidMockException e) {
-            log.error(e.getMessage(), e.getCause());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -232,11 +224,9 @@ public class MockControllers extends BaseController {
             this.mockModel.deleteById(id, authenticationProfileModel);
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -249,11 +239,9 @@ public class MockControllers extends BaseController {
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(mockResponseVmodel.getSpec());
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -273,11 +261,9 @@ public class MockControllers extends BaseController {
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(body);
         } catch (NotFoundException e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>("no mock found", HttpStatus.NOT_FOUND);
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 
@@ -291,8 +277,7 @@ public class MockControllers extends BaseController {
             MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q, authenticationProfileModel);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.handlingErrorResponse(null, e);
         }
     }
 }

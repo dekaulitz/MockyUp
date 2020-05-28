@@ -12,7 +12,5 @@ import java.util.List;
 public class AccessVmodel {
     private String username;
     private String token;
-    private Long expiredTime;
-    private String refreshToken;
     private List<String> accessMenus;
 }

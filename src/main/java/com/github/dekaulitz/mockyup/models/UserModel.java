@@ -9,6 +9,7 @@ import com.github.dekaulitz.mockyup.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.AccessVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UpdateUserVmodel;
@@ -52,7 +53,7 @@ public class UserModel {
     public AccessVmodel doLogin(UserLoginVmodel vmodel) throws UnathorizedAccess, UnsupportedEncodingException {
         UserEntities userExist = this.userRepository.findFirstByUsername(vmodel.getUsername());
         if (userExist == null) {
-            throw new UnathorizedAccess("invalid username or password");
+            throw new UnathorizedAccess(ResponseCode.INVALID_USERNAME_OR_PASSWORD);
         }
         boolean isAuthenticated = Hash.verifyHash(vmodel.getPassword(), userExist.getPassword());
         if (!isAuthenticated) throw new UnathorizedAccess("invalid username or password");
@@ -106,6 +107,18 @@ public class UserModel {
                 .password(vmodel.getPassword())
                 .accessList(vmodel.getAccessList()).build();
         return this.userRepository.save(userEntitiesUpdate);
+    }
+
+    //@todo fix the error code and error message
+    public AccessVmodel refreshToken(String token) throws UnsupportedEncodingException {
+        Optional<String> userId = JwtManager.getUserIdFromToken(token);
+        if (!userId.isPresent()) throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
+        Optional<UserEntities> userEntities = this.userRepository.findById(userId.get());
+        if (!userEntities.isPresent())
+            throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
+        return AccessVmodel.builder().accessMenus(userEntities.get().getAccessList())
+                .token(JwtManager.generateToken(userEntities.get()))
+                .username(userEntities.get().getUsername()).build();
     }
 }
 
