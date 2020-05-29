@@ -41,7 +41,7 @@ public class UserModel {
     public UserEntities addUser(RegistrationVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry {
         boolean isExist = this.userRepository.existsByUsername(vmodel.getUsername());
         if (isExist) {
-            throw new DuplicateDataEntry("user already exist");
+            throw new DuplicateDataEntry(ResponseCode.USER_ALREADY_EXIST);
         }
         UserEntities userEntities = new UserEntities();
         userEntities.setUsername(vmodel.getUsername());
@@ -56,7 +56,7 @@ public class UserModel {
             throw new UnathorizedAccess(ResponseCode.INVALID_USERNAME_OR_PASSWORD);
         }
         boolean isAuthenticated = Hash.verifyHash(vmodel.getPassword(), userExist.getPassword());
-        if (!isAuthenticated) throw new UnathorizedAccess("invalid username or password");
+        if (!isAuthenticated) throw new UnathorizedAccess(ResponseCode.INVALID_USERNAME_OR_PASSWORD);
         String token = JwtManager.generateToken(userExist);
         return AccessVmodel.builder().username(userExist.getUsername())
                 .accessMenus(userExist.getAccessList())
@@ -89,7 +89,7 @@ public class UserModel {
         query.fields().include("_id").include("username").include("accessList");
         UserEntities userEntities = this.mongoTemplate.findOne(query, UserEntities.class);
         if (userEntities == null)
-            throw new NotFoundException("user not found");
+            throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
         return userEntities;
     }
 
@@ -99,7 +99,7 @@ public class UserModel {
             throw new DuplicateDataEntry("user already exist");
         }
         Optional<UserEntities> userEntities = this.userRepository.findById(id);
-        if (!userEntities.isPresent()) throw new NotFoundException("user not found");
+        if (!userEntities.isPresent()) throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
         if (vmodel.getPassword().isEmpty()) vmodel.setPassword(userEntities.get().getPassword());
         else vmodel.setPassword(Hash.hashing(vmodel.getPassword()));
         UserEntities userEntitiesUpdate = UserEntities.builder()
@@ -109,7 +109,6 @@ public class UserModel {
         return this.userRepository.save(userEntitiesUpdate);
     }
 
-    //@todo fix the error code and error message
     public AccessVmodel refreshToken(String token) throws UnsupportedEncodingException {
         Optional<String> userId = JwtManager.getUserIdFromToken(token);
         if (!userId.isPresent()) throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);

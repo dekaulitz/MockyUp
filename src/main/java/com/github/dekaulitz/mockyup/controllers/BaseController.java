@@ -42,6 +42,7 @@ public class BaseController {
                     ResponseVmodel.builder().responseMessage(ex.getMessage())
                             .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
         }
+        if (!ex.getMessage().isEmpty()) errorModel.setErrorMessage(ex.getMessage());
         return ResponseEntity.status(errorModel.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(errorModel.getErrorMessage())
                         .responseCode(errorModel.getErrorCode()).build());

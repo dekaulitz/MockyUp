@@ -29,4 +29,10 @@ public class InvalidMockException extends Exception {
         super(errorModel.getErrorMessage());
         this.errorModel = errorModel;
     }
+
+    public InvalidMockException(ErrorModel errorModel, Exception e) {
+        super(e.getMessage().isEmpty() ? errorModel.getErrorMessage() : e.getMessage());
+        errorModel.setErrorMessage(this.getMessage());
+        this.errorModel = errorModel;
+    }
 }

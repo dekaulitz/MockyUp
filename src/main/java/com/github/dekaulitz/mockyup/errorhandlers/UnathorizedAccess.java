@@ -19,4 +19,10 @@ public class UnathorizedAccess extends AuthenticationException {
         super(errorModel.getErrorMessage());
         this.errorModel = errorModel;
     }
+
+    public UnathorizedAccess(ErrorModel errorModel, Exception e) {
+        super(e.getMessage().isEmpty() ? errorModel.getErrorMessage() : e.getMessage());
+        errorModel.setErrorMessage(this.getMessage());
+        this.errorModel = errorModel;
+    }
 }

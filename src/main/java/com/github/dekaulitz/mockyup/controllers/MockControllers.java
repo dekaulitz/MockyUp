@@ -7,9 +7,11 @@ import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UserMocks;
 import io.swagger.util.Json;
@@ -159,6 +161,14 @@ public class MockControllers extends BaseController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @GetMapping(value = "/mocks/{id}/users",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getUserMocks(@PathVariable String id) {
+        return ResponseEntity.ok(this.mockModel.getUserMocks(id));
+    }
+
     /**
      * @param body
      * @return
@@ -225,8 +235,8 @@ public class MockControllers extends BaseController {
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+        } catch (UnathorizedAccess e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
         }
     }
 
@@ -262,8 +272,12 @@ public class MockControllers extends BaseController {
             return ResponseEntity.ok(body);
         } catch (NotFoundException e) {
             return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+        } catch (UnathorizedAccess e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (InvalidMockException e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (JsonProcessingException e) {
+            return this.handlingErrorResponse(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
         }
     }
 

@@ -17,7 +17,7 @@ public interface Model<T, V> {
 
     T save(MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException;
 
-    T updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, JsonProcessingException;
+    T updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, JsonProcessingException, InvalidMockException;
 
     AbstractPage<T> paging(Pageable pageable, String q, AuthenticationProfileModel userId);
 

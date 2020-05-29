@@ -99,6 +99,7 @@ public class UserControllers extends BaseController {
     @PutMapping(value = "/mocks/users/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUsers(@RequestBody UpdateUserVmodel vmodel, @PathVariable String id) {
         try {
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
         } catch (DuplicateDataEntry duplicateDataEntry) {
             return this.handlingErrorResponse(duplicateDataEntry.getErrorModel(), duplicateDataEntry);

@@ -4,6 +4,7 @@ import com.github.dekaulitz.mockyup.entities.UserEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -37,7 +38,7 @@ public class SecurityProvider extends AbstractUserDetailsAuthenticationProvider 
         try {
             AuthenticationProfileModel authenticationProfileModel = JwtManager.validateToken(authenticationToken.getToken());
             Optional<UserEntities> userEntities = this.userRepository.findById(authenticationProfileModel.get_id());
-            if (!userEntities.isPresent()) throw new UnathorizedAccess("user not found");
+            if (!userEntities.isPresent()) throw new UnathorizedAccess(ResponseCode.USER_NOT_FOUND);
             authenticationProfileModel.setUsername(userEntities.get().getUsername());
             List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",", userEntities.get().getAccessList()));
             authenticationProfileModel.setGrantedAuthorities(grantedAuthorities);

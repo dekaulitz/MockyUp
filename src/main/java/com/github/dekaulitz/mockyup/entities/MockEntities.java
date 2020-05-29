@@ -25,8 +25,6 @@ public class MockEntities implements Serializable {
     private String description;
     @Field
     private String version;
-
-    private String projectId;
     @Field
     private String spec;
     @Field
@@ -34,8 +32,6 @@ public class MockEntities implements Serializable {
     @Field
     @Indexed
     private List<UserMocksEntities> users;
-
-    private Date createdDate;
-
+    private MockCreatorEntities updatedBy;
     private Date updatedDate;
 }

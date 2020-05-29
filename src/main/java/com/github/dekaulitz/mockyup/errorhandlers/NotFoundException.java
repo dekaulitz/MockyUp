@@ -29,4 +29,10 @@ public class NotFoundException extends Exception {
         super(errorModel.getErrorMessage());
         this.errorModel = errorModel;
     }
+
+    public NotFoundException(ErrorModel errorModel, Exception e) {
+        super(e.getMessage().isEmpty() ? errorModel.getErrorMessage() : e.getMessage());
+        errorModel.setErrorMessage(this.getMessage());
+        this.errorModel = errorModel;
+    }
 }

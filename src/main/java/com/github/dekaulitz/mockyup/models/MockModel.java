@@ -2,13 +2,19 @@ package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
+import com.github.dekaulitz.mockyup.entities.MockCreatorEntities;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
+import com.github.dekaulitz.mockyup.entities.MockHistoryEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
+import com.github.dekaulitz.mockyup.repositories.MockHistoryRepository;
 import com.github.dekaulitz.mockyup.repositories.MockRepository;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
@@ -16,10 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,11 +37,16 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     @Autowired
     private final MockRepository mockRepository;
+
+    @Autowired
+    private final MockHistoryRepository mockHistoryRepository;
+
     @Autowired
     private final MongoTemplate mongoTemplate;
 
-    public MockModel(MockRepository mockRepository, MongoTemplate mongoTemplate) {
+    public MockModel(MockRepository mockRepository, MockHistoryRepository mockHistoryRepository, MongoTemplate mongoTemplate) {
         this.mockRepository = mockRepository;
+        this.mockHistoryRepository = mockHistoryRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -46,7 +59,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     public MockEntities getById(String id) throws NotFoundException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
-            throw new NotFoundException("mocks not found");
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         }
         return mockEntities.get();
     }
@@ -55,20 +68,26 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     public MockEntities save(MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
         try {
             MockEntities mockEntities = new MockEntities();
-            this.setMockEntity(view, mockEntities);
+            this.setSaveMockEntity(view, mockEntities, authenticationProfileModel);
+            mockEntities.setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id()).username(authenticationProfileModel.getUsername()).build());
+            mockEntities.setUpdatedDate(new Date());
             return this.mockRepository.save(mockEntities);
-        } catch (JsonProcessingException e) {
-            throw new InvalidMockException("invalid mock exception " + e.getMessage());
+        } catch (Exception e) {
+            throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
         }
     }
 
     @Override
-    public MockEntities updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, JsonProcessingException {
+    public MockEntities updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, InvalidMockException {
         Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
-            throw new NotFoundException("mocks not found");
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         }
-        this.setMockEntity(view, mockEntities.get());
+        this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
+        this.saveMockToHistory(mockEntities.get());
+        this.setUpdateMockEntity(view, mockEntities.get(), authenticationProfileModel);
+        mockEntities.get().setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id()).username(authenticationProfileModel.getUsername()).build());
+        mockEntities.get().setUpdatedDate(new Date());
         mockRepository.save(mockEntities.get());
         return mockEntities.get();
     }
@@ -77,8 +96,9 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     public void deleteById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
-            throw new NotFoundException("mocks not found");
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         }
+        this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
         mockRepository.deleteById(mockEntities.get().getId());
     }
 
@@ -94,6 +114,12 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         basePage.addAdditionalCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
         basePage.setPageable(pageable).build(MockEntities.class);
         return basePage;
+    }
+
+    public MockEntities getUserMocks(String id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(id)).fields().include("_id").include("users");
+        return mongoTemplate.findOne(query, MockEntities.class);
     }
 
 
@@ -140,5 +166,27 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
             }
         }
         return null;
+    }
+
+    private void saveMockToHistory(MockEntities mockEntities) {
+        MockHistoryEntities mockHistoryEntities = new MockHistoryEntities();
+        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
+        mockHistoryEntities.setSpec(mockEntities.getSpec());
+        mockHistoryEntities.setTitle(mockEntities.getTitle());
+        mockHistoryEntities.setDescription(mockEntities.getDescription());
+        mockHistoryEntities.setSwagger(mockEntities.getSwagger());
+        mockHistoryEntities.setUsers(mockEntities.getUsers());
+        mockHistoryEntities.setUpdatedBy(mockEntities.getUpdatedBy());
+        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
+        this.mockHistoryRepository.save(mockHistoryEntities);
+
+    }
+
+    private void checkAccessModificationMocks(MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) {
+        mockEntities.getUsers().forEach(userMocksEntities -> {
+            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id()) && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
+                throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+            }
+        });
     }
 }

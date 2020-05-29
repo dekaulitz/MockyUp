@@ -2,12 +2,15 @@ package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.entities.MockEntities;
 import com.github.dekaulitz.mockyup.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -38,27 +41,72 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
 
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public void setMockEntity(MockVmodel body, MockEntities mockEntities) throws JsonProcessingException {
+    public void setSaveMockEntity(MockVmodel body, MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
         SwaggerParseResult result = null;
-        mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
-        mockEntities.setTitle(body.getTitle());
-        mockEntities.setDescription(body.getDescription());
-        result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
-        OpenAPI openAPI = result.getOpenAPI();
-        Paths newPath = new Paths();
-        openAPI.getPaths().forEach((s, pathItem) -> {
-            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-        });
-        openAPI.setPaths(newPath);
-        mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
-        List<UserMocksEntities> users = new ArrayList<>();
-        body.getUsers().forEach(userMocks -> {
-            UserMocksEntities user = new UserMocksEntities();
-            user.setAccess(userMocks.getAccess());
-            user.setUserId(userMocks.getUserId());
-            users.add(user);
-        });
-        mockEntities.setUsers(users);
+        try {
+            mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
+            mockEntities.setTitle(body.getTitle());
+            mockEntities.setDescription(body.getDescription());
+            result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
+            OpenAPI openAPI = result.getOpenAPI();
+            Paths newPath = new Paths();
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+            });
+            List<UserMocksEntities> users = new ArrayList<>();
+            openAPI.setPaths(newPath);
+            mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+            UserMocksEntities creator = new UserMocksEntities();
+            creator.setUserId(authenticationProfileModel.get_id());
+            creator.setAccess(Role.MOCKS_READ_WRITE.name());
+            users.add(creator);
+            if (body.getUsers() != null) {
+                body.getUsers().forEach(userMocks -> {
+                    UserMocksEntities user = new UserMocksEntities();
+                    user.setAccess(userMocks.getAccess());
+                    user.setUserId(userMocks.getUserId());
+                    users.add(user);
+                });
+            }
+            mockEntities.setUsers(users);
+        } catch (JsonProcessingException e) {
+            throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
+        }
+
+    }
+
+    public void setUpdateMockEntity(MockVmodel body, MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
+        SwaggerParseResult result = null;
+        try {
+            mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
+            mockEntities.setTitle(body.getTitle());
+            mockEntities.setDescription(body.getDescription());
+            result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
+            OpenAPI openAPI = result.getOpenAPI();
+            Paths newPath = new Paths();
+            openAPI.getPaths().forEach((s, pathItem) -> {
+                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+            });
+            List<UserMocksEntities> users = new ArrayList<>();
+            openAPI.setPaths(newPath);
+            mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+//            UserMocksEntities creator = new UserMocksEntities();
+//            creator.setUserId(authenticationProfileModel.get_id());
+//            creator.setAccess(Role.MOCKS_READ_WRITE.name());
+//            users.add(creator);
+//            if (body.getUsers() != null) {
+//                body.getUsers().forEach(userMocks -> {
+//                    UserMocksEntities user = new UserMocksEntities();
+//                    user.setAccess(userMocks.getAccess());
+//                    user.setUserId(userMocks.getUserId());
+//                    users.add(user);
+//                });
+//            }
+//            mockEntities.setUsers(users);
+        } catch (JsonProcessingException e) {
+            throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
+        }
+
     }
 
     public MockExample getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths)
