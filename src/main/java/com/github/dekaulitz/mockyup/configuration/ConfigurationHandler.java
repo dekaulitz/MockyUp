@@ -1,10 +1,13 @@
 package com.github.dekaulitz.mockyup.configuration;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.time.Duration;
 
 @Configuration
 @EnableWebMvc
@@ -23,7 +26,7 @@ public class ConfigurationHandler implements WebMvcConfigurer {
         registry.addResourceHandler("/mocks/docs-swagger/**").addResourceLocations(
                 "classpath:/public/");
         registry.addResourceHandler("/mocks/static/**").addResourceLocations(
-                "classpath:templates/dist");
+                "classpath:templates/dist").setCacheControl(CacheControl.maxAge(Duration.ofSeconds(3600)));
     }
 
 }
