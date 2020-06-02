@@ -12,6 +12,7 @@ import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.vmodels.Creator;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UserMocks;
 import io.swagger.util.Json;
@@ -137,6 +138,8 @@ public class MockControllers extends BaseController {
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             mockResponseVmodel.setDescription(mock.getDescription());
             mockResponseVmodel.setTitle(mock.getTitle());
+            mockResponseVmodel.setDateUpdated(mock.getUpdatedDate());
+            mockResponseVmodel.setUpdatedBy(Creator.builder().userId(mock.getUpdatedBy().getUserId()).username(mock.getUpdatedBy().getUsername()).build());
             //check if the user is exist
             if (mock.getUsers() != null) {
                 List<UserMocks> userMockss = new ArrayList<>();
@@ -276,6 +279,7 @@ public class MockControllers extends BaseController {
             });
             openAPI.setPaths(newPath);
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
+            body.setDateUpdated(mock.getUpdatedDate());
             return ResponseEntity.ok(body);
         } catch (NotFoundException e) {
             return this.handlingErrorResponse(e.getErrorModel(), e);
