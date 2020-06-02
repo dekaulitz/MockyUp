@@ -79,8 +79,6 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
         SwaggerParseResult result = null;
         try {
             mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
-            mockEntities.setTitle(body.getTitle());
-            mockEntities.setDescription(body.getDescription());
             result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
             OpenAPI openAPI = result.getOpenAPI();
             Paths newPath = new Paths();

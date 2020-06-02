@@ -19,6 +19,8 @@ import java.util.List;
 public class MockHistoryEntities implements Serializable {
     @Id
     private String id;
+
+    private String mockId;
     @Field
     private String title;
     @Field

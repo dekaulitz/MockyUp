@@ -161,12 +161,19 @@ public class MockControllers extends BaseController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    //    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/users",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getUserMocks(@PathVariable String id) {
-        return ResponseEntity.ok(this.mockModel.getUserMocks(id));
+        return ResponseEntity.ok(this.mockModel.getUsersListOfMocks(id));
+    }
+
+    @GetMapping(value = "/mocks/{id}/histories",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getMockHistories(@PathVariable String id) {
+        return ResponseEntity.ok(this.mockModel.getMockHistories(id));
     }
 
     /**

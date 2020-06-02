@@ -15,12 +15,16 @@ import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
+import com.github.dekaulitz.mockyup.vmodels.MockLookup;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -116,10 +120,38 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         return basePage;
     }
 
+    public List<MockHistoryEntities> getMockHistories(String id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("mockId").is(id)).fields().include("swagger").include("mockId").include("updatedDate").include("updatedBy");
+        return mongoTemplate.find(query, MockHistoryEntities.class);
+    }
+
+
     public MockEntities getUserMocks(String id) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id)).fields().include("_id").include("users");
         return mongoTemplate.findOne(query, MockEntities.class);
+    }
+
+    public List<MockLookup> getUsersListOfMocks(String mockId) {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("_id").is(mockId)),
+                Aggregation.unwind("users"),
+                Aggregation.project().and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
+                LookupOperation.newLookup().from("userEntities").localField("users.userId").foreignField("_id").as("userDetails"),
+                Aggregation.unwind("userDetails"),
+                aggregationOperationContext -> new Document("$project",
+                        new Document("users._id", "$userDetails._id")
+                                .append("users.username", "$userDetails.username")
+                                .append("users.access", "$users.access")
+                                .append("users.updatedDate", "$updatedDate")),
+                aggregationOperationContext -> new Document("$group",
+                        new Document("_id", "$_id")
+                                .append("users", new Document("$push", "$users")))
+
+        );
+        List<MockLookup> test = mongoTemplate.aggregate(aggregation, "mockup", MockLookup.class).getMappedResults();
+        return test;
     }
 
 
@@ -170,6 +202,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     private void saveMockToHistory(MockEntities mockEntities) {
         MockHistoryEntities mockHistoryEntities = new MockHistoryEntities();
+        mockHistoryEntities.setMockId(mockEntities.getId());
         mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
         mockHistoryEntities.setSpec(mockEntities.getSpec());
         mockHistoryEntities.setTitle(mockEntities.getTitle());
