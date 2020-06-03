@@ -15,11 +15,13 @@ import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
+import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.vmodels.MockLookup;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -135,25 +137,80 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     public List<MockLookup> getUsersListOfMocks(String mockId) {
         Aggregation aggregation = Aggregation.newAggregation(
+                //find the collection base on id
                 Aggregation.match(Criteria.where("_id").is(mockId)),
+                //extract the collection base on users
                 Aggregation.unwind("users"),
+                //setup project fields and convert users.userId to object id
                 Aggregation.project().and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
+                //join collection with user entities
                 LookupOperation.newLookup().from("userEntities").localField("users.userId").foreignField("_id").as("userDetails"),
+                //extract the collection
                 Aggregation.unwind("userDetails"),
+                //setup project property
                 aggregationOperationContext -> new Document("$project",
                         new Document("users._id", "$userDetails._id")
                                 .append("users.username", "$userDetails.username")
                                 .append("users.access", "$users.access")
                                 .append("users.updatedDate", "$updatedDate")),
+                //grouping all component
                 aggregationOperationContext -> new Document("$group",
                         new Document("_id", "$_id")
                                 .append("users", new Document("$push", "$users")))
 
         );
-        List<MockLookup> test = mongoTemplate.aggregate(aggregation, "mockup", MockLookup.class).getMappedResults();
-        return test;
+        return mongoTemplate.aggregate(aggregation, "mockup", MockLookup.class).getMappedResults();
     }
 
+    public List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
+        Aggregation aggregation = Aggregation.newAggregation(
+                //find by criteria
+                Aggregation.match(Criteria.where("_id").is(id)),
+                //extract users array as list
+                Aggregation.unwind("users"),
+                //set project field
+                Aggregation.project().and("title").as("title").and("spec").as("spec").and("description").as("description").and("updatedBy").as("updatedBy")
+                        //convert $users.userId to objectId for querying the user id
+                        .and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
+                //join collection with user entities
+                LookupOperation.newLookup().from("userEntities").localField("users.userId").foreignField("_id").as("userDetails"),
+                //extract the collection base on userdetails
+                Aggregation.unwind("userDetails"),
+                //join collection with user entities for get current user login access
+                LookupOperation.newLookup().from("userEntities")
+                        .localField("users.userId")
+                        .foreignField("_id")
+                        .as("currentAccessUser"),
+                //extract the collection base on currentAccessUser
+                Aggregation.unwind("currentAccessUser"),
+                //finding currentAccessUser base on  user login
+                Aggregation.match(Criteria.where("currentAccessUser._id").is(new ObjectId(authenticationProfileModel.get_id()))),
+                //set up project property
+                aggregationOperationContext -> new Document("$project",
+                        new Document("users._id", "$userDetails._id")
+                                .append("users.username", "$userDetails.username")
+                                .append("users.access", "$users.access")
+                                .append("currentAccessUser.username", "$currentAccessUser.username")
+                                .append("currentAccessUser.access", "$users.access")
+                                .append("title", "$title")
+                                .append("description", "$description")
+                                .append("spec", "$spec")
+                                .append("updatedBy", "$updatedBy")
+                                .append("dateUpdated", "$updatedDate")
+                ),
+                //grouping all finding
+                aggregationOperationContext -> new Document("$group",
+                        new Document("_id", "$_id")
+                                .append("title", new Document("$first", "$title"))
+                                .append("description", new Document("$first", "$description"))
+                                .append("spec", new Document("$first", "$spec"))
+                                .append("updatedBy", new Document("$first", "$updatedBy"))
+                                .append("dateUpdated", new Document("$first", "$dateUpdated"))
+                                .append("currentAccessUser", new Document("$first", "$currentAccessUser"))
+
+                ));
+        return mongoTemplate.aggregate(aggregation, "mockup", DtoMockupDetailVmodel.class).getMappedResults();
+    }
 
     public MockExample getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
