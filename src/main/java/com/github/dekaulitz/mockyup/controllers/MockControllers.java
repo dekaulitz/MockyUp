@@ -12,7 +12,7 @@ import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import com.github.dekaulitz.mockyup.vmodels.Creator;
+import com.github.dekaulitz.mockyup.vmodels.CreatorVmodel;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UserMocks;
 import io.swagger.util.Json;
@@ -139,7 +139,7 @@ public class MockControllers extends BaseController {
             mockResponseVmodel.setDescription(mock.getDescription());
             mockResponseVmodel.setTitle(mock.getTitle());
             mockResponseVmodel.setDateUpdated(mock.getUpdatedDate());
-            mockResponseVmodel.setUpdatedBy(Creator.builder().userId(mock.getUpdatedBy().getUserId()).username(mock.getUpdatedBy().getUsername()).build());
+            mockResponseVmodel.setUpdatedBy(CreatorVmodel.builder().userId(mock.getUpdatedBy().getUserId()).username(mock.getUpdatedBy().getUsername()).build());
             //check if the user is exist
             if (mock.getUsers() != null) {
                 List<UserMocks> userMockss = new ArrayList<>();
@@ -164,12 +164,21 @@ public class MockControllers extends BaseController {
         }
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/users",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getUserMocks(@PathVariable String id) {
         return ResponseEntity.ok(this.mockModel.getUsersListOfMocks(id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @GetMapping(value = "/mocks/{id}/detailWithAccess",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getCurrentAccess(@PathVariable String id) {
+        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(this.mockModel.getDetailMockUpIdByUserAccess(id, authenticationProfileModel));
     }
 
     @GetMapping(value = "/mocks/{id}/histories",
