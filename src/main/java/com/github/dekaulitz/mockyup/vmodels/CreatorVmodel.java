@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class Creator {
+public class CreatorVmodel {
     private String userId;
     private String username;
 }
