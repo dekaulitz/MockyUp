@@ -1,5 +1,7 @@
 package com.github.dekaulitz.mockyup.vmodels;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.util.Json;
 import lombok.*;
 
 import java.util.Date;
@@ -13,8 +15,13 @@ public class DtoMockupDetailVmodel {
     private String id;
     private String title;
     private String description;
-    private Object spec;
+    private String spec;
     private DtoMockupDetailUpdatedByVmodel updatedBy;
     private DtoMockupDetailCurrentAccessVmodel currentAccessUser;
     private Date dateUpdated;
+
+
+    public Object getSpec() throws JsonProcessingException {
+        return Json.mapper().readTree(this.spec);
+    }
 }

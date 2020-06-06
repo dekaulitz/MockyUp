@@ -15,6 +15,7 @@ import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
+import com.github.dekaulitz.mockyup.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.vmodels.MockLookup;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
@@ -24,11 +25,13 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MockModel extends BaseModel<MockEntities, MockVmodel> {
@@ -124,7 +128,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
 
     public List<MockHistoryEntities> getMockHistories(String id) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("mockId").is(id)).fields().include("swagger").include("mockId").include("updatedDate").include("updatedBy");
+        query.with(Sort.by(Sort.Direction.DESC, "_id")).addCriteria(Criteria.where("mockId").is(id)).fields().include("swagger").include("mockId").include("updatedDate").include("updatedBy");
         return mongoTemplate.find(query, MockHistoryEntities.class);
     }
 
@@ -169,7 +173,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
                 //extract users array as list
                 Aggregation.unwind("users"),
                 //set project field
-                Aggregation.project().and("title").as("title").and("spec").as("spec").and("description").as("description").and("updatedBy").as("updatedBy")
+                Aggregation.project().and("title").as("title").and("swagger").as("swagger").and("description").as("description").and("updatedBy").as("updatedBy")
                         //convert $users.userId to objectId for querying the user id
                         .and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
                 //join collection with user entities
@@ -194,7 +198,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
                                 .append("currentAccessUser.access", "$users.access")
                                 .append("title", "$title")
                                 .append("description", "$description")
-                                .append("spec", "$spec")
+                                .append("swagger", "$swagger")
                                 .append("updatedBy", "$updatedBy")
                                 .append("dateUpdated", "$updatedDate")
                 ),
@@ -203,7 +207,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
                         new Document("_id", "$_id")
                                 .append("title", new Document("$first", "$title"))
                                 .append("description", new Document("$first", "$description"))
-                                .append("spec", new Document("$first", "$spec"))
+                                .append("spec", new Document("$first", "$swagger"))
                                 .append("updatedBy", new Document("$first", "$updatedBy"))
                                 .append("dateUpdated", new Document("$first", "$dateUpdated"))
                                 .append("currentAccessUser", new Document("$first", "$currentAccessUser"))
@@ -278,5 +282,50 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
                 throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
             }
         });
+    }
+
+    public Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+        Optional<MockEntities> mockEntities = mockRepository.findById(id);
+        if (!mockEntities.isPresent()) {
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
+        }
+        this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
+        AtomicBoolean addUserExist = new AtomicBoolean(false);
+        mockEntities.get().getUsers().forEach(userMocksEntities -> {
+            if (userMocksEntities.getUserId().equals(vmodel.getUserId())) {
+                addUserExist.set(true);
+            }
+        });
+        Update update = new Update();
+        if (addUserExist.get()) {
+            query.addCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(vmodel.getUserId())));
+            update.set("users.$.access", vmodel.getAccess());
+        } else
+            update.push("users", new Document("userId", vmodel.getUserId()).append("access", vmodel.getAccess()));
+        return mongoTemplate.updateFirst(query, update, MockEntities.class);
+    }
+
+    public Object removeAccessUserOnMock(String id, String userId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+        Optional<MockEntities> mockEntities = mockRepository.findById(id);
+        if (!mockEntities.isPresent()) {
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
+        }
+        this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
+        AtomicBoolean addUserExist = new AtomicBoolean(false);
+        mockEntities.get().getUsers().forEach(userMocksEntities -> {
+            if (userMocksEntities.getUserId().equals(userId)) {
+                addUserExist.set(true);
+            }
+        });
+        if (!addUserExist.get()) {
+            throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
+        }
+        Update update = new Update();
+        update.pull("users", new Document("userId", userId));
+        return mongoTemplate.updateFirst(query, update, MockEntities.class);
     }
 }

@@ -15,8 +15,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -53,7 +51,7 @@ public class RequestFilter extends OncePerRequestFilter {
             MDC.put(CLIENT_ID, getClientIP(request));
             MDC.put(REQUEST_ID, token);
             MDC.put(REQUEST_TIME, requestTime);
-            log.info("{}", this.logsMapper.logRequest(req));
+//            log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);
             MDC.remove(REQUEST_TIME);

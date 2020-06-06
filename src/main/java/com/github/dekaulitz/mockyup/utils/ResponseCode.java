@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.utils;
 import com.github.dekaulitz.mockyup.errorhandlers.ErrorModel;
 import org.springframework.http.HttpStatus;
 
+
 public class ResponseCode {
 
     public static ErrorModel TOKEN_INVALID = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK010", "token invalid");
@@ -20,6 +21,7 @@ public class ResponseCode {
 
 
     public static ErrorModel GLOBAL_ERROR_MESSAGE = new ErrorModel(HttpStatus.INTERNAL_SERVER_ERROR, "MOCK001", "something bad happen");
+    public static ErrorModel GLOBAL_PAGE_NOT_FOUND = new ErrorModel(HttpStatus.NOT_FOUND, "MOCK002", "page not found");
 
 
 }

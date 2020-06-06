@@ -87,9 +87,10 @@ public class UserControllers extends BaseController {
 
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserList(@RequestParam(value = "q", required = false) String q) {
+    public ResponseEntity getUserList(@RequestParam(value = "username", required = false) String username) {
         try {
-            return ResponseEntity.ok(this.userModel.listUsers(q));
+            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return ResponseEntity.ok(this.userModel.listUsers(username, authenticationProfileModel));
         } catch (Exception e) {
             return this.handlingErrorResponse(null, e);
         }

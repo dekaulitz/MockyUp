@@ -12,9 +12,7 @@ import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import com.github.dekaulitz.mockyup.vmodels.CreatorVmodel;
-import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
-import com.github.dekaulitz.mockyup.vmodels.UserMocks;
+import com.github.dekaulitz.mockyup.vmodels.*;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
@@ -178,14 +176,53 @@ public class MockControllers extends BaseController {
     )
     public ResponseEntity<Object> getCurrentAccess(@PathVariable String id) {
         AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(this.mockModel.getDetailMockUpIdByUserAccess(id, authenticationProfileModel));
+        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockModel.getDetailMockUpIdByUserAccess(id, authenticationProfileModel);
+        if (mockDetailWithAccess.isEmpty()) {
+            throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+        }
+        return ResponseEntity.ok(mockDetailWithAccess.get(0));
     }
 
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/histories",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getMockHistories(@PathVariable String id) {
         return ResponseEntity.ok(this.mockModel.getMockHistories(id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @PutMapping(value = "/mocks/{id}/addUser",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> addUserAccess(@PathVariable String id, @RequestBody AddUserAccessVmodel vmodel) {
+        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            return ResponseEntity.ok(this.mockModel.addUserAccessOnMock(id, vmodel, authenticationProfileModel));
+        } catch (NotFoundException e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (UnathorizedAccess e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (Exception e) {
+            return this.handlingErrorResponse(null, e);
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @DeleteMapping(value = "/mocks/{id}/remove/{userId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> removeUserAccessOnMock(@PathVariable String id, @PathVariable String userId) {
+        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            return ResponseEntity.ok(this.mockModel.removeAccessUserOnMock(id, userId, authenticationProfileModel));
+        } catch (NotFoundException e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (UnathorizedAccess e) {
+            return this.handlingErrorResponse(e.getErrorModel(), e);
+        } catch (Exception e) {
+            return this.handlingErrorResponse(null, e);
+        }
     }
 
     /**

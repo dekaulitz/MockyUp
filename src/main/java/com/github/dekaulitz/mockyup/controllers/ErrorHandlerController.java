@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ErrorHandlerController implements ErrorController {
 
+    public ErrorHandlerController() {
+    }
+
+    //@TODO should enhance the response error handler
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        if (status.equals(HttpStatus.NOT_FOUND.value())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseVmodel.builder()
+                    .responseCode(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorCode())
+                    .responseMessage(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorMessage()).build());
+        }
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         if (status != null) {
             int statusCode = Integer.parseInt(status.toString());

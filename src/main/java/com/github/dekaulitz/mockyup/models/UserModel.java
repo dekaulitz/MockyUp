@@ -14,6 +14,7 @@ import com.github.dekaulitz.mockyup.vmodels.AccessVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UserLoginVmodel;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -76,10 +77,11 @@ public class UserModel {
         return basePage;
     }
 
-    public List<UserEntities> listUsers(String q) {
+    public List<UserEntities> listUsers(String username, AuthenticationProfileModel authenticationProfileModel) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").regex(".*" + q + ".*", "i")).limit(25);
-        query.fields().include("_id").include("username");
+        query.addCriteria(Criteria.where("username").regex(".*" + username + ".*", "i"))
+                .addCriteria(Criteria.where("id").ne(new ObjectId(authenticationProfileModel.get_id()))).limit(25);
+        query.fields().include("id").include("username");
         return this.mongoTemplate.find(query, UserEntities.class);
     }
 
