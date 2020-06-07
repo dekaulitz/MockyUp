@@ -43,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 new AntPathRequestMatcher("/mocks/**/users"),
                 new AntPathRequestMatcher("/mocks/**/spec"),
                 new AntPathRequestMatcher("/mocks/**/histories"),
+                new AntPathRequestMatcher("/mocks/**/histories/**"),
                 new AntPathRequestMatcher("/mocks/**/detailWithAccess"),
                 new AntPathRequestMatcher("/mocks/**/addUser"),
                 new AntPathRequestMatcher("/mocks/**/remove/**"),

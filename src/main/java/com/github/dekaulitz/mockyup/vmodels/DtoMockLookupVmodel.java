@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MockLookup {
+public class DtoMockLookupVmodel {
     private String id;
     private List<UserDetailMocks> users;
 

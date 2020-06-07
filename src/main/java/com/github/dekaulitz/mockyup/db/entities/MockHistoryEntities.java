@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.entities;
+package com.github.dekaulitz.mockyup.db.entities;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -10,15 +10,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "mockup")
+@Document(collection = "mockup_histories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MockEntities implements Serializable {
+public class MockHistoryEntities implements Serializable {
     @Id
     private String id;
+
+    private String mockId;
     @Field
     private String title;
     @Field

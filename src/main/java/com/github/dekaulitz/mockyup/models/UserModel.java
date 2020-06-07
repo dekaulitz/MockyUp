@@ -1,12 +1,12 @@
 package com.github.dekaulitz.mockyup.models;
 
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.repositories.UserRepository;
-import com.github.dekaulitz.mockyup.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;

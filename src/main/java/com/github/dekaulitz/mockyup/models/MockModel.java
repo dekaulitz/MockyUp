@@ -2,23 +2,20 @@ package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.entities.MockCreatorEntities;
-import com.github.dekaulitz.mockyup.entities.MockEntities;
-import com.github.dekaulitz.mockyup.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockCreatorEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.repositories.MockHistoryRepository;
+import com.github.dekaulitz.mockyup.db.repositories.MockRepository;
+import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
-import com.github.dekaulitz.mockyup.repositories.MockHistoryRepository;
-import com.github.dekaulitz.mockyup.repositories.MockRepository;
-import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
-import com.github.dekaulitz.mockyup.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
-import com.github.dekaulitz.mockyup.vmodels.MockLookup;
-import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
+import com.github.dekaulitz.mockyup.vmodels.*;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import org.bson.Document;
@@ -139,7 +136,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         return mongoTemplate.findOne(query, MockEntities.class);
     }
 
-    public List<MockLookup> getUsersListOfMocks(String mockId) {
+    public List<DtoMockLookupVmodel> getUsersListOfMocks(String mockId) {
         Aggregation aggregation = Aggregation.newAggregation(
                 //find the collection base on id
                 Aggregation.match(Criteria.where("_id").is(mockId)),
@@ -163,7 +160,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
                                 .append("users", new Document("$push", "$users")))
 
         );
-        return mongoTemplate.aggregate(aggregation, "mockup", MockLookup.class).getMappedResults();
+        return mongoTemplate.aggregate(aggregation, "mockup", DtoMockLookupVmodel.class).getMappedResults();
     }
 
     public List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
@@ -327,5 +324,21 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         Update update = new Update();
         update.pull("users", new Document("userId", userId));
         return mongoTemplate.updateFirst(query, update, MockEntities.class);
+    }
+
+    public DtoMockupHistoryVmodel geMockHistoryId(String id, String historyId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
+        query.addCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
+        List<MockEntities> mockEntitiesList = mongoTemplate.find(query, MockEntities.class);
+        if (mockEntitiesList.isEmpty())
+            throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+        Query queryHistory = new Query();
+        queryHistory.addCriteria(Criteria.where("mockId").is(id).and("id").is(new ObjectId(historyId)));
+        queryHistory.fields().include("mockId").include("swagger");
+        List<DtoMockupHistoryVmodel> mockHistoryEntitiesList = mongoTemplate.find(queryHistory, DtoMockupHistoryVmodel.class, "mockup_histories");
+        if (mockHistoryEntitiesList.isEmpty())
+            throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
+        return mockHistoryEntitiesList.get(0);
     }
 }

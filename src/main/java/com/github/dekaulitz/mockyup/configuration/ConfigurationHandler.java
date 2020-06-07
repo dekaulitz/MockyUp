@@ -25,6 +25,7 @@ public class ConfigurationHandler implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/mocks/docs-swagger/**").addResourceLocations(
                 "classpath:/public/");
+
         registry.addResourceHandler("/mocks/static/**").addResourceLocations(
                 "classpath:templates/dist").setCacheControl(CacheControl.maxAge(Duration.ofSeconds(3600)));
     }

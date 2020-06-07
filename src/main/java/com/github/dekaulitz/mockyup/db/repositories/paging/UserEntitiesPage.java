@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.repositories.paging;
+package com.github.dekaulitz.mockyup.db.repositories.paging;
 
-import com.github.dekaulitz.mockyup.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

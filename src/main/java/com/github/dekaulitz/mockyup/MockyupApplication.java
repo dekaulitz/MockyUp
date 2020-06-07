@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup;
 
-import com.github.dekaulitz.mockyup.entities.UserEntities;
-import com.github.dekaulitz.mockyup.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.Role;
 import org.slf4j.Logger;

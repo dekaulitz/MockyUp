@@ -3,16 +3,17 @@ package com.github.dekaulitz.mockyup.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.entities.MockEntities;
-import com.github.dekaulitz.mockyup.entities.UserMocksEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
-import com.github.dekaulitz.mockyup.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import com.github.dekaulitz.mockyup.vmodels.*;
+import com.github.dekaulitz.mockyup.vmodels.AddUserAccessVmodel;
+import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
+import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
@@ -37,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -94,71 +94,11 @@ public class MockControllers extends BaseController {
         MockExample mock = null;
         try {
             mock = this.mockModel.getMockMocking(request, path, id, body);
-            if (mock != null) {
+            if (mock != null)
                 return this.generateMockResponseEntity(mock);
-            }
             return new ResponseEntity<>("no example mock found", HttpStatus.NOT_FOUND);
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (InvalidMockException invalidMock) {
-            return this.handlingErrorResponse(invalidMock.getErrorModel(), invalidMock);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
-        }
-    }
-
-    /**
-     * @return
-     * @desc listing all mocks
-     */
-    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
-    @GetMapping(value = "/mocks/list")
-    public ResponseEntity mocks() {
-        return ResponseEntity.ok(this.mockModel.all());
-    }
-
-    /**
-     * @param id
-     * @param body
-     * @return
-     * @desc get mocking detail
-     */
-    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
-    @GetMapping(value = "/mocks/{id}/detail",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity mockById(@PathVariable String id, @RequestBody(required = false) String body, @RequestParam(value = "spec", required = false) boolean spec) {
-        try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            MockEntities mock = this.mockModel.getById(id);
-            MockVmodel mockResponseVmodel = new MockVmodel();
-            mockResponseVmodel.setId(mock.getId());
-            mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
-            mockResponseVmodel.setDescription(mock.getDescription());
-            mockResponseVmodel.setTitle(mock.getTitle());
-            mockResponseVmodel.setDateUpdated(mock.getUpdatedDate());
-            mockResponseVmodel.setUpdatedBy(CreatorVmodel.builder().userId(mock.getUpdatedBy().getUserId()).username(mock.getUpdatedBy().getUsername()).build());
-            //check if the user is exist
-            if (mock.getUsers() != null) {
-                List<UserMocks> userMockss = new ArrayList<>();
-                for (UserMocksEntities userMocksEntities : mock.getUsers()) {
-                    if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())) {
-                        UserMocks userMocks = new UserMocks();
-                        userMocks.setUserId(userMocksEntities.getUserId());
-                        userMocks.setAccess(userMocksEntities.getAccess());
-                        userMockss.add(userMocks);
-                        break;
-                    }
-                }
-                mockResponseVmodel.setUsers(userMockss);
-            }
-            if (spec)
-                return ResponseEntity.ok(mockResponseVmodel.getSpec());
-            return ResponseEntity.ok(mockResponseVmodel);
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -199,12 +139,8 @@ public class MockControllers extends BaseController {
         AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             return ResponseEntity.ok(this.mockModel.addUserAccessOnMock(id, vmodel, authenticationProfileModel));
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (UnathorizedAccess e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -216,12 +152,22 @@ public class MockControllers extends BaseController {
         AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             return ResponseEntity.ok(this.mockModel.removeAccessUserOnMock(id, userId, authenticationProfileModel));
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (UnathorizedAccess e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
+        }
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
+    @GetMapping(value = "/mocks/{id}/histories/{historyId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getSpecHistory(@PathVariable String id, @PathVariable String historyId) {
+        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            return ResponseEntity.ok(this.mockModel.geMockHistoryId(id, historyId, authenticationProfileModel));
+        } catch (UnathorizedAccess | NotFoundException e) {
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -248,10 +194,8 @@ public class MockControllers extends BaseController {
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
 
             return ResponseEntity.ok(body);
-        } catch (InvalidMockException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -290,9 +234,9 @@ public class MockControllers extends BaseController {
             this.mockModel.deleteById(id, authenticationProfileModel);
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
+            return this.handlingErrorResponse(e);
         } catch (UnathorizedAccess e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -304,10 +248,8 @@ public class MockControllers extends BaseController {
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(mockResponseVmodel.getSpec());
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -317,24 +259,12 @@ public class MockControllers extends BaseController {
         try {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             MockEntities mock = this.mockModel.updateByID(id, body, authenticationProfileModel);
-            Paths newPath = new Paths();
             body.setId(mock.getId());
-            OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
-            openAPI.getPaths().forEach((s, pathItem) -> {
-                newPath.put(s.replace("_", ".").replace("*{", "{"), pathItem);
-            });
-            openAPI.setPaths(newPath);
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             body.setDateUpdated(mock.getUpdatedDate());
             return ResponseEntity.ok(body);
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (UnathorizedAccess e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (InvalidMockException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
-        } catch (JsonProcessingException e) {
-            return this.handlingErrorResponse(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
+        } catch (NotFoundException | UnathorizedAccess | InvalidMockException | JsonProcessingException e) {
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -348,7 +278,7 @@ public class MockControllers extends BaseController {
             MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q, authenticationProfileModel);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 }

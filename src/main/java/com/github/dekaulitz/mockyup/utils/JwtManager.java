@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 
 import javax.servlet.http.HttpServletRequest;

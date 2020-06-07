@@ -2,9 +2,9 @@ package com.github.dekaulitz.mockyup.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
+import com.github.dekaulitz.mockyup.db.repositories.paging.AbstractPage;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.repositories.paging.AbstractPage;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import org.springframework.data.domain.Pageable;
 

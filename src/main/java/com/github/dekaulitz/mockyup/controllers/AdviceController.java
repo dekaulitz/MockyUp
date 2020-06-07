@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
+
 
 public class AdviceController extends ResponseEntityExceptionHandler {
 
@@ -23,6 +25,13 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleInvalidMockException(Exception ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ResponseVmodel.builder().responseMessage(ex.getMessage())
+                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+    }
+
+    @ExceptionHandler(IOException.class)
+    public final ResponseEntity<Object> handleIoException(IOException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage())
                         .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());

@@ -2,12 +2,12 @@ package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.UserModel;
-import com.github.dekaulitz.mockyup.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
@@ -39,9 +39,9 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.doLogin(vmodel));
         } catch (UnathorizedAccess unathorizedAccess) {
-            return this.handlingErrorResponse(unathorizedAccess.getErrorModel(), unathorizedAccess);
+            return this.handlingErrorResponse(unathorizedAccess);
         } catch (UnsupportedEncodingException e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -51,7 +51,7 @@ public class UserControllers extends BaseController {
             String authorization = JwtManager.getAuthorizationHeader(request);
             return ResponseEntity.ok(this.userModel.refreshToken(authorization));
         } catch (UnsupportedEncodingException e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -67,7 +67,7 @@ public class UserControllers extends BaseController {
                     .username(userEntities.getUsername()).build();
             return ResponseEntity.ok(registrationResponseVmodel);
         } catch (DuplicateDataEntry duplicateDataEntry) {
-            return this.handlingErrorResponse(duplicateDataEntry.getErrorModel(), duplicateDataEntry);
+            return this.handlingErrorResponse(duplicateDataEntry);
         }
 
     }
@@ -81,7 +81,7 @@ public class UserControllers extends BaseController {
             UserEntitiesPage pagingVmodel = this.userModel.paging(pageable, q);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -92,7 +92,7 @@ public class UserControllers extends BaseController {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return ResponseEntity.ok(this.userModel.listUsers(username, authenticationProfileModel));
         } catch (Exception e) {
-            return this.handlingErrorResponse(null, e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -103,9 +103,9 @@ public class UserControllers extends BaseController {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
         } catch (DuplicateDataEntry duplicateDataEntry) {
-            return this.handlingErrorResponse(duplicateDataEntry.getErrorModel(), duplicateDataEntry);
+            return this.handlingErrorResponse(duplicateDataEntry);
         } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
+            return this.handlingErrorResponse(e);
         }
     }
 
@@ -116,7 +116,7 @@ public class UserControllers extends BaseController {
         try {
             return ResponseEntity.ok(this.userModel.getUserById(id));
         } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e.getErrorModel(), e);
+            return this.handlingErrorResponse(e);
         }
     }
 

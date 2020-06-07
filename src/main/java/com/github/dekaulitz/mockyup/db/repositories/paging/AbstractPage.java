@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.repositories.paging;
+package com.github.dekaulitz.mockyup.db.repositories.paging;
 
 import lombok.Getter;
 import lombok.Setter;

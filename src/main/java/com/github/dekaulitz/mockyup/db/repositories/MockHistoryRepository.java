@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.repositories;
+package com.github.dekaulitz.mockyup.db.repositories;
 
-import com.github.dekaulitz.mockyup.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

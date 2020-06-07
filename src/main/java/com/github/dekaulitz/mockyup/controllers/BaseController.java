@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import com.github.dekaulitz.mockyup.errorhandlers.ErrorModel;
+import com.github.dekaulitz.mockyup.errorhandlers.*;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
@@ -36,16 +36,25 @@ public class BaseController {
     }
 
 
-    protected ResponseEntity<Object> handlingErrorResponse(ErrorModel errorModel, Exception ex) {
-        if (errorModel == null) {
-            return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
-                    ResponseVmodel.builder().responseMessage(ex.getMessage())
-                            .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+    protected ResponseEntity<Object> handlingErrorResponse(Exception ex) {
+        if (ex instanceof DuplicateDataEntry) {
+            return this.responseHandling(((DuplicateDataEntry) ex).getErrorModel());
+        } else if (ex instanceof InvalidMockException) {
+            return this.responseHandling(((InvalidMockException) ex).getErrorModel());
+        } else if (ex instanceof NotFoundException) {
+            return this.responseHandling(((NotFoundException) ex).getErrorModel());
+        } else if (ex instanceof UnathorizedAccess) {
+            return this.responseHandling(((UnathorizedAccess) ex).getErrorModel());
         }
-        if (!ex.getMessage().isEmpty()) errorModel.setErrorMessage(ex.getMessage());
+        return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
+                ResponseVmodel.builder().responseMessage(ex.getMessage())
+                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+    }
+
+
+    private ResponseEntity<Object> responseHandling(ErrorModel errorModel) {
         return ResponseEntity.status(errorModel.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(errorModel.getErrorMessage())
                         .responseCode(errorModel.getErrorCode()).build());
-
     }
 }

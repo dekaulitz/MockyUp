@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.entities;
+package com.github.dekaulitz.mockyup.db.entities;
 
 import lombok.*;
 

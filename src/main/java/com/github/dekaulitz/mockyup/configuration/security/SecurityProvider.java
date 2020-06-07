@@ -1,8 +1,8 @@
 package com.github.dekaulitz.mockyup.configuration.security;
 
-import com.github.dekaulitz.mockyup.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
