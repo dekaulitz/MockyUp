@@ -88,19 +88,6 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
             List<UserMocksEntities> users = new ArrayList<>();
             openAPI.setPaths(newPath);
             mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
-//            UserMocksEntities creator = new UserMocksEntities();
-//            creator.setUserId(authenticationProfileModel.get_id());
-//            creator.setAccess(Role.MOCKS_READ_WRITE.name());
-//            users.add(creator);
-//            if (body.getUsers() != null) {
-//                body.getUsers().forEach(userMocks -> {
-//                    UserMocksEntities user = new UserMocksEntities();
-//                    user.setAccess(userMocks.getAccess());
-//                    user.setUserId(userMocks.getUserId());
-//                    users.add(user);
-//                });
-//            }
-//            mockEntities.setUsers(users);
         } catch (JsonProcessingException e) {
             throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
         }

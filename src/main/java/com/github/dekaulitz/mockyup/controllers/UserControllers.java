@@ -6,13 +6,10 @@ import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.UserModel;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.vmodels.UpdateUserVmodel;
-import com.github.dekaulitz.mockyup.vmodels.UserLoginVmodel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -20,9 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 @RestController
 public class UserControllers extends BaseController {
@@ -32,27 +26,6 @@ public class UserControllers extends BaseController {
     public UserControllers(LogsMapper logsMapper, UserModel userModel) {
         super(logsMapper);
         this.userModel = userModel;
-    }
-
-    @PostMapping(value = "/mocks/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> login(@RequestBody UserLoginVmodel vmodel) {
-        try {
-            return ResponseEntity.ok(this.userModel.doLogin(vmodel));
-        } catch (UnathorizedAccess unathorizedAccess) {
-            return this.handlingErrorResponse(unathorizedAccess);
-        } catch (UnsupportedEncodingException e) {
-            return this.handlingErrorResponse(e);
-        }
-    }
-
-    @GetMapping(value = "/mocks/auth/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> logOut(HttpServletRequest request) {
-        try {
-            String authorization = JwtManager.getAuthorizationHeader(request);
-            return ResponseEntity.ok(this.userModel.refreshToken(authorization));
-        } catch (UnsupportedEncodingException e) {
-            return this.handlingErrorResponse(e);
-        }
     }
 
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")

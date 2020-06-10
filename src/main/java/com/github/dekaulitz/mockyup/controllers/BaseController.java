@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class BaseController {
     protected final LogsMapper logsMapper;
-    protected Logger log = LoggerFactory.getLogger(this.getClass());
+    protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public BaseController(LogsMapper logsMapper) {
         this.logsMapper = logsMapper;
@@ -37,6 +37,7 @@ public class BaseController {
 
 
     protected ResponseEntity<Object> handlingErrorResponse(Exception ex) {
+        LOGGER.error(ex.getMessage(), ex.getCause());
         if (ex instanceof DuplicateDataEntry) {
             return this.responseHandling(((DuplicateDataEntry) ex).getErrorModel());
         } else if (ex instanceof InvalidMockException) {

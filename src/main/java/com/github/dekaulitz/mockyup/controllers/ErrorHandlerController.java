@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -15,12 +15,12 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class ErrorHandlerController implements ErrorController {
+public class ErrorHandlerController extends BaseController implements ErrorController {
 
-    public ErrorHandlerController() {
+    public ErrorHandlerController(LogsMapper logsMapper) {
+        super(logsMapper);
     }
 
-    //@TODO should enhance the response error handler
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> handleError(HttpServletRequest request) {
@@ -31,17 +31,7 @@ public class ErrorHandlerController implements ErrorController {
                     .responseMessage(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorMessage()).build());
         }
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        if (status != null) {
-            int statusCode = Integer.parseInt(status.toString());
-            if (exception instanceof UnathorizedAccess) {
-                UnathorizedAccess unathorizedAccess = (UnathorizedAccess) exception;
-                return ResponseEntity.status(unathorizedAccess.getErrorModel().getHttpCode()).body(
-                        ResponseVmodel.builder().responseMessage(unathorizedAccess.getMessage())
-                                .responseCode(unathorizedAccess.getErrorModel().getErrorCode()).build());
-            }
-            return ResponseEntity.status(statusCode).body(request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
+        return this.handlingErrorResponse(exception);
 
     }
 

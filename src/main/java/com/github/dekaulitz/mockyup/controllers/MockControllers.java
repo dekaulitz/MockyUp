@@ -180,7 +180,7 @@ public class MockControllers extends BaseController {
     @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @PostMapping(value = "/mocks/store")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
-        log.info("{}", body);
+        LOGGER.info("{}", body);
         try {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             MockEntities mock = this.mockModel.save(body, authenticationProfileModel);
@@ -213,7 +213,7 @@ public class MockControllers extends BaseController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

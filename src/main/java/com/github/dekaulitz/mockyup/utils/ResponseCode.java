@@ -8,10 +8,10 @@ public class ResponseCode {
 
     public static ErrorModel TOKEN_INVALID = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK010", "token invalid");
     public static ErrorModel REFRESH_TOKEN_REQUIRED = new ErrorModel(HttpStatus.FORBIDDEN, "MOCK011", "refresh token required");
-    public static ErrorModel TOKEN_EXPIRED = new ErrorModel(HttpStatus.FORBIDDEN, "MOCK012", "token expired please login");
-    public static ErrorModel TOKEN_NOT_FOUND = new ErrorModel(HttpStatus.FORBIDDEN, "MOCK013", "token expired please login");
+    public static ErrorModel TOKEN_EXPIRED = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK012", "token expired please login");
+    public static ErrorModel TOKEN_NOT_FOUND = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK010", "token invalid");
     public static ErrorModel INVALID_USERNAME_OR_PASSWORD = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK014", "invalid username or password");
-    public static ErrorModel INVALID_ACCESS_PERMISSION = new ErrorModel(HttpStatus.UNAUTHORIZED, "MOCK015", "invalid access permissions");
+    public static ErrorModel INVALID_ACCESS_PERMISSION = new ErrorModel(HttpStatus.FORBIDDEN, "MOCK015", "invalid access permissions");
 
 
     public static ErrorModel MOCKUP_NOT_FOUND = new ErrorModel(HttpStatus.BAD_REQUEST, "MOCK020", "mockup not found");
