@@ -41,7 +41,7 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
             mockEntities.setTitle(body.getTitle());
             mockEntities.setDescription(body.getDescription());
             parsingSpecToOpenApi(body, mockEntities);
-            List<UserMocksEntities> users = null;
+            List<UserMocksEntities> users = new ArrayList<>();
             UserMocksEntities creator = new UserMocksEntities();
             creator.setUserId(authenticationProfileModel.get_id());
             creator.setAccess(Role.MOCKS_READ_WRITE.name());
@@ -69,7 +69,6 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
         openAPI.getPaths().forEach((s, pathItem) -> {
             newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
         });
-        List<UserMocksEntities> users = new ArrayList<>();
         openAPI.setPaths(newPath);
         mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
     }
