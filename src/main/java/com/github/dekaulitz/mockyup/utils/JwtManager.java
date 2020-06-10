@@ -8,7 +8,6 @@ import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfile
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,10 +69,9 @@ public class JwtManager {
         return verifier.verify(token);
     }
 
-    public static String getAuthorizationHeader(HttpServletRequest request) {
-        String authenticationHeader = request.getHeader("Authorization");
-        if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer"))
+    public static String getAuthorizationHeader(String AuthHeader) {
+        if (AuthHeader == null || !AuthHeader.startsWith("Bearer"))
             throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
-        return authenticationHeader.substring(7);
+        return AuthHeader.substring(7);
     }
 }

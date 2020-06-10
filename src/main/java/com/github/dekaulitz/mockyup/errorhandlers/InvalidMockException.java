@@ -1,10 +1,11 @@
 package com.github.dekaulitz.mockyup.errorhandlers;
 
+import com.github.dekaulitz.mockyup.vmodels.ErrorVmodel;
 import lombok.Getter;
 
 public class InvalidMockException extends Exception {
     @Getter
-    private ErrorModel errorModel;
+    private ErrorVmodel errorVmodel;
 
     public InvalidMockException() {
     }
@@ -25,14 +26,14 @@ public class InvalidMockException extends Exception {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public InvalidMockException(ErrorModel errorModel) {
-        super(errorModel.getErrorMessage());
-        this.errorModel = errorModel;
+    public InvalidMockException(ErrorVmodel errorVmodel) {
+        super(errorVmodel.getErrorMessage());
+        this.errorVmodel = errorVmodel;
     }
 
-    public InvalidMockException(ErrorModel errorModel, Exception e) {
-        super(e.getMessage().isEmpty() ? errorModel.getErrorMessage() : e.getMessage());
-        errorModel.setErrorMessage(this.getMessage());
-        this.errorModel = errorModel;
+    public InvalidMockException(ErrorVmodel errorVmodel, Exception e) {
+        super(e.getMessage().isEmpty() ? errorVmodel.getErrorMessage() : e.getMessage());
+        errorVmodel.setErrorMessage(this.getMessage());
+        this.errorVmodel = errorVmodel;
     }
 }

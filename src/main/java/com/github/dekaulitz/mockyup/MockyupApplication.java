@@ -52,24 +52,25 @@ public class MockyupApplication implements CommandLineRunner {
             this.userRepository.save(rootUser);
             //get all mocks that has not users on the mock
             List<MockEntities> mocksHasNoUsers = this.mockRepository.getMocksHasNoUsers(null);
-            mocksHasNoUsers.forEach(mockEntities -> {
-                List<UserMocksEntities> userMocksEntitiesList = new ArrayList<>();
-                userMocksEntitiesList.add(UserMocksEntities.builder()
-                        .userId(rootUser.getId())
-                        .access(Role.MOCKS_READ_WRITE.toString())
-                        .build());
-                MockEntities updateMockenties = MockEntities.builder()
-                        .id(mockEntities.getId())
-                        .description(mockEntities.getDescription())
-                        .title(mockEntities.getTitle())
-                        .spec(mockEntities.getSpec())
-                        .swagger(mockEntities.getSwagger())
-                        .updatedDate(new Date())
-                        .users(userMocksEntitiesList)
-                        .updatedBy(MockCreatorEntities.builder().userId(rootUser.getId()).username(rootUser.getUsername()).build())
-                        .build();
-                this.mockRepository.save(updateMockenties);
-            });
+            if (mocksHasNoUsers != null)
+                mocksHasNoUsers.forEach(mockEntities -> {
+                    List<UserMocksEntities> userMocksEntitiesList = new ArrayList<>();
+                    userMocksEntitiesList.add(UserMocksEntities.builder()
+                            .userId(rootUser.getId())
+                            .access(Role.MOCKS_READ_WRITE.toString())
+                            .build());
+                    MockEntities updateMockenties = MockEntities.builder()
+                            .id(mockEntities.getId())
+                            .description(mockEntities.getDescription())
+                            .title(mockEntities.getTitle())
+                            .spec(mockEntities.getSpec())
+                            .swagger(mockEntities.getSwagger())
+                            .updatedDate(new Date())
+                            .users(userMocksEntitiesList)
+                            .updatedBy(MockCreatorEntities.builder().userId(rootUser.getId()).username(rootUser.getUsername()).build())
+                            .build();
+                    this.mockRepository.save(updateMockenties);
+                });
         }
 
         LOGGER.info("user root already created will pass the process");

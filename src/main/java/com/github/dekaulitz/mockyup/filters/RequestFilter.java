@@ -1,7 +1,6 @@
 package com.github.dekaulitz.mockyup.filters;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Component
-@Data
 public class RequestFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(RequestFilter.class);
     private final String REQUEST_ID = "requestId";
@@ -48,10 +46,9 @@ public class RequestFilter extends OncePerRequestFilter {
         req.put("method", request.getMethod());
         req.put("responseStatus", response.getStatus());
         CompletableFuture.runAsync(() -> {
-            MDC.put(CLIENT_ID, getClientIP(request));
             MDC.put(REQUEST_ID, token);
             MDC.put(REQUEST_TIME, requestTime);
-//            log.info("{}", this.logsMapper.logRequest(req));
+            log.info("{}", this.logsMapper.logRequest(req));
             MDC.remove(CLIENT_ID);
             MDC.remove(REQUEST_ID);
             MDC.remove(REQUEST_TIME);
@@ -68,15 +65,6 @@ public class RequestFilter extends OncePerRequestFilter {
         return token;
     }
 
-    private String getClientIP(final HttpServletRequest request) {
-        final String clientIP;
-        if (request.getHeader("X-Forwarded-For") != null) {
-            clientIP = request.getHeader("X-Forwarded-For").split(",")[0];
-        } else {
-            clientIP = request.getRemoteAddr();
-        }
-        return clientIP;
-    }
 
     @Override
     protected boolean isAsyncDispatch(final HttpServletRequest request) {

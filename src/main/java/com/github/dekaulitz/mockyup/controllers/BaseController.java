@@ -1,20 +1,27 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import com.github.dekaulitz.mockyup.errorhandlers.*;
-import com.github.dekaulitz.mockyup.models.helper.MockExample;
+import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
+import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
+import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
+import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.vmodels.ErrorVmodel;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
 
 public class BaseController {
     protected final LogsMapper logsMapper;
     protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    protected AuthenticationProfileModel authenticationProfileModel;
 
     public BaseController(LogsMapper logsMapper) {
         this.logsMapper = logsMapper;
@@ -25,7 +32,7 @@ public class BaseController {
      * @return
      * @desc generate mock response base mock data
      */
-    protected ResponseEntity generateMockResponseEntity(MockExample mock) {
+    protected ResponseEntity generateMockResponseEntity(MockHelper mock) {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (mock.getResponse().getHeaders() != null) {
             for (Map.Entry headerMap : mock.getResponse().getHeaders().entrySet()) {
@@ -39,13 +46,13 @@ public class BaseController {
     protected ResponseEntity<Object> handlingErrorResponse(Exception ex) {
         LOGGER.error(ex.getMessage(), ex.getCause());
         if (ex instanceof DuplicateDataEntry) {
-            return this.responseHandling(((DuplicateDataEntry) ex).getErrorModel());
+            return this.responseHandling(((DuplicateDataEntry) ex).getErrorVmodel());
         } else if (ex instanceof InvalidMockException) {
-            return this.responseHandling(((InvalidMockException) ex).getErrorModel());
+            return this.responseHandling(((InvalidMockException) ex).getErrorVmodel());
         } else if (ex instanceof NotFoundException) {
-            return this.responseHandling(((NotFoundException) ex).getErrorModel());
+            return this.responseHandling(((NotFoundException) ex).getErrorVmodel());
         } else if (ex instanceof UnathorizedAccess) {
-            return this.responseHandling(((UnathorizedAccess) ex).getErrorModel());
+            return this.responseHandling(((UnathorizedAccess) ex).getErrorVmodel());
         }
         return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage())
@@ -53,9 +60,13 @@ public class BaseController {
     }
 
 
-    private ResponseEntity<Object> responseHandling(ErrorModel errorModel) {
-        return ResponseEntity.status(errorModel.getHttpCode()).body(
-                ResponseVmodel.builder().responseMessage(errorModel.getErrorMessage())
-                        .responseCode(errorModel.getErrorCode()).build());
+    private ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel) {
+        return ResponseEntity.status(errorVmodel.getHttpCode()).body(
+                ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
+                        .responseCode(errorVmodel.getErrorCode()).build());
+    }
+
+    public AuthenticationProfileModel getAuthenticationProfileModel() {
+        return (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

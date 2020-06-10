@@ -1,11 +1,12 @@
 package com.github.dekaulitz.mockyup.errorhandlers;
 
+import com.github.dekaulitz.mockyup.vmodels.ErrorVmodel;
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 
 public class UnathorizedAccess extends AuthenticationException {
     @Getter
-    private ErrorModel errorModel;
+    private ErrorVmodel errorVmodel;
 
     public UnathorizedAccess(String msg, Throwable t) {
         super(msg, t);
@@ -15,14 +16,14 @@ public class UnathorizedAccess extends AuthenticationException {
         super(msg);
     }
 
-    public UnathorizedAccess(ErrorModel errorModel) {
-        super(errorModel.getErrorMessage());
-        this.errorModel = errorModel;
+    public UnathorizedAccess(ErrorVmodel errorVmodel) {
+        super(errorVmodel.getErrorMessage());
+        this.errorVmodel = errorVmodel;
     }
 
-    public UnathorizedAccess(ErrorModel errorModel, Exception e) {
-        super(e.getMessage().isEmpty() ? errorModel.getErrorMessage() : e.getMessage());
-        errorModel.setErrorMessage(this.getMessage());
-        this.errorModel = errorModel;
+    public UnathorizedAccess(ErrorVmodel errorVmodel, Exception e) {
+        super(e.getMessage().isEmpty() ? errorVmodel.getErrorMessage() : e.getMessage());
+        errorVmodel.setErrorMessage(this.getMessage());
+        this.errorVmodel = errorVmodel;
     }
 }

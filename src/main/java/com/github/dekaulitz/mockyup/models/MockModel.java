@@ -11,8 +11,8 @@ import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.models.helper.MockExample;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
+import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.vmodels.*;
@@ -38,9 +38,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-public class MockModel extends BaseModel<MockEntities, MockVmodel> {
+public class MockModel extends BaseMockModel<MockEntities, MockVmodel> {
 
     @Autowired
     private final MockRepository mockRepository;
@@ -63,11 +64,18 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
     }
 
     @Override
-    public MockEntities getById(String id) throws NotFoundException {
+    public MockEntities getById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         }
+        AtomicReference<Boolean> hasAccessToSee = new AtomicReference<>(false);
+        mockEntities.get().getUsers().forEach(userMocksEntities -> {
+            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())) {
+                hasAccessToSee.set(true);
+            }
+        });
+        if (!hasAccessToSee.get()) throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
         return mockEntities.get();
     }
 
@@ -116,7 +124,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         //add search query param
         basePage.addCriteria(q);
         //selected field
-        basePage.getQuery().fields().include("_id").include("title").include("description").include("users");
+        basePage.getQuery().fields().include("_id").include("title").include("description").include("users").include("updatedDate");
         //add additional criteria or custom criteria
         basePage.addAdditionalCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
         basePage.setPageable(pageable).build(MockEntities.class);
@@ -213,7 +221,7 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         return mongoTemplate.aggregate(aggregation, "mockup", DtoMockupDetailVmodel.class).getMappedResults();
     }
 
-    public MockExample getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
+    public MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
@@ -256,29 +264,6 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
             }
         }
         return null;
-    }
-
-    private void saveMockToHistory(MockEntities mockEntities) {
-        MockHistoryEntities mockHistoryEntities = new MockHistoryEntities();
-        mockHistoryEntities.setMockId(mockEntities.getId());
-        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
-        mockHistoryEntities.setSpec(mockEntities.getSpec());
-        mockHistoryEntities.setTitle(mockEntities.getTitle());
-        mockHistoryEntities.setDescription(mockEntities.getDescription());
-        mockHistoryEntities.setSwagger(mockEntities.getSwagger());
-        mockHistoryEntities.setUsers(mockEntities.getUsers());
-        mockHistoryEntities.setUpdatedBy(mockEntities.getUpdatedBy());
-        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
-        this.mockHistoryRepository.save(mockHistoryEntities);
-
-    }
-
-    private void checkAccessModificationMocks(MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) {
-        mockEntities.getUsers().forEach(userMocksEntities -> {
-            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id()) && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
-                throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
-            }
-        });
     }
 
     public Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
@@ -326,6 +311,14 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
         return mongoTemplate.updateFirst(query, update, MockEntities.class);
     }
 
+    /**
+     * @param id
+     * @param historyId
+     * @param authenticationProfileModel
+     * @return
+     * @throws NotFoundException
+     * @
+     */
     public DtoMockupHistoryVmodel geMockHistoryId(String id, String historyId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
@@ -341,4 +334,38 @@ public class MockModel extends BaseModel<MockEntities, MockVmodel> {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         return mockHistoryEntitiesList.get(0);
     }
+
+    /**
+     * @param mockEntities
+     * @desc save to mock history
+     */
+    private void saveMockToHistory(MockEntities mockEntities) {
+        MockHistoryEntities mockHistoryEntities = new MockHistoryEntities();
+        mockHistoryEntities.setMockId(mockEntities.getId());
+        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
+        mockHistoryEntities.setSpec(mockEntities.getSpec());
+        mockHistoryEntities.setTitle(mockEntities.getTitle());
+        mockHistoryEntities.setDescription(mockEntities.getDescription());
+        mockHistoryEntities.setSwagger(mockEntities.getSwagger());
+        mockHistoryEntities.setUsers(mockEntities.getUsers());
+        mockHistoryEntities.setUpdatedBy(mockEntities.getUpdatedBy());
+        mockHistoryEntities.setUpdatedDate(mockEntities.getUpdatedDate());
+        this.mockHistoryRepository.save(mockHistoryEntities);
+
+    }
+
+    /**
+     * @param mockEntities
+     * @param authenticationProfileModel
+     * @desc check current user login has access to modified the mocks
+     */
+    private void checkAccessModificationMocks(MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) {
+        mockEntities.getUsers().forEach(userMocksEntities -> {
+            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id()) && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
+                throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+            }
+        });
+    }
+
+
 }

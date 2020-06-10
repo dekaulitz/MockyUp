@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.errorhandlers;
+package com.github.dekaulitz.mockyup.vmodels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ErrorModel {
+public class ErrorVmodel {
     private HttpStatus httpCode;
     private String errorCode;
     private String errorMessage;

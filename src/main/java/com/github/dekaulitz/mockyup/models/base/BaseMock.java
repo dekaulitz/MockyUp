@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.models;
+package com.github.dekaulitz.mockyup.models.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
@@ -9,10 +9,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface Model<T, V> {
+public interface BaseMock<T, V> {
     List<T> all();
 
-    T getById(String id) throws NotFoundException;
+    T getById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException;
 
     T save(V view, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException;
 

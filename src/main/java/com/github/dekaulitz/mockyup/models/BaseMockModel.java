@@ -7,8 +7,9 @@ import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
-import com.github.dekaulitz.mockyup.models.helper.MockExample;
+import com.github.dekaulitz.mockyup.models.base.BaseMock;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
+import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
@@ -29,15 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-abstract class BaseModel<M, M1> implements Model<M, M1> {
-
-    interface Transform<M, M1> {
-        M transform(M1 v);
-    }
-
-    protected M transform(M1 b, Transform fobj) {
-        return (M) fobj.transform(b);
-    }
+abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
 
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -47,15 +40,8 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
             mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
             mockEntities.setTitle(body.getTitle());
             mockEntities.setDescription(body.getDescription());
-            result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
-            OpenAPI openAPI = result.getOpenAPI();
-            Paths newPath = new Paths();
-            openAPI.getPaths().forEach((s, pathItem) -> {
-                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-            });
-            List<UserMocksEntities> users = new ArrayList<>();
-            openAPI.setPaths(newPath);
-            mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+            parsingSpecToOpenApi(body, mockEntities);
+            List<UserMocksEntities> users = null;
             UserMocksEntities creator = new UserMocksEntities();
             creator.setUserId(authenticationProfileModel.get_id());
             creator.setAccess(Role.MOCKS_READ_WRITE.name());
@@ -75,53 +61,58 @@ abstract class BaseModel<M, M1> implements Model<M, M1> {
 
     }
 
+    private void parsingSpecToOpenApi(MockVmodel body, MockEntities mockEntities) throws JsonProcessingException {
+        SwaggerParseResult result;
+        result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
+        OpenAPI openAPI = result.getOpenAPI();
+        Paths newPath = new Paths();
+        openAPI.getPaths().forEach((s, pathItem) -> {
+            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+        });
+        List<UserMocksEntities> users = new ArrayList<>();
+        openAPI.setPaths(newPath);
+        mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+    }
+
     public void setUpdateMockEntity(MockVmodel body, MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
         SwaggerParseResult result = null;
         try {
             mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
-            result = new OpenAPIParser().readContents(JsonMapper.mapper().writeValueAsString(body.getSpec()), null, null);
-            OpenAPI openAPI = result.getOpenAPI();
-            Paths newPath = new Paths();
-            openAPI.getPaths().forEach((s, pathItem) -> {
-                newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
-            });
-            List<UserMocksEntities> users = new ArrayList<>();
-            openAPI.setPaths(newPath);
-            mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+            parsingSpecToOpenApi(body, mockEntities);
         } catch (JsonProcessingException e) {
             throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE, e);
         }
 
     }
 
-    public MockExample getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths)
+    public MockHelper getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths)
             throws NotFoundException, JsonProcessingException, InvalidMockException, UnsupportedEncodingException {
-        MockExample mock = null;
+        MockHelper mock = null;
         JsonNode jsonNode = JsonMapper.mapper().valueToTree(pathItem);
         Operation ops = JsonMapper.mapper().treeToValue(jsonNode.get(request.getMethod().toLowerCase()), Operation.class);
         if (ops.getExtensions() == null) throw new NotFoundException("no extension found");
-        Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockExample.X_EXAMPLES);
+        Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockHelper.X_EXAMPLES);
         if (examples == null) throw new NotFoundException("no mock example found");
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
             switch (extension.getKey()) {
-                case MockExample.X_PATH:
-                    mock = MockExample.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
+                case MockHelper.X_PATH:
+                    mock = MockHelper.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
                     if (mock != null) return mock;
                     break;
-                case MockExample.X_HEADERS:
-                    mock = MockExample.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
+                case MockHelper.X_HEADERS:
+                    mock = MockHelper.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
                     if (mock != null) return mock;
                     break;
-                case MockExample.X_QUERY:
-                    mock = MockExample.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
+                case MockHelper.X_QUERY:
+                    mock = MockHelper.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
                     if (mock != null) return mock;
                     break;
-                case MockExample.X_BODY:
-                    mock = MockExample.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
+                case MockHelper.X_BODY:
+                    mock = MockHelper.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
                     if (mock != null) return mock;
                     break;
-                case MockExample.X_DEFAULT:
-                    mock = MockExample.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue());
+                case MockHelper.X_DEFAULT:
+                    mock = MockHelper.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue());
                     if (mock != null) return mock;
                     break;
                 default:

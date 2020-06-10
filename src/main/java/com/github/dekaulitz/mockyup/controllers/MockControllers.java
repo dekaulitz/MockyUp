@@ -2,12 +2,11 @@ package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.MockModel;
-import com.github.dekaulitz.mockyup.models.helper.MockExample;
+import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
@@ -28,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +87,7 @@ public class MockControllers extends BaseController {
     public ResponseEntity mockingPath(@NonNull @RequestParam(value = "path") String path,
                                       @PathVariable String id, @RequestBody(required = false) String body,
                                       HttpServletRequest request, HttpServletResponse response) {
-        MockExample mock = null;
+        MockHelper mock = null;
         try {
             mock = this.mockModel.getMockMocking(request, path, id, body);
             if (mock != null)
@@ -113,8 +111,7 @@ public class MockControllers extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getCurrentAccess(@PathVariable String id) {
-        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockModel.getDetailMockUpIdByUserAccess(id, authenticationProfileModel);
+        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockModel.getDetailMockUpIdByUserAccess(id, this.getAuthenticationProfileModel());
         if (mockDetailWithAccess.isEmpty()) {
             throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
         }
@@ -134,9 +131,8 @@ public class MockControllers extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> addUserAccess(@PathVariable String id, @RequestBody AddUserAccessVmodel vmodel) {
-        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            return ResponseEntity.ok(this.mockModel.addUserAccessOnMock(id, vmodel, authenticationProfileModel));
+            return ResponseEntity.ok(this.mockModel.addUserAccessOnMock(id, vmodel, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
@@ -147,9 +143,8 @@ public class MockControllers extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> removeUserAccessOnMock(@PathVariable String id, @PathVariable String userId) {
-        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            return ResponseEntity.ok(this.mockModel.removeAccessUserOnMock(id, userId, authenticationProfileModel));
+            return ResponseEntity.ok(this.mockModel.removeAccessUserOnMock(id, userId, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
@@ -161,9 +156,8 @@ public class MockControllers extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getSpecHistory(@PathVariable String id, @PathVariable String historyId) {
-        AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            return ResponseEntity.ok(this.mockModel.geMockHistoryId(id, historyId, authenticationProfileModel));
+            return ResponseEntity.ok(this.mockModel.geMockHistoryId(id, historyId, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
@@ -180,8 +174,7 @@ public class MockControllers extends BaseController {
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
         LOGGER.info("{}", body);
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            MockEntities mock = this.mockModel.save(body, authenticationProfileModel);
+            MockEntities mock = this.mockModel.save(body, this.getAuthenticationProfileModel());
             Paths newPath = new Paths();
             body.setId(mock.getId());
             OpenAPI openAPI = Json.mapper().readValue(mock.getSpec(), OpenAPI.class);
@@ -228,8 +221,7 @@ public class MockControllers extends BaseController {
     )
     public ResponseEntity deleteByMockId(@PathVariable String id) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            this.mockModel.deleteById(id, authenticationProfileModel);
+            this.mockModel.deleteById(id, this.getAuthenticationProfileModel());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
@@ -240,7 +232,7 @@ public class MockControllers extends BaseController {
     @GetMapping(value = "/mocks/{id}/spec", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMockSpecById(@PathVariable String id) {
         try {
-            MockEntities mock = this.mockModel.getById(id);
+            MockEntities mock = this.mockModel.getById(id, this.getAuthenticationProfileModel());
             MockVmodel mockResponseVmodel = new MockVmodel();
             mockResponseVmodel.setSpec(Json.mapper().readTree(mock.getSwagger()));
             return ResponseEntity.ok(mockResponseVmodel.getSpec());
@@ -253,8 +245,7 @@ public class MockControllers extends BaseController {
     @PutMapping(value = "/mocks/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateMockById(@PathVariable String id, @RequestBody MockVmodel body) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            MockEntities mock = this.mockModel.updateByID(id, body, authenticationProfileModel);
+            MockEntities mock = this.mockModel.updateByID(id, body, this.getAuthenticationProfileModel());
             body.setId(mock.getId());
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             body.setDateUpdated(mock.getUpdatedDate());
@@ -270,8 +261,7 @@ public class MockControllers extends BaseController {
             Pageable pageable,
             @RequestParam(value = "q", required = false) String q) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q, authenticationProfileModel);
+            MockEntitiesPage pagingVmodel = this.mockModel.paging(pageable, q, this.getAuthenticationProfileModel());
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
             return this.handlingErrorResponse(e);

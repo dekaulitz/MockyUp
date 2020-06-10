@@ -1,7 +1,6 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.models.UserModel;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,8 +28,7 @@ public class UserControllers extends BaseController {
     @PostMapping(value = "/mocks/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> adduser(@RequestBody RegistrationVmodel vmodel) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserEntities userEntities = this.userModel.addUser(vmodel, authenticationProfileModel);
+            UserEntities userEntities = this.userModel.addUser(vmodel, this.getAuthenticationProfileModel());
             RegistrationResponseVmodel registrationResponseVmodel = RegistrationResponseVmodel
                     .builder().accessList(userEntities.getAccessList())
                     .id(userEntities.getId())
@@ -60,8 +57,7 @@ public class UserControllers extends BaseController {
     @GetMapping(value = "/mocks/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUserList(@RequestParam(value = "username", required = false) String username) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return ResponseEntity.ok(this.userModel.listUsers(username, authenticationProfileModel));
+            return ResponseEntity.ok(this.userModel.listUsers(username, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
@@ -71,7 +67,6 @@ public class UserControllers extends BaseController {
     @PutMapping(value = "/mocks/users/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUsers(@RequestBody UpdateUserVmodel vmodel, @PathVariable String id) {
         try {
-            AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);

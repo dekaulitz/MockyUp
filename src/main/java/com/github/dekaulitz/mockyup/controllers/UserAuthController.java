@@ -37,7 +37,8 @@ public class UserAuthController extends BaseController {
     @GetMapping(value = "/mocks/auth/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> logOut(HttpServletRequest request) {
         try {
-            String authorization = JwtManager.getAuthorizationHeader(request);
+            String headerAuth = request.getHeader("Authorization");
+            String authorization = JwtManager.getAuthorizationHeader(headerAuth);
             return ResponseEntity.ok(this.userModel.refreshToken(authorization));
         } catch (Exception e) {
             return this.handlingErrorResponse(e);
