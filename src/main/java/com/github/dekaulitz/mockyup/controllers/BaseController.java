@@ -44,7 +44,7 @@ public class BaseController {
 
 
     protected ResponseEntity<Object> handlingErrorResponse(Exception ex) {
-        LOGGER.error(ex.getMessage(), ex.getCause());
+        LOGGER.error(ex.getMessage());
         if (ex instanceof DuplicateDataEntry) {
             return this.responseHandling(((DuplicateDataEntry) ex).getErrorVmodel());
         } else if (ex instanceof InvalidMockException) {
@@ -54,6 +54,7 @@ public class BaseController {
         } else if (ex instanceof UnathorizedAccess) {
             return this.responseHandling(((UnathorizedAccess) ex).getErrorVmodel());
         }
+        LOGGER.error("exception occured", ex);
         return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage())
                         .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());

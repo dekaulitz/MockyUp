@@ -172,7 +172,6 @@ public class MockControllers extends BaseController {
     @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @PostMapping(value = "/mocks/store")
     public ResponseEntity storeMocksEntity(@RequestBody MockVmodel body) {
-        LOGGER.info("{}", body);
         try {
             MockEntities mock = this.mockModel.save(body, this.getAuthenticationProfileModel());
             Paths newPath = new Paths();
