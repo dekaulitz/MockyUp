@@ -1,7 +1,6 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
-import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.UserModel;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.vmodels.UserLoginVmodel;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 @RestController
 public class UserAuthController extends BaseController {
@@ -31,10 +29,8 @@ public class UserAuthController extends BaseController {
     public ResponseEntity<Object> login(@RequestBody UserLoginVmodel vmodel) {
         try {
             return ResponseEntity.ok(this.userModel.doLogin(vmodel));
-        } catch (UnathorizedAccess unathorizedAccess) {
+        } catch (Exception unathorizedAccess) {
             return this.handlingErrorResponse(unathorizedAccess);
-        } catch (UnsupportedEncodingException e) {
-            return this.handlingErrorResponse(e);
         }
     }
 
@@ -43,7 +39,7 @@ public class UserAuthController extends BaseController {
         try {
             String authorization = JwtManager.getAuthorizationHeader(request);
             return ResponseEntity.ok(this.userModel.refreshToken(authorization));
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }

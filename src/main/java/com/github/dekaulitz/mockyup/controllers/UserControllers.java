@@ -4,8 +4,6 @@ import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
-import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
-import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.models.UserModel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
@@ -39,8 +37,8 @@ public class UserControllers extends BaseController {
                     .id(userEntities.getId())
                     .username(userEntities.getUsername()).build();
             return ResponseEntity.ok(registrationResponseVmodel);
-        } catch (DuplicateDataEntry duplicateDataEntry) {
-            return this.handlingErrorResponse(duplicateDataEntry);
+        } catch (Exception e) {
+            return this.handlingErrorResponse(e);
         }
 
     }
@@ -75,9 +73,7 @@ public class UserControllers extends BaseController {
         try {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
-        } catch (DuplicateDataEntry duplicateDataEntry) {
-            return this.handlingErrorResponse(duplicateDataEntry);
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }
@@ -88,7 +84,7 @@ public class UserControllers extends BaseController {
     public ResponseEntity getUserById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(this.userModel.getUserById(id));
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }

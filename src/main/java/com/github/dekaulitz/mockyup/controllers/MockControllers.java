@@ -5,8 +5,6 @@ import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
-import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
-import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.models.MockModel;
 import com.github.dekaulitz.mockyup.models.helper.MockExample;
@@ -166,7 +164,7 @@ public class MockControllers extends BaseController {
         AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             return ResponseEntity.ok(this.mockModel.geMockHistoryId(id, historyId, authenticationProfileModel));
-        } catch (UnathorizedAccess | NotFoundException e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }
@@ -233,9 +231,7 @@ public class MockControllers extends BaseController {
             AuthenticationProfileModel authenticationProfileModel = (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             this.mockModel.deleteById(id, authenticationProfileModel);
             return ResponseEntity.ok().build();
-        } catch (NotFoundException e) {
-            return this.handlingErrorResponse(e);
-        } catch (UnathorizedAccess e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }
@@ -263,7 +259,7 @@ public class MockControllers extends BaseController {
             body.setSpec(Json.mapper().readTree(mock.getSwagger()));
             body.setDateUpdated(mock.getUpdatedDate());
             return ResponseEntity.ok(body);
-        } catch (NotFoundException | UnathorizedAccess | InvalidMockException | JsonProcessingException e) {
+        } catch (Exception e) {
             return this.handlingErrorResponse(e);
         }
     }
