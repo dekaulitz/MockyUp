@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.errorhandlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
 import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ErrorVmodel;
@@ -16,23 +16,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public class BaseController {
-    protected final LogsMapper logsMapper;
+
     protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     protected AuthenticationProfileModel authenticationProfileModel;
-
-    public BaseController(LogsMapper logsMapper) {
-        this.logsMapper = logsMapper;
-    }
 
     /**
      * @param mock
      * @return
      * @desc generate mock response base mock data
      */
-    protected ResponseEntity generateMockResponseEntity(MockHelper mock) {
+    protected ResponseEntity<Object> generateMockResponseEntity(MockHelper mock) {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (mock.getResponse().getHeaders() != null) {
             for (Map.Entry headerMap : mock.getResponse().getHeaders().entrySet()) {
@@ -43,27 +40,29 @@ public class BaseController {
     }
 
 
-    protected ResponseEntity<Object> handlingErrorResponse(Exception ex) {
-        LOGGER.error(ex.getMessage());
+    protected ResponseEntity<Object> handlingErrorResponse(Exception ex, HttpServletRequest request) {
         if (ex instanceof DuplicateDataEntry) {
-            return this.responseHandling(((DuplicateDataEntry) ex).getErrorVmodel());
+            return this.responseHandling(((DuplicateDataEntry) ex).getErrorVmodel(), request);
         } else if (ex instanceof InvalidMockException) {
-            return this.responseHandling(((InvalidMockException) ex).getErrorVmodel());
+            return this.responseHandling(((InvalidMockException) ex).getErrorVmodel(), request);
         } else if (ex instanceof NotFoundException) {
-            return this.responseHandling(((NotFoundException) ex).getErrorVmodel());
+            return this.responseHandling(((NotFoundException) ex).getErrorVmodel(), request);
         } else if (ex instanceof UnathorizedAccess) {
-            return this.responseHandling(((UnathorizedAccess) ex).getErrorVmodel());
+            return this.responseHandling(((UnathorizedAccess) ex).getErrorVmodel(), request);
         }
-        LOGGER.error("exception occured", ex);
+        LOGGER.error("exception occured " + ex.getMessage(), ex);
         return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode())
+                        .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
+                        .build());
     }
 
 
-    private ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel) {
+    private ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel, HttpServletRequest request) {
         return ResponseEntity.status(errorVmodel.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
+                        .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
                         .responseCode(errorVmodel.getErrorCode()).build());
     }
 

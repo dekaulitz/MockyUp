@@ -35,6 +35,7 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     public void setSaveMockEntity(MockVmodel body, MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
+//        Assert.notNull(body.getTitle());
         SwaggerParseResult result = null;
         try {
             mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));

@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.filters;
 
 import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
+import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +16,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class RequestFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(RequestFilter.class);
-    private final String REQUEST_ID = "requestId";
-    private final String CLIENT_ID = "clientIp";
-    private final String REQUEST_TIME = "requestTime";
     @Autowired
     private final LogsMapper logsMapper;
 
@@ -35,30 +32,30 @@ public class RequestFilter extends OncePerRequestFilter {
             throws java.io.IOException, ServletException {
         long start = System.currentTimeMillis();
         final String token = getxRequestID(request);
-        if (!StringUtils.isEmpty(REQUEST_ID)) {
-            response.addHeader(REQUEST_ID,  token);
+        if (!StringUtils.isEmpty(ConstantsRepository.REQUEST_ID)) {
+            response.addHeader(ConstantsRepository.REQUEST_ID, token);
         }
+        MDC.put(ConstantsRepository.REQUEST_ID, token);
+        MDC.put(ConstantsRepository.PATH_ENDPOINT, request.getRequestURI());
+        request.setAttribute(ConstantsRepository.REQUEST_ID, token);
+        request.setAttribute(ConstantsRepository.REQUEST_TIME, start);
         chain.doFilter(request, response);
         final String requestTime = (System.currentTimeMillis() - start) + "ms";
         Map<String, Object> req = new HashMap<>();
         req.put("headers", getRequestHeaders(request));
+        req.put("responseTime", requestTime);
         req.put("endpoint", request.getRequestURI());
         req.put("method", request.getMethod());
         req.put("responseStatus", response.getStatus());
-        CompletableFuture.runAsync(() -> {
-            MDC.put(REQUEST_ID, token);
-            MDC.put(REQUEST_TIME, requestTime);
-            log.info("{}", this.logsMapper.logRequest(req));
-            MDC.remove(CLIENT_ID);
-            MDC.remove(REQUEST_ID);
-            MDC.remove(REQUEST_TIME);
-        });
+        log.info("{}", this.logsMapper.logRequest(req));
+        MDC.remove(ConstantsRepository.REQUEST_ID);
+        MDC.remove(ConstantsRepository.REQUEST_TIME);
     }
 
-    private String getxRequestID(final HttpServletRequest request) {
+    private String getxRequestID(HttpServletRequest request) {
         final String token;
-        if (!StringUtils.isEmpty(REQUEST_ID) && !StringUtils.isEmpty(request.getHeader(REQUEST_ID))) {
-            token = request.getHeader(REQUEST_ID);
+        if (!StringUtils.isEmpty(ConstantsRepository.REQUEST_ID) && !StringUtils.isEmpty(request.getHeader(ConstantsRepository.REQUEST_ID))) {
+            token = request.getHeader(ConstantsRepository.REQUEST_ID);
         } else {
             token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
         }

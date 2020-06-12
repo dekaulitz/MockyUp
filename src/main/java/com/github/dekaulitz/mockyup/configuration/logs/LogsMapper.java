@@ -26,6 +26,5 @@ public class LogsMapper {
             e.printStackTrace();
             return null;
         }
-
     }
 }

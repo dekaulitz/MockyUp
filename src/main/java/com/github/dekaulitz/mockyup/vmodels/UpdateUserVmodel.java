@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,9 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 public class UpdateUserVmodel {
-    @NotNull
+    @NotEmpty(message = "Please provide a username")
     private String username;
-    @NotNull
+    @NotEmpty(message = "Please provide a password")
     private String password;
     private List<String> accessList;
 }

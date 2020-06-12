@@ -1,6 +1,5 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.github.dekaulitz.mockyup.configuration.logs.LogsMapper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -17,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ErrorHandlerController extends BaseController implements ErrorController {
 
-    public ErrorHandlerController(LogsMapper logsMapper) {
-        super(logsMapper);
-    }
+
 
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -31,7 +28,7 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
                     .responseMessage(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorMessage()).build());
         }
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        return this.handlingErrorResponse(exception);
+        return this.handlingErrorResponse(exception, request);
 
     }
 

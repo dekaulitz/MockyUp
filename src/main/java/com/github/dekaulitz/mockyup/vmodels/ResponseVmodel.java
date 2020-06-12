@@ -13,5 +13,7 @@ public class ResponseVmodel {
     private String responseMessage;
     @JsonProperty("response_code")
     private String responseCode;
+    @JsonProperty("requestId")
+    private String requestId;
     private Object data;
 }
