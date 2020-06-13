@@ -1,19 +1,20 @@
 version: 2
 jobs:
-  working_directory: ~/mockup
-  docker:
-    - image: circleci/openjdk:8-jdk-stretch
-  steps:
-    - checkout
-    - restore_cache:
-        key: mockup-{{ checksum "pom.xml" }}
-    - run: mvn dependency:go-offline
-    - save_cache:
-        paths:
-          - ~/.m2
-        key: mockup-{{ checksum "pom.xml" }}
-    - run: mvn package
-    - store_test_results:
-        path: target/surefire-reports
-    - store_artifacts:
-        path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
+  build:
+    working_directory: ~/mockup
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          key: mockup-{{ checksum "pom.xml" }}
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: mockup-{{ checksum "pom.xml" }}
+      - run: mvn package
+      - store_test_results:
+          path: target/surefire-reports
+      - store_artifacts:
+          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
