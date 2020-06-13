@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ErrorHandlerController extends BaseController implements ErrorController {
 
-
-
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> handleError(HttpServletRequest request) {
@@ -28,6 +26,9 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
                     .responseMessage(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorMessage()).build());
         }
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+        if (exception == null) {
+            exception = (Exception) request.getAttribute("org.springframework.boot.web.servlet.error.DefaultErrorAttributes.ERROR");
+        }
         return this.handlingErrorResponse(exception, request);
 
     }

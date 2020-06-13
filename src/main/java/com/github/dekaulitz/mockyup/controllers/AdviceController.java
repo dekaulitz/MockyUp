@@ -1,75 +1,35 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
-import com.github.dekaulitz.mockyup.errorhandlers.NotFoundException;
+import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.io.IOException;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 
 
 @ControllerAdvice
+@Log4j2
 public class AdviceController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(InvalidMockException.class)
-    public final ResponseEntity<Object> handleInvalidMockException(InvalidMockException ex, WebRequest request) {
-        if (ex.getErrorVmodel() == null) return handlingNullErrorModel(ex);
-        return ResponseEntity.status(ex.getErrorVmodel().getHttpCode()).body(
-                ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ex.getErrorVmodel().getErrorCode()).build());
+    @ExceptionHandler(AccessDeniedException.class)
+    public final ResponseEntity<Object> handleInvalidMockException(AccessDeniedException ex, HttpServletRequest request) {
+        return ResponseEntity.status(ResponseCode.INVALID_ACCESS_PERMISSION.getHttpCode()).body(
+                ResponseVmodel.builder().responseMessage(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorMessage())
+                        .responseCode(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode()).build());
     }
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleInvalidMockException(Exception ex, WebRequest request) {
+    public final ResponseEntity<Object> handleInvalidMockException(Exception ex, HttpServletRequest request) {
+        log.error("error occured : ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
-    }
-
-    @ExceptionHandler(IOException.class)
-    public final ResponseEntity<Object> handleIoException(IOException ex, WebRequest request) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-        if (ex.getErrorVmodel() == null) return handlingNullErrorModel(ex);
-        return ResponseEntity.status(ex.getErrorVmodel().getHttpCode()).body(
-                ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ex.getErrorVmodel().getErrorCode()).build());
-    }
-
-    /**
-     * @param ex
-     * @return
-     * @desc handling error model when null
-     */
-    public ResponseEntity<Object> handlingNullErrorModel(Exception ex) {
-        return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
-                ResponseVmodel.builder().responseMessage(ex.getMessage())
-                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
-
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(x -> x.getDefaultMessage()).collect(Collectors.joining(", "));
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
-                ResponseVmodel.builder().responseMessage(errors)
+                ResponseVmodel.builder().responseMessage(ex.getMessage()).requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
                         .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
     }
 }

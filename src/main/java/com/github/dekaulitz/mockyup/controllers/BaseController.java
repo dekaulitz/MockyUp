@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,12 @@ public class BaseController {
             return this.responseHandling(((NotFoundException) ex).getErrorVmodel(), request);
         } else if (ex instanceof UnathorizedAccess) {
             return this.responseHandling(((UnathorizedAccess) ex).getErrorVmodel(), request);
+        } else if (ex instanceof AccessDeniedException) {
+            return ResponseEntity.status(ResponseCode.INVALID_ACCESS_PERMISSION.getHttpCode()).body(
+                    ResponseVmodel.builder().responseMessage(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorMessage())
+                            .responseCode(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode())
+                            .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
+                            .build());
         }
         LOGGER.error("exception occured " + ex.getMessage(), ex);
         return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(

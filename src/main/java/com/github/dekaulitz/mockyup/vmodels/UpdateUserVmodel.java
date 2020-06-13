@@ -15,7 +15,6 @@ import java.util.List;
 public class UpdateUserVmodel {
     @NotEmpty(message = "Please provide a username")
     private String username;
-    @NotEmpty(message = "Please provide a password")
     private String password;
     private List<String> accessList;
 }
