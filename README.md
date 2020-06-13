@@ -1,6 +1,6 @@
 <h2 align="left">MOCKYUP</h2>
 MockyUp is a mockup server that release with java version that following OASOPENAPI version 3.xx. You can easyly to integration your swagger documentation with this mockup server with injecting some vendor extension for generating some example.
-
+For  <a href="https://github.com/dekaulitz/mockup-frontend">Mockup UI Repository </a>
 <h2 align="left">Stack</h2>
 This project build under spring boot framework with spring data mongodb and <a href="https://github.com/swagger-api">swagger library version 3 </a>.
 
@@ -8,13 +8,14 @@ This project build under spring boot framework with spring data mongodb and <a h
 <h4>Requirement</h4>
 Pre requirement you must have:
 
-* Monngodb
+* MongoDB
 * Java absolutely at least 1.8 version
 * Postman
+* Open API Spec version 3.0.x its mandatory if you want to mock response works
 
 
 <h4>How to run it</h4>
-Changes your applicatio.properties if you have different configuration of mongodb installment.
+Changes your application.properties if you have different configuration of mongodb installment.
 
 For build the jar and downloading the library
 ```
@@ -32,6 +33,8 @@ For swagger ui  we are using custom swagger ui that for enable mockup path
 ```
 http://localhost:8080/docs-swagger/index.html
 ```
+
+when the apps running will check the default account `root` if account root its not exist will create the new one with password `root` * youre should change latter if you are already using the previous mock, will also adding users into every mock that has not users.
 
 
 <h4>How to Add Example on Swagger OAS 3</h4>
