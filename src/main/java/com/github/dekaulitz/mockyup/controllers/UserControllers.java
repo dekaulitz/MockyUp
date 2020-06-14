@@ -38,6 +38,17 @@ public class UserControllers extends BaseController {
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
+    }
+
+    @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
+    @DeleteMapping(value = "/mocks/user/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteUser(@PathVariable String id, HttpServletRequest request) {
+        try {
+            this.userModel.deleteUser(id, this.getAuthenticationProfileModel());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return this.handlingErrorResponse(e, request);
+        }
 
     }
 

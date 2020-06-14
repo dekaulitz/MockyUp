@@ -115,6 +115,7 @@ public class MockModel extends BaseMockModel<MockEntities, MockVmodel> {
         }
         this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
         mockRepository.deleteById(mockEntities.get().getId());
+        mockHistoryRepository.deleteAllByMockId(mockEntities.get().getId());
     }
 
     @Override
