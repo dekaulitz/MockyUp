@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +14,16 @@ import java.util.HashMap;
 public class MockResponseModel {
     private int httpCode;
     private Object response;
-    private HashMap<String, Object> headers;
+    private Map<String, Object> headers;
+
+    public Object get$ref() {
+        return $ref;
+    }
+
+    public void set$ref(Object $ref) {
+        this.$ref = $ref;
+    }
+
+    private Object $ref;
+
 }
