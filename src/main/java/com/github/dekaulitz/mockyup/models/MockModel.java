@@ -115,6 +115,7 @@ public class MockModel extends BaseMockModel<MockEntities, MockVmodel> {
         }
         this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
         mockRepository.deleteById(mockEntities.get().getId());
+        mockHistoryRepository.deleteAllByMockId(mockEntities.get().getId());
     }
 
     @Override
@@ -231,16 +232,14 @@ public class MockModel extends BaseMockModel<MockEntities, MockVmodel> {
         //pathitem is exist or without path parameter clean url
         PathItem item = openAPI.getPaths().get(path);
         if (item != null) {
-            String openApiPath = path.replace("_", ".");
-            String[] openAPIPaths = openApiPath.split("/");
-            return getMockResponse(item, request, body, openAPIPaths, paths);
+            String[] openAPIPaths = path.split("/");
+            return getMockResponse(item, request, body, openAPIPaths, paths, openAPI.getComponents());
         }
         //path item with path parameter we should check every endpoint that related with data
         for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
             String s = entry.getKey();
             PathItem pathItem = entry.getValue();
-            String openApiPath = s.replace("_", ".");
-            String[] openAPIPaths = openApiPath.split("/");
+            String[] openAPIPaths = s.split("/");
             String[] regexPath = new String[paths.length];
             // every targeting mocks uri should has same length
             if (openAPIPaths.length == paths.length) {
@@ -259,8 +258,8 @@ public class MockModel extends BaseMockModel<MockEntities, MockVmodel> {
                     }
                 }
                 //check if current openapi path equal with regexpath (path)
-                if (openApiPath.equals(String.join("/", regexPath)))
-                    return getMockResponse(pathItem, request, body, openAPIPaths, paths);
+                if (s.equals(String.join("/", regexPath)))
+                    return getMockResponse(pathItem, request, body, openAPIPaths, paths, openAPI.getComponents());
             }
         }
         return null;

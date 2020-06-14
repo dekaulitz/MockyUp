@@ -51,6 +51,15 @@ public class UserModel {
         return this.userRepository.save(userEntities);
     }
 
+    public void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry {
+        Optional<UserEntities> userEntities = this.userRepository.findById(userId);
+        if (!userEntities.isPresent()) {
+            throw new DuplicateDataEntry(ResponseCode.USER_NOT_FOUND);
+        }
+
+        this.userRepository.delete(userEntities.get());
+    }
+
     public AccessVmodel doLogin(UserLoginVmodel vmodel) throws UnathorizedAccess, UnsupportedEncodingException {
         UserEntities userExist = this.userRepository.findFirstByUsername(vmodel.getUsername());
         if (userExist == null) {

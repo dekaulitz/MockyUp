@@ -14,10 +14,7 @@ import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.parser.OpenAPIParser;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.Paths;
+import io.swagger.v3.oas.models.*;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,6 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     public void setSaveMockEntity(MockVmodel body, MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) throws InvalidMockException {
-//        Assert.notNull(body.getTitle());
         SwaggerParseResult result = null;
         try {
             mockEntities.setSwagger(JsonMapper.mapper().writeValueAsString(body.getSpec()));
@@ -68,7 +64,7 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
         OpenAPI openAPI = result.getOpenAPI();
         Paths newPath = new Paths();
         openAPI.getPaths().forEach((s, pathItem) -> {
-            newPath.put(s.replace(".", "_").replace("{", "*{"), pathItem);
+            newPath.put(s.replace("{", "*{"), pathItem);
         });
         openAPI.setPaths(newPath);
         mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
@@ -85,34 +81,34 @@ abstract class BaseMockModel<M, M1> implements BaseMock<M, M1> {
 
     }
 
-    public MockHelper getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths)
+    public MockHelper getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths, Components components)
             throws NotFoundException, JsonProcessingException, InvalidMockException, UnsupportedEncodingException {
         MockHelper mock = null;
         JsonNode jsonNode = JsonMapper.mapper().valueToTree(pathItem);
         Operation ops = JsonMapper.mapper().treeToValue(jsonNode.get(request.getMethod().toLowerCase()), Operation.class);
-        if (ops.getExtensions() == null) throw new NotFoundException("no extension found");
+        if (ops.getExtensions() == null) throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockHelper.X_EXAMPLES);
-        if (examples == null) throw new NotFoundException("no mock example found");
+        if (examples == null) throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
             switch (extension.getKey()) {
                 case MockHelper.X_PATH:
-                    mock = MockHelper.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths);
+                    mock = MockHelper.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths, components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_HEADERS:
-                    mock = MockHelper.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue());
+                    mock = MockHelper.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_QUERY:
-                    mock = MockHelper.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue());
+                    mock = MockHelper.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_BODY:
-                    mock = MockHelper.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body);
+                    mock = MockHelper.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body, components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_DEFAULT:
-                    mock = MockHelper.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue());
+                    mock = MockHelper.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 default:
