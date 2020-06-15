@@ -10,4 +10,6 @@ import java.util.List;
 public interface MockHistoryRepository extends MongoRepository<MockHistoryEntities, String> {
 
     public List<MockHistoryEntities> findByMockId(String id);
+
+    public void deleteAllByMockId(String mockId);
 }
