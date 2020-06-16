@@ -18,6 +18,9 @@ public class ResponseCode {
     public static ErrorVmodel INVALID_MOCKUP_STRUCTURE = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK021", "Invalid mockup structure!");
     public static ErrorVmodel USER_NOT_FOUND = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK022", "User not found!");
     public static ErrorVmodel USER_ALREADY_EXIST = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK023", "User already exists!");
+    public static ErrorVmodel INVALID_MOCK_REF = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK024", "Rereference mocks its not valid");
+    public static ErrorVmodel INVALID_MOCK_HEADER = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK025", "Invalid mock header");
+    public static ErrorVmodel INVALID_MOCK_DEFAULT = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK026", "Invalid mock default");
 
 
     public static ErrorVmodel GLOBAL_ERROR_MESSAGE = new ErrorVmodel(HttpStatus.INTERNAL_SERVER_ERROR, "MOCK001", "Something bad happen");

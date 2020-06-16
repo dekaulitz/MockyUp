@@ -1,5 +1,7 @@
 <h2 align="left">MOCKYUP</h2>
 MockyUp is a mockup server that release with java version that following OASOPENAPI version 3.xx. You can easyly to integration your swagger documentation with this mockup server with injecting some vendor extension for generating some example.
+**We only supported for json request and response**.
+
 For  <a href="https://github.com/dekaulitz/mockup-frontend">Mockup UI Repository </a>
 <h2 align="left">Stack</h2>
 This project build under spring boot framework with spring data mongodb and <a href="https://github.com/swagger-api">swagger library version 3 </a>.
