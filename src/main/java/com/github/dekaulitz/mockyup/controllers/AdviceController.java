@@ -4,14 +4,18 @@ import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 
 
 @ControllerAdvice
@@ -30,6 +34,17 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         log.error("error occured : ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage()).requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
+                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(x -> x.getDefaultMessage()).collect(Collectors.joining(", "));
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                ResponseVmodel.builder().responseMessage(errors)
                         .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
     }
 }
