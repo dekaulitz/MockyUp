@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -39,12 +40,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String errors = ex.getBindingResult()
+        List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage()).collect(Collectors.joining(", "));
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
-                ResponseVmodel.builder().responseMessage(errors)
-                        .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+                .map(x -> x.getDefaultMessage()).collect(Collectors.toList());
+        return ResponseEntity.status(ResponseCode.VALIDATION_FAIL.getHttpCode()).body(
+                ResponseVmodel.builder().extraMessages(errors).responseMessage(ResponseCode.VALIDATION_FAIL.getErrorMessage())
+                        .responseCode(ResponseCode.VALIDATION_FAIL.getErrorCode()).build());
     }
 }

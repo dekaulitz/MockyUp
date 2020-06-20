@@ -9,13 +9,15 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class RequestFilter extends OncePerRequestFilter {
@@ -83,15 +85,5 @@ public class RequestFilter extends OncePerRequestFilter {
         return headers;
 
     }
-
-    private Map<String, Object> getResponsetHeaders(ContentCachingResponseWrapper response) {
-        Map<String, Object> headers = new HashMap<>();
-        Collection<String> headerNames = response.getHeaderNames();
-        for (String headerName : headerNames) {
-            headers.put(headerName, response.getHeader(headerName));
-        }
-        return headers;
-    }
-
 }
 
