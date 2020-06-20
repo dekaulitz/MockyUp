@@ -23,7 +23,6 @@ import java.util.Map;
 public class BaseController {
 
     protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    protected AuthenticationProfileModel authenticationProfileModel;
 
     /**
      * @param mock
