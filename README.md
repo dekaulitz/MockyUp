@@ -51,5 +51,5 @@ so im just adding new extension fields:
 * `x-default` new extension sub from `x-examples` related with default example
 
 <h4>Swagger with mocks</h4>
-You can see how to integrate swagger.json with the mock response with this <a href="https://github.com/dekaulitz/MockyUp/blob/master/src/main/resources/public/example_mocking_books.json.">structure</a>.
+You can see how to integrate swagger.json with the mock response with this <a href="https://github.com/dekaulitz/MockyUp/blob/master/src/main/resources/public/example_mocking_books.json">structure</a>.
 change the host with the current host and change `testing_path` with the id from database and check your request.
