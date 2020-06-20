@@ -3,7 +3,7 @@ package com.github.dekaulitz.mockyup.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
-import com.github.dekaulitz.mockyup.models.MockResponseModel;
+import com.github.dekaulitz.mockyup.vmodels.DtoMockResponseVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.Components;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class MockHelper {
     private Map<String, Object> property;
     @Setter
     @Getter
-    private MockResponseModel response;
+    private DtoMockResponseVmodel response;
 
     /**
      * @param request
@@ -200,7 +200,7 @@ public class MockHelper {
 
     private static void parsingMockFromJsonMapper(MockHelper mockHelper, Map<String, Object> stringObjectMap) {
         mockHelper.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
-        mockHelper.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), MockResponseModel.class));
+        mockHelper.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), DtoMockResponseVmodel.class));
     }
 
     private static void getComponentReference(MockHelper mockHelper, Components components) throws InvalidMockException {

@@ -3,6 +3,8 @@ package com.github.dekaulitz.mockyup.vmodels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class ResponseVmodel {
     @JsonProperty("requestId")
     private String requestId;
     private Object data;
+    private List<String> extraMessages;
 }
