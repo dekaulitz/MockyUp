@@ -1,7 +1,8 @@
 package com.github.dekaulitz.mockyup.controllers;
 
+import com.github.dekaulitz.mockyup.base.controller.BaseController;
+import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ResponseVmodel;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import com.github.dekaulitz.mockyup.vmodels.ResponseVmodel;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

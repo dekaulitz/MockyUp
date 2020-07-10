@@ -1,15 +1,16 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.dekaulitz.mockyup.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
-import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.models.MockModel;
+import com.github.dekaulitz.mockyup.base.controller.BaseController;
+import com.github.dekaulitz.mockyup.domain.mocks.models.MockModel;
+import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
+import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
+import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.MockEntitiesPage;
+import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import com.github.dekaulitz.mockyup.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.vmodels.DtoMockupDetailVmodel;
-import com.github.dekaulitz.mockyup.vmodels.MockVmodel;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;

@@ -1,11 +1,12 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.github.dekaulitz.mockyup.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
-import com.github.dekaulitz.mockyup.models.UserModel;
-import com.github.dekaulitz.mockyup.vmodels.RegistrationResponseVmodel;
-import com.github.dekaulitz.mockyup.vmodels.RegistrationVmodel;
-import com.github.dekaulitz.mockyup.vmodels.UpdateUserVmodel;
+import com.github.dekaulitz.mockyup.base.controller.BaseController;
+import com.github.dekaulitz.mockyup.domain.users.models.UserModel;
+import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationResponseVmodel;
+import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
+import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.UserEntitiesPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;

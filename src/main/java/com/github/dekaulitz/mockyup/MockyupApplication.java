@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup;
 
-import com.github.dekaulitz.mockyup.db.entities.MockCreatorEntities;
-import com.github.dekaulitz.mockyup.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.db.entities.UserMocksEntities;
-import com.github.dekaulitz.mockyup.db.repositories.MockRepository;
-import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockCreatorEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserMocksEntities;
+import com.github.dekaulitz.mockyup.infrastructure.db.repositories.MockRepository;
+import com.github.dekaulitz.mockyup.infrastructure.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.Role;
 import org.slf4j.Logger;
@@ -48,6 +48,7 @@ public class MockyupApplication implements CommandLineRunner {
             UserEntities rootUser = new UserEntities();
             rootUser.setUsername("root");
             rootUser.setPassword(Hash.hashing("root"));
+            rootUser.setUpdatedDate(new Date());
             rootUser.setAccessList(Arrays.asList(Role.MOCKS_READ_WRITE.name(), Role.USERS_READ_WRITE.name()));
             this.userRepository.save(rootUser);
             //get all mocks that has not users on the mock

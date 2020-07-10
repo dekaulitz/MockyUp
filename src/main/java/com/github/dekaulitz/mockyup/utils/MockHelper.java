@@ -2,8 +2,8 @@ package com.github.dekaulitz.mockyup.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.dekaulitz.mockyup.errorhandlers.InvalidMockException;
-import com.github.dekaulitz.mockyup.vmodels.DtoMockResponseVmodel;
+import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockResponseVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.Components;
 import lombok.AllArgsConstructor;
