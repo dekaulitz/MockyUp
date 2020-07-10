@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.controllers;
 
+import com.github.dekaulitz.mockyup.base.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

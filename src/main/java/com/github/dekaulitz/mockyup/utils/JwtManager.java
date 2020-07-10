@@ -4,13 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.dekaulitz.mockyup.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.errorhandlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
+import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class JwtManager {
@@ -21,14 +21,14 @@ public class JwtManager {
     static final String CAN_DO_REFRESH = "canRefresh";
     static final String EXPIRED_AT = "expiredAt";
 
-    public static String generateToken(UserEntities userEntities) throws UnsupportedEncodingException {
+    public static String generateToken(String id, String username, List<String> accessList) throws UnsupportedEncodingException {
         Algorithm algorithm = Algorithm.HMAC256(SECCRET);
         Calendar date = Calendar.getInstance();
         long t = date.getTimeInMillis();
         return JWT.create()
-                .withClaim("id", userEntities.getId())
-                .withClaim("username", userEntities.getUsername())
-                .withClaim("roles", String.join(",", userEntities.getAccessList()))
+                .withClaim("id", id)
+                .withClaim("username", username)
+                .withClaim("roles", String.join(",", accessList))
                 .withClaim(CAN_DO_REFRESH, new Date(t + (60 * ONE_MINUTE_IN_MILLIS)))
                 .withClaim(EXPIRED_AT, new Date(t + (30 + ONE_MINUTE_IN_MILLIS)))
                 .withIssuedAt(new Date()).sign(algorithm);

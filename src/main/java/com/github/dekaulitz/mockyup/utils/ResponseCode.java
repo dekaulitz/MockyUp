@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.utils;
 
-import com.github.dekaulitz.mockyup.vmodels.ErrorVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ErrorVmodel;
 import org.springframework.http.HttpStatus;
 
 
