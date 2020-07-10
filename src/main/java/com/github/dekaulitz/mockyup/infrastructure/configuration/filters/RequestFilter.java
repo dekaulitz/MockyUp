@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.infrastructure.configuration.filters;
 
-import com.github.dekaulitz.mockyup.infrastructure.configuration.logs.LogsMapper;
+import com.github.dekaulitz.mockyup.infrastructure.configuration.log.LogsMapper;
 import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
