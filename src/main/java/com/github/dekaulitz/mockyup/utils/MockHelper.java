@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,9 @@ public class MockHelper {
     public static final String X_QUERY = "x-query-including";
     public static final String X_BODY = "x-body-including";
     public static final String X_DEFAULT = "x-default";
+
+    public final static String PROPERTY = "property";
+    public final static String RESPONSE = "response";
     @Getter
     @Setter
     private Map<String, Object> property;
@@ -109,7 +111,6 @@ public class MockHelper {
     }
 
     /**
-     * @param request
      * @param extension
      * @param openAPIPaths
      * @param paths
@@ -117,7 +118,7 @@ public class MockHelper {
      * @return
      * @desc generate mock response base on path
      */
-    public static MockHelper generateResponnsePath(HttpServletRequest request, List<Map<String, Object>> extension, String[] openAPIPaths, String[] paths, Components components) throws InvalidMockException {
+    public static MockHelper generateResponsePath(List<Map<String, Object>> extension, String[] openAPIPaths, String[] paths, Components components) throws InvalidMockException {
         for (Map<String, Object> stringObjectMap : extension) {
             MockHelper mockHelper = new MockHelper();
             parsingMockFromJsonMapper(mockHelper, stringObjectMap);
@@ -144,7 +145,7 @@ public class MockHelper {
      * @return
      * @desc generate response query base on query
      */
-    public static MockHelper generateResponnseQuery(HttpServletRequest request, List<Map<String, Object>> extension, Components components) throws InvalidMockException, UnsupportedEncodingException {
+    public static MockHelper generateResponseQuery(HttpServletRequest request, List<Map<String, Object>> extension, Components components) throws InvalidMockException, UnsupportedEncodingException {
         for (Map<String, Object> stringObjectMap : extension) {
             MockHelper mockHelper = new MockHelper();
             parsingMockFromJsonMapper(mockHelper, stringObjectMap);
@@ -188,7 +189,7 @@ public class MockHelper {
      * @return
      * @desc generate default response
      */
-    public static MockHelper generateResponseDefault(LinkedHashMap<String, Object> value, Components components) throws InvalidMockException {
+    public static MockHelper generateResponseDefault(Map<String, Object> value, Components components) throws InvalidMockException {
         MockHelper mockHelper = new MockHelper();
         parsingMockFromJsonMapper(mockHelper, value);
         if (mockHelper.getResponse() == null) {
@@ -199,8 +200,8 @@ public class MockHelper {
     }
 
     private static void parsingMockFromJsonMapper(MockHelper mockHelper, Map<String, Object> stringObjectMap) {
-        mockHelper.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get("property"), Map.class));
-        mockHelper.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get("response"), DtoMockResponseVmodel.class));
+        mockHelper.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get(PROPERTY), Map.class));
+        mockHelper.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get(RESPONSE), DtoMockResponseVmodel.class));
     }
 
     private static void getComponentReference(MockHelper mockHelper, Components components) throws InvalidMockException {

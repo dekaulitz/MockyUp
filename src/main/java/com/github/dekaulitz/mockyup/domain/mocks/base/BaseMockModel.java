@@ -22,7 +22,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +88,7 @@ public class BaseMockModel {
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
             switch (extension.getKey()) {
                 case MockHelper.X_PATH:
-                    mock = MockHelper.generateResponnsePath(request, (List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths, components);
+                    mock = MockHelper.generateResponsePath((List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths, components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_HEADERS:
@@ -97,7 +96,7 @@ public class BaseMockModel {
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_QUERY:
-                    mock = MockHelper.generateResponnseQuery(request, (List<Map<String, Object>>) extension.getValue(), components);
+                    mock = MockHelper.generateResponseQuery(request, (List<Map<String, Object>>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_BODY:
@@ -105,7 +104,7 @@ public class BaseMockModel {
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_DEFAULT:
-                    mock = MockHelper.generateResponseDefault((LinkedHashMap<String, Object>) extension.getValue(), components);
+                    mock = MockHelper.generateResponseDefault((Map<String, Object>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 default:
