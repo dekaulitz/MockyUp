@@ -25,6 +25,8 @@ import static org.springframework.util.Assert.isTrue;
 class MockHelperTest {
     private final String DEFAULT_COMPONENT_VALUE = "ok";
     private final String DEFAULT_COMPONENT_NAME = "componentResponse";
+    private final String DEFAULT_COMPONENT_NAME_2 = "componentResponse2";
+    private final String DEFAULT_COMPONENT_NAME_2_VALUE = "not ok";
     private final String DEFAULT_RESPONSE_HEADER_1 = "x-header-id";
     private final String DEFAULT_RESPONSE_HEADER_VALUE_1 = "1";
     private final String DEFAULT_RESPONSE_HEADER_2 = "x-meta-id";
@@ -51,6 +53,18 @@ class MockHelperTest {
 
     @Test
     void generateResponseHeaderWhenUsingResponseAsReturn() throws InvalidMockException {
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "clientId",
+         *                 "value": clientId
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "response": "ok"
+         *               }]
+         */
         List<Map<String, Object>> varResponseHeader = new ArrayList<>();
         Map<String, Object> headerProperty = new HashMap<>();
         Map<String, String> headerProperty1 = new HashMap<>();
@@ -74,7 +88,22 @@ class MockHelperTest {
 
     @Test
     void generateResponseHeaderWhenUsingComponentAsReturn() throws InvalidMockException {
-
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "clientId",
+         *                 "value": clientId
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "header":{
+         *                     "x-header-id":"1",
+         *                     "x-meta-id":"2"
+         *                 }
+         *                 "$ref": "componentResponse"
+         *               }]
+         */
 
         List<Map<String, Object>> varResponseHeader = new ArrayList<>();
         Map<String, Object> headerProperty = new HashMap<>();
@@ -101,9 +130,22 @@ class MockHelperTest {
 
     @Test
     void generateResponseHeaderNoHeaderFound() throws InvalidMockException {
-        Map<String, Object> dtoResponseHeader = new HashMap<>();
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_1, DEFAULT_RESPONSE_HEADER_VALUE_1);
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_2, DEFAULT_RESPONSE_HEADER_VALUE_2);
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "clientId",
+         *                 "value": clientId
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "header":{
+         *                     "x-header-id":"1",
+         *                     "x-meta-id":"2"
+         *                 }
+         *                 "$ref": "componentResponse"
+         *               }]
+         */
 
         List<Map<String, Object>> varResponseHeader = new ArrayList<>();
         Map<String, Object> headerProperty = new HashMap<>();
@@ -135,7 +177,18 @@ class MockHelperTest {
 
     @Test
     void generateResponseBody() throws JsonProcessingException, InvalidMockException {
-
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "firstname",
+         *                 "value": fahmi
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "response": "ok"
+         *               }]
+         */
 
         List<Map<String, Object>> varResponseBody = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
@@ -165,7 +218,20 @@ class MockHelperTest {
 
     }
 
+    @Test
     void generateResponseBodyWhenNoMockFound() throws JsonProcessingException, InvalidMockException {
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "firstname",
+         *                 "value": fahmi
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "response": "ok"
+         *               }]
+         */
         List<Map<String, Object>> varResponseBody = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
 
@@ -193,26 +259,60 @@ class MockHelperTest {
 
     @Test
     void generateResponseBodyFromComponentsExample() throws JsonProcessingException, InvalidMockException {
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "firstname",
+         *                 "value": fahmi
+         *               },
+         *               "response": {
+         *                 "httpCode": 400,
+         *                 "$ref": "componentResponse"
+         *               },
+         *               {
+         *               "property": {
+         *                 "name": "firstname",
+         *                 "value": ajo
+         *               },
+         *               "response": {
+         *                 "httpCode": 400,
+         *                 "$ref": "componentResponse2"
+         *               }
+         *               ]
+         */
         List<Map<String, Object>> varResponseBody = new ArrayList<>();
-        Map<String, Object> bodyProperty = new HashMap<>();
 
+        Map<String, Object> varProperty = new HashMap<>();
         Map<String, Object> bodyProperty1 = new HashMap<>();
         bodyProperty1.put(MockHelper.NAME_PROPERTY, "firstname");
         bodyProperty1.put(MockHelper.VALUE_PROPERTY, "fahmi");
 
         DtoMockResponseVmodel dtoMockResponseVmodel = new DtoMockResponseVmodel();
-        dtoMockResponseVmodel.setHttpCode(200);
-        dtoMockResponseVmodel.setResponse("ok");
-
-        bodyProperty.put(MockHelper.PROPERTY, bodyProperty1);
-        bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
-        varResponseBody.add(bodyProperty);
-        //when mock response getting from components examples
-        dtoMockResponseVmodel = new DtoMockResponseVmodel();
         dtoMockResponseVmodel.setHttpCode(400);
-        dtoMockResponseVmodel.setResponse(null);
         dtoMockResponseVmodel.set$ref(this.DEFAULT_COMPONENT_NAME);
-        bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
+
+        varProperty.put(MockHelper.PROPERTY, bodyProperty1);
+        varProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
+
+
+        Map<String, Object> varProperty2 = new HashMap<>();
+        Map<String, Object> bodyProperty2 = new HashMap<>();
+        bodyProperty2.put(MockHelper.NAME_PROPERTY, "firstname");
+        bodyProperty2.put(MockHelper.VALUE_PROPERTY, "ajo");
+
+        DtoMockResponseVmodel dtoMockResponseVmodel2 = new DtoMockResponseVmodel();
+        dtoMockResponseVmodel2.setHttpCode(200);
+        dtoMockResponseVmodel2.set$ref(this.DEFAULT_COMPONENT_NAME_2);
+
+        varProperty2.put(MockHelper.PROPERTY, bodyProperty2);
+        varProperty2.put(MockHelper.RESPONSE, dtoMockResponseVmodel2);
+
+
+        varResponseBody.add(varProperty);
+        varResponseBody.add(varProperty2);
+
+
         String jsonPayload = "{\n" +
                 "  \"firstname\": \"fahmi\"\n" +
                 "}";
@@ -223,10 +323,30 @@ class MockHelperTest {
         MockHelper mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
         isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
         isTrue(mockHelper.getResponse().getHttpCode() == 400, "response is not expected");
+
+        jsonPayload = "{\n" +
+                "  \"firstname\": \"ajo\"\n" +
+                "}";
+        mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_NAME_2_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
     }
 
     @Test
     void generateResponseBodyFromComponentsExampleNotFound() throws JsonProcessingException {
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "firstname",
+         *                 "value": fahmi
+         *               },
+         *               "response": {
+         *                 "httpCode": 400,
+         *                 "$ref": "componentResponse"
+         *               }
+         *               ]
+         */
         List<Map<String, Object>> varResponseBody = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
 
@@ -235,17 +355,13 @@ class MockHelperTest {
         bodyProperty1.put(MockHelper.VALUE_PROPERTY, "fahmi");
 
         DtoMockResponseVmodel dtoMockResponseVmodel = new DtoMockResponseVmodel();
-        dtoMockResponseVmodel.setHttpCode(200);
-        dtoMockResponseVmodel.setResponse("ok");
+        dtoMockResponseVmodel.setHttpCode(400);
+        dtoMockResponseVmodel.setResponse(null);
+        dtoMockResponseVmodel.set$ref("a");
 
         bodyProperty.put(MockHelper.PROPERTY, bodyProperty1);
         bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
         varResponseBody.add(bodyProperty);
-        //when mock response getting from components examples
-        dtoMockResponseVmodel = new DtoMockResponseVmodel();
-        dtoMockResponseVmodel.setHttpCode(400);
-        dtoMockResponseVmodel.setResponse(null);
-        dtoMockResponseVmodel.set$ref("a");
         bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
         String jsonPayload = "{\n" +
                 "  \"firstname\": \"fahmi\"\n" +
@@ -263,6 +379,14 @@ class MockHelperTest {
 
     @Test
     void generateResponseDefault() throws InvalidMockException {
+        /**
+         * Var response json structure
+         *             {
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "response": "ok"
+         *               }
+         */
         Map<String, Object> varResponse = new HashMap<>();
 
         DtoMockResponseVmodel dtoMockResponseVmodel = new DtoMockResponseVmodel();
@@ -279,6 +403,18 @@ class MockHelperTest {
 
     @Test
     void generateResponseDefaultFromComponentExample() throws InvalidMockException {
+        /**
+         * Var response json structure
+         *             {
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "headers":{
+         *                     "x-header-id":"1",
+         *                     "x-meta-id":"2"
+         *                 }
+         *                 "$ref": "componentResponse"
+         *               }
+         */
         Map<String, Object> varResponse = new HashMap<>();
 
         DtoMockResponseVmodel dtoMockResponseVmodel = new DtoMockResponseVmodel();
@@ -309,7 +445,11 @@ class MockHelperTest {
          *               },
          *               "response": {
          *                 "httpCode": 200,
-         *                 "response": "ok"
+         *                 "headers":{
+         *                     "x-request-id":"1",
+         *                     "x-meta-id":"2"
+         *                 }
+         *                 "$ref": "componentResponse"
          *               }
          */
         List<Map<String, Object>> varResponse = new ArrayList<>();
@@ -327,13 +467,6 @@ class MockHelperTest {
         bodyProperty.put(MockHelper.PROPERTY, bodyProperty1);
         bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
         varResponse.add(bodyProperty);
-        //when mock response getting from components examples
-        dtoMockResponseVmodel = new DtoMockResponseVmodel();
-        dtoMockResponseVmodel.setHttpCode(200);
-        dtoMockResponseVmodel.setResponse("ok");
-        dtoMockResponseVmodel.setHeaders(dtoResponseHeader);
-        bodyProperty.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
-
 
         //openapi path example `/path2/{id}
         String[] extractedResultOpenapiPath = {"", "path2", "*{ID}"};
@@ -350,7 +483,18 @@ class MockHelperTest {
 
     @Test
     void generateResponsePathFromComponentExample() throws InvalidMockException {
-
+        /**
+         * Var response json structure
+         *             {
+         *               "property": {
+         *                 "name": "ID",
+         *                 "value": 10
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "$ref": "componentResponse"
+         *               }
+         */
         List<Map<String, Object>> varResponse = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
 
@@ -382,10 +526,18 @@ class MockHelperTest {
 
     @Test
     void generateResponsePathNotFound() throws InvalidMockException {
-        Map<String, Object> dtoResponseHeader = new HashMap<>();
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_1, DEFAULT_RESPONSE_HEADER_VALUE_1);
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_2, DEFAULT_RESPONSE_HEADER_VALUE_2);
-
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "ID",
+         *                 "value": 11
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "$ref": "componentResponse"
+         *               }]
+         */
         List<Map<String, Object>> varResponse = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
 
@@ -414,6 +566,18 @@ class MockHelperTest {
 
     @Test
     void generateResponsePathMultiplePath() throws InvalidMockException {
+        /**
+         * Var response json structure
+         *             {
+         *               "property": {
+         *                 "name": "ID",
+         *                 "value": 10
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "$ref": "componentResponse"
+         *               }
+         */
         List<Map<String, Object>> varResponse = new ArrayList<>();
 
         Map<String, Object> varProperty = new HashMap<>();
@@ -478,6 +642,22 @@ class MockHelperTest {
 
     @Test
     void generateResponseQuery() throws UnsupportedEncodingException, InvalidMockException {
+        /**
+         * Var response json structure
+         *             [{
+         *               "property": {
+         *                 "name": "query",
+         *                 "value": "test"
+         *               },
+         *               "response": {
+         *                 "httpCode": 200,
+         *                 "response": "ok",
+         *                 "headers":{
+         *                     "x-header-id":"1",
+         *                     "x-meta-id":"2"
+         *                 }
+         *               }]
+         */
         List<Map<String, Object>> varResponse = new ArrayList<>();
         Map<String, Object> bodyProperty = new HashMap<>();
 
@@ -488,9 +668,6 @@ class MockHelperTest {
         DtoMockResponseVmodel dtoMockResponseVmodel = new DtoMockResponseVmodel();
         dtoMockResponseVmodel.setHttpCode(200);
         dtoMockResponseVmodel.setResponse("ok");
-        Map<String, Object> dtoResponseHeader = new HashMap<>();
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_1, DEFAULT_RESPONSE_HEADER_VALUE_1);
-        dtoResponseHeader.put(this.DEFAULT_RESPONSE_HEADER_2, DEFAULT_RESPONSE_HEADER_VALUE_2);
         dtoMockResponseVmodel.setHeaders(dtoResponseHeader);
         ;
 
@@ -533,10 +710,16 @@ class MockHelperTest {
 
     private Components generateComponents() {
         Components components = new Components();
+
         Example example1 = new Example();
-        example1.setValue("ok");
+        example1.setValue(this.DEFAULT_COMPONENT_VALUE);
+
+        Example example2 = new Example();
+        example2.setValue(this.DEFAULT_COMPONENT_NAME_2_VALUE);
+
         Map<String, Example> componentExample1 = new HashMap<>();
-        componentExample1.put("componentResponse", example1);
+        componentExample1.put(this.DEFAULT_COMPONENT_NAME, example1);
+        componentExample1.put(this.DEFAULT_COMPONENT_NAME_2, example2);
         components.setExamples(componentExample1);
         return components;
     }
