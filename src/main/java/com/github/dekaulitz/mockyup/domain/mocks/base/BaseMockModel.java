@@ -86,24 +86,39 @@ public class BaseMockModel {
         Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockHelper.X_EXAMPLES);
         if (examples == null) throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
+            /**
+             *  for the mock it will responding by the order
+             *             1. path
+             *             2. headers
+             *             3. query
+             *             4. body
+             *             5. default
+             *             if the mock found with the expected criteria
+             *             will stop the other search and returning the response
+             */
             switch (extension.getKey()) {
                 case MockHelper.X_PATH:
+                    //checking the mock from path
                     mock = MockHelper.generateResponsePath((List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths, components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_HEADERS:
+                    //checking the mock from the headers
                     mock = MockHelper.generateResponseHeader(request, (List<Map<String, Object>>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_QUERY:
+                    //checking the mock from the query
                     mock = MockHelper.generateResponseQuery(request, (List<Map<String, Object>>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_BODY:
+                    //checking the mock from the boyd
                     mock = MockHelper.generateResponseBody(request, (List<Map<String, Object>>) extension.getValue(), body, components);
                     if (mock != null) return mock;
                     break;
                 case MockHelper.X_DEFAULT:
+                    //if there is no mock defined on path,header,query and body but default was defined
                     mock = MockHelper.generateResponseDefault((Map<String, Object>) extension.getValue(), components);
                     if (mock != null) return mock;
                     break;
