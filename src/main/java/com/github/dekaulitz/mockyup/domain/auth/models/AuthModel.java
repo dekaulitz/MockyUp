@@ -47,9 +47,7 @@ public class AuthModel implements AuthInterface {
     private DtoAuthProfileVmodel renderingAccessToken(UserEntities userEntities) throws UnsupportedEncodingException {
         DtoAuthProfileVmodel auth = new DtoAuthProfileVmodel();
         auth.setId(userEntities.getId());
-        auth.setAccessMenus(userEntities.getAccessList());
-        auth.setUsername(userEntities.getUsername());
-        auth.setToken(JwtManager.generateToken(userEntities.getId(), userEntities.getUsername(), userEntities.getAccessList()));
+        auth.setToken(JwtManager.generateToken(userEntities.getId()));
         return auth;
     }
 }
