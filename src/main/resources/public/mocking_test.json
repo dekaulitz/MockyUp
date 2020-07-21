@@ -1,0 +1,578 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "description": "Testing mockup server",
+    "version": "v1.0",
+    "title": "Testing Mockup Server",
+    "termsOfService": "",
+    "contact": {
+      "email": "sulaimanfahmi@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://{host}/mocks/mocking/{testing_path}?path=",
+      "description": "Testing locally",
+      "variables": {
+        "host": {
+          "default": "localhost:8080"
+        },
+        "testing_path": {
+          "description": "testing id path",
+          "default": "5e3aa62f11b5dc7e1bfaa1d6"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "BOOKS",
+      "description": "Testing mock server"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "get all books",
+        "operationId": "",
+        "parameters": [],
+        "responses": {},
+        "x-examples": {
+          "x-path-including": [],
+          "x-body-including": [],
+          "x-header-including": [
+            {
+              "property": {
+                "name": "client-id",
+                "value": "default"
+              },
+              "response": {
+                "httpCode": 400,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "error_400"
+              },
+              "response": {
+                "httpCode": 400,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            }
+          ],
+          "x-query-including": [
+            {
+              "property": {
+                "name": "query",
+                "value": "title:empty"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "sort",
+                "value": "published:asc"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            },
+            {
+              "property": {
+                "name": "query",
+                "value": "title:one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            }
+          ],
+          "x-default": {
+            "response": {
+              "httpCode": 200,
+              "headers": {
+                "x-request-id": "this is from mocks",
+                "x-limiter": "this is from mocks"
+              },
+              "response": "DEFAULT"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "add new books",
+        "operationId": "",
+        "parameters": [],
+        "responses": {},
+        "x-examples": {
+          "x-path-including": [],
+          "x-body-including": [
+            {
+              "property": {
+                "name": "title",
+                "value": "noRef"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "title",
+                "value": "withRef"
+              },
+              "response": {
+                "httpCode": 500,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            }
+          ],
+          "x-header-including": [
+          ],
+          "x-query-including": [
+          ],
+          "x-default": {
+            "response": {
+              "httpCode": 200,
+              "headers": {
+                "x-request-id": "this is from mocks",
+                "x-limiter": "this is from mocks"
+              },
+              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+            }
+          }
+        }
+      }
+    },
+    "/books/{BOOK_ID}": {
+      "get": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "get detail book",
+        "operationId": "",
+        "parameters": [],
+        "responses": {},
+        "x-examples": {
+          "x-path-including": [
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": 10
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": "99"
+              },
+              "response": {
+                "httpCode": 500,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            }
+          ],
+          "x-body-including": [],
+          "x-header-including": [
+            {
+              "property": {
+                "name": "client-id",
+                "value": "empty"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "error_400"
+              },
+              "response": {
+                "httpCode": 400,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/ERROR_400"
+              }
+            }
+          ],
+          "x-query-including": [
+          ],
+          "x-default": {
+            "response": {
+              "httpCode": 401,
+              "headers": {
+                "x-request-id": "this is from mocks"
+              },
+              "response": "DEFAULT"
+            }
+          }
+        }
+      }
+    },
+    "/books/{BOOK_ID}/update": {
+      "put": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "",
+        "operationId": "",
+        "parameters": [
+        ],
+        "responses": {},
+        "x-examples": {
+          "x-query-including": [
+            {
+              "property": {
+                "name": "query",
+                "value": "title:empty"
+              },
+              "response": {
+                "httpCode": 422,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "sort",
+                "value": "published:asc"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            },
+            {
+              "property": {
+                "name": "query",
+                "value": "title:one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            }
+          ],
+          "x-path-including": [
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": "1"
+              },
+              "response": {
+                "httpCode": 500,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": "5"
+              },
+              "response": {
+                "httpCode": 403,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            }
+          ],
+          "x-body-including": [
+            {
+              "property": {
+                "name": "title",
+                "value": "noRef"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "title",
+                "value": "withRef"
+              },
+              "response": {
+                "httpCode": 201,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "response": "DEFAULT"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "parameters": {},
+    "examples": {
+      "LIST_OF_BOOKS": {
+        "value": [
+          {
+            "id": 1,
+            "title": "BOOK_1",
+            "author": "string",
+            "category": [
+              "string"
+            ],
+            "images": [
+              {
+                "url": "string",
+                "order": 0
+              }
+            ],
+            "publisher": "string",
+            "publishedDate": "2020-06-13T16:05:04.126Z"
+          },
+          {
+            "id": 2,
+            "title": "BOOK_2",
+            "author": "string",
+            "category": [
+              "cat1",
+              "cat2"
+            ],
+            "images": [
+              {
+                "url": "http://any.domain.com/any_image.jpg",
+                "order": 1
+              },
+              {
+                "url": "http://any.domain.com/any_image.jpg",
+                "order": 2
+              }
+            ],
+            "publisher": "string",
+            "publishedDate": "2020-06-13T16:05:04.126Z"
+          }
+        ]
+      },
+      "DEFAULT_COMPONENT_EXAMPLE": {
+        "value": "DEFAULT_COMPONENT_EXAMPLE"
+      },
+      "LIST_OF_BOOKS_ONLY_ONE": {
+        "value": [
+          {
+            "id": 1,
+            "title": "BOOK_1",
+            "author": "string",
+            "category": [
+              "string"
+            ],
+            "images": [
+              {
+                "url": "string",
+                "order": 0
+              }
+            ],
+            "publisher": "string",
+            "publishedDate": "2020-06-13T16:05:04.126Z"
+          }
+        ]
+      },
+      "BOOKS_DETAIL": {
+        "value": {
+          "id": 2,
+          "title": "BOOK_2",
+          "author": "string",
+          "category": [
+            "cat1",
+            "cat2"
+          ],
+          "images": [
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 1
+            },
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 2
+            }
+          ],
+          "publisher": "string",
+          "publishedDate": "2020-06-13T16:05:04.126Z"
+        }
+      },
+      "BOOKS_DETAIL_WITH_PATH": {
+        "value": {
+          "id": 1,
+          "title": "BOOK_2_WITH_PATH_REFF",
+          "author": "string",
+          "category": [
+            "cat1",
+            "cat2"
+          ],
+          "images": [
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 1
+            },
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 2
+            }
+          ],
+          "publisher": "string",
+          "publishedDate": "2020-06-13T16:05:04.126Z"
+        }
+      },
+      "BOOKS_FROM_STORE_REF": {
+        "value": {
+          "id": 2,
+          "title": "BOOK_2_THIS IS FROM STORE",
+          "author": "string",
+          "category": [
+            "cat1",
+            "cat2"
+          ],
+          "images": [
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 1
+            },
+            {
+              "url": "http://any.domain.com/any_image.jpg",
+              "order": 2
+            }
+          ],
+          "publisher": "string",
+          "publishedDate": "2020-06-13T16:05:04.126Z"
+        }
+      },
+      "ERROR_400": {
+        "value": {
+          "response_code": "ANY_400",
+          "response_message": "ANY MESSAGE 400",
+          "data": {}
+        }
+      },
+      "ERROR_500": {
+        "value": {
+          "response_code": "ANY_500",
+          "response_message": "ANY MESSAGE 400",
+          "data": {}
+        }
+      },
+      "BOOKS_DELETED": {
+        "value": {
+          "id": 1,
+          "status": "deleted"
+        }
+      },
+      "BOOKS_DELETED_FORBIDEN": {
+        "value": {
+          "id": 99,
+          "status": "forbiden"
+        }
+      }
+    }
+  }
+}
