@@ -247,33 +247,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
             return getMockResponse(item, request, body, openAPIPaths, paths, openAPI.getComponents());
         }
         //path item with path parameter we should check every endpoint that related with data
-        for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
-            String s = entry.getKey();
-            PathItem pathItem = entry.getValue();
-            String[] openAPIPaths = s.split("/");
-            String[] regexPath = new String[paths.length];
-            // every targeting mocks uri should has same length
-            if (openAPIPaths.length == paths.length) {
-                // converting request path to original for searching data
-                for (int i = 0; i < openAPIPaths.length; i++) {
-                    //checking path parameter
-                    if (!openAPIPaths[i].equals(paths[i])) {
-                        if (openAPIPaths[i].contains("*")) {
-                            regexPath[i] = openAPIPaths[i];
-                        }
-                    } else {
-                        //this is for checking wildcard with path parameter
-                        if (!paths[i].contains("*") && openAPIPaths[i].equals(paths[i])) {
-                            regexPath[i] = openAPIPaths[i];
-                        }
-                    }
-                }
-                //check if current openapi path equal with regexpath (path)
-                if (s.equals(String.join("/", regexPath)))
-                    return getMockResponse(pathItem, request, body, openAPIPaths, paths, openAPI.getComponents());
-            }
-        }
-        return null;
+        return checkOpenApiPathWithPath(request, body, openAPI, paths);
     }
 
     @Override
@@ -380,5 +354,33 @@ public class MockModel extends BaseMockModel implements MockInterface {
         });
     }
 
-
+    private MockHelper checkOpenApiPathWithPath(HttpServletRequest request, String body, OpenAPI openAPI, String[] paths) throws UnsupportedEncodingException, InvalidMockException, NotFoundException, JsonProcessingException {
+        for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
+            String s = entry.getKey();
+            PathItem pathItem = entry.getValue();
+            String[] openAPIPaths = s.split("/");
+            String[] regexPath = new String[paths.length];
+            // every targeting mocks uri should has same length
+            if (openAPIPaths.length == paths.length) {
+                // converting request path to original for searching data
+                for (int i = 0; i < openAPIPaths.length; i++) {
+                    //checking path parameter
+                    if (!openAPIPaths[i].equals(paths[i])) {
+                        if (openAPIPaths[i].contains("*")) {
+                            regexPath[i] = openAPIPaths[i];
+                        }
+                    } else {
+                        //this is for checking wildcard with path parameter
+                        if (!paths[i].contains("*") && openAPIPaths[i].equals(paths[i])) {
+                            regexPath[i] = openAPIPaths[i];
+                        }
+                    }
+                }
+                //check if current openapi path equal with regexpath (path) and break the loop
+                if (s.equals(String.join("/", regexPath)))
+                    return getMockResponse(pathItem, request, body, openAPIPaths, paths, openAPI.getComponents());
+            }
+        }
+        return null;
+    }
 }
