@@ -184,14 +184,14 @@ public class MockHelper {
     }
 
     /**
-     * @param value
+     * @param extension
      * @param components
      * @return
      * @desc generate default response
      */
-    public static MockHelper generateResponseDefault(Map<String, Object> value, Components components) throws InvalidMockException {
+    public static MockHelper generateResponseDefault(Map<String, Object> extension, Components components) throws InvalidMockException {
         MockHelper mockHelper = new MockHelper();
-        parsingMockFromJsonMapper(mockHelper, value);
+        parsingMockFromJsonMapper(mockHelper, extension);
         if (mockHelper.getResponse() == null) {
             throw new InvalidMockException(ResponseCode.INVALID_MOCK_DEFAULT);
         }
@@ -199,9 +199,9 @@ public class MockHelper {
         return mockHelper;
     }
 
-    private static void parsingMockFromJsonMapper(MockHelper mockHelper, Map<String, Object> stringObjectMap) {
-        mockHelper.setProperty(JsonMapper.mapper().convertValue(stringObjectMap.get(PROPERTY), Map.class));
-        mockHelper.setResponse(JsonMapper.mapper().convertValue(stringObjectMap.get(RESPONSE), DtoMockResponseVmodel.class));
+    private static void parsingMockFromJsonMapper(MockHelper mockHelper, Map<String, Object> xExamples) {
+        mockHelper.setProperty(JsonMapper.mapper().convertValue(xExamples.get(PROPERTY), Map.class));
+        mockHelper.setResponse(JsonMapper.mapper().convertValue(xExamples.get(RESPONSE), DtoMockResponseVmodel.class));
     }
 
     private static void getComponentReference(MockHelper mockHelper, Components components) throws InvalidMockException {
