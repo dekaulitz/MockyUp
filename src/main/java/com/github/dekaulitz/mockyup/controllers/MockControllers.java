@@ -108,7 +108,8 @@ public class MockControllers extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> getCurrentAccess(@PathVariable String id, HttpServletRequest request) {
-        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockModel.getDetailMockUpIdByUserAccess(id, this.getAuthenticationProfileModel());
+        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockModel.getDetailMockUpIdByUserAccess(id,
+                this.getAuthenticationProfileModel());
         if (mockDetailWithAccess.isEmpty()) {
             throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
         }
@@ -127,7 +128,8 @@ public class MockControllers extends BaseController {
     @PutMapping(value = "/mocks/{id}/addUser",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> addUserAccess(@PathVariable String id, @Valid @RequestBody AddUserAccessVmodel vmodel, HttpServletRequest request) {
+    public ResponseEntity<Object> addUserAccess(@PathVariable String id, @Valid @RequestBody AddUserAccessVmodel vmodel,
+                                                HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.mockModel.addUserAccessOnMock(id, vmodel, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
