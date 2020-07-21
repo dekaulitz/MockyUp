@@ -90,7 +90,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
         try {
             MockEntities mockEntities = new MockEntities();
             this.setSaveMockEntity(view, mockEntities, authenticationProfileModel);
-            mockEntities.setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id()).username(authenticationProfileModel.getUsername()).build());
+            mockEntities.setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id())
+                    .username(authenticationProfileModel.getUsername()).build());
             mockEntities.setUpdatedDate(new Date());
             return this.mockRepository.save(mockEntities);
         } catch (Exception e) {
@@ -99,7 +100,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     }
 
     @Override
-    public MockEntities updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException, InvalidMockException {
+    public MockEntities updateByID(String id, MockVmodel view, AuthenticationProfileModel authenticationProfileModel)
+            throws NotFoundException, InvalidMockException {
         Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
@@ -107,7 +109,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
         this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
         this.saveMockToHistory(mockEntities.get());
         this.setUpdateMockEntity(view, mockEntities.get());
-        mockEntities.get().setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id()).username(authenticationProfileModel.getUsername()).build());
+        mockEntities.get().setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id())
+                .username(authenticationProfileModel.getUsername()).build());
         mockEntities.get().setUpdatedDate(new Date());
         mockRepository.save(mockEntities.get());
         return mockEntities.get();
@@ -141,7 +144,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     @Override
     public List<MockHistoryEntities> getMockHistories(String id) {
         Query query = new Query();
-        query.with(Sort.by(Sort.Direction.DESC, "_id")).addCriteria(Criteria.where("mockId").is(id)).fields().include("swagger").include("mockId").include("updatedDate").include("updatedBy");
+        query.with(Sort.by(Sort.Direction.DESC, "_id")).addCriteria(Criteria.where("mockId").is(id))
+                .fields().include("swagger").include("mockId").include("updatedDate").include("updatedBy");
         return mongoTemplate.find(query, MockHistoryEntities.class);
     }
 
@@ -161,7 +165,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
                 //extract the collection base on users
                 Aggregation.unwind("users"),
                 //setup project fields and convert users.userId to object id
-                Aggregation.project().and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
+                Aggregation.project().and("updatedDate").as("updatedDate").and("users.access")
+                        .as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
                 //join collection with user entities
                 LookupOperation.newLookup().from("userEntities").localField("users.userId").foreignField("_id").as("userDetails"),
                 //extract the collection
@@ -189,9 +194,11 @@ public class MockModel extends BaseMockModel implements MockInterface {
                 //extract users array as list
                 Aggregation.unwind("users"),
                 //set project field
-                Aggregation.project().and("title").as("title").and("swagger").as("swagger").and("description").as("description").and("updatedBy").as("updatedBy")
+                Aggregation.project().and("title").as("title").and("swagger").as("swagger")
+                        .and("description").as("description").and("updatedBy").as("updatedBy")
                         //convert $users.userId to objectId for querying the user id
-                        .and("updatedDate").as("updatedDate").and("users.access").as("users.access").andExpression("toObjectId('$users.userId')").as("users.userId"),
+                        .and("updatedDate").as("updatedDate").and("users.access").as("users.access")
+                        .andExpression("toObjectId('$users.userId')").as("users.userId"),
                 //join collection with user entities
                 LookupOperation.newLookup().from("userEntities").localField("users.userId").foreignField("_id").as("userDetails"),
                 //extract the collection base on userdetails
@@ -233,7 +240,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     }
 
     @Override
-    public MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
+    public MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException,
+            JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent())
             throw new NotFoundException("data not found");
@@ -251,7 +259,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     }
 
     @Override
-    public Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+    public Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel)
+            throws NotFoundException {
         Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
@@ -275,7 +284,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     }
 
     @Override
-    public Object removeAccessUserOnMock(String id, String userId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+    public Object removeAccessUserOnMock(String id, String userId, AuthenticationProfileModel authenticationProfileModel)
+            throws NotFoundException {
         Optional<MockEntities> mockEntities = mockRepository.findById(id);
         if (!mockEntities.isPresent()) {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
@@ -306,7 +316,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
      * @
      */
     @Override
-    public DtoMockupHistoryVmodel geMockHistoryId(String id, String historyId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
+    public DtoMockupHistoryVmodel geMockHistoryId(String id, String historyId, AuthenticationProfileModel authenticationProfileModel)
+            throws NotFoundException {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
         query.addCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
@@ -316,7 +327,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
         Query queryHistory = new Query();
         queryHistory.addCriteria(Criteria.where("mockId").is(id).and("id").is(new ObjectId(historyId)));
         queryHistory.fields().include("mockId").include("swagger");
-        List<DtoMockupHistoryVmodel> mockHistoryEntitiesList = mongoTemplate.find(queryHistory, DtoMockupHistoryVmodel.class, "mockup_histories");
+        List<DtoMockupHistoryVmodel> mockHistoryEntitiesList = mongoTemplate.find(queryHistory, DtoMockupHistoryVmodel.class,
+                "mockup_histories");
         if (mockHistoryEntitiesList.isEmpty())
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         return mockHistoryEntitiesList.get(0);
@@ -348,13 +360,15 @@ public class MockModel extends BaseMockModel implements MockInterface {
      */
     private void checkAccessModificationMocks(MockEntities mockEntities, AuthenticationProfileModel authenticationProfileModel) {
         mockEntities.getUsers().forEach(userMocksEntities -> {
-            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id()) && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
+            if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())
+                    && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
                 throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
             }
         });
     }
 
-    private MockHelper checkOpenApiPathWithPath(HttpServletRequest request, String body, OpenAPI openAPI, String[] paths) throws UnsupportedEncodingException, InvalidMockException, NotFoundException, JsonProcessingException {
+    private MockHelper checkOpenApiPathWithPath(HttpServletRequest request, String body, OpenAPI openAPI, String[] paths)
+            throws UnsupportedEncodingException, InvalidMockException, NotFoundException, JsonProcessingException {
         for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
             String s = entry.getKey();
             PathItem pathItem = entry.getValue();
