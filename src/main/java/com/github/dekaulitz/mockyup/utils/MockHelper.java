@@ -146,6 +146,8 @@ public class MockHelper {
      * @desc generate response query base on query
      */
     public static MockHelper generateResponseQuery(HttpServletRequest request, List<Map<String, Object>> extension, Components components) throws InvalidMockException, UnsupportedEncodingException {
+        //for query mock response for the ordering its depend on your mock query-including
+        //if youre first query was a=x&b=y but from the query mock struct b=y its defined first so it will throwing response from b=y
         for (Map<String, Object> stringObjectMap : extension) {
             MockHelper mockHelper = new MockHelper();
             parsingMockFromJsonMapper(mockHelper, stringObjectMap);
