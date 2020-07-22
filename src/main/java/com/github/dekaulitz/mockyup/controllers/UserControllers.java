@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.base.controller.BaseController;
-import com.github.dekaulitz.mockyup.domain.users.models.UserModel;
+import com.github.dekaulitz.mockyup.domain.users.base.UserInterface;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
@@ -20,17 +20,17 @@ import javax.validation.Valid;
 @RestController
 public class UserControllers extends BaseController {
     @Autowired
-    private final UserModel userModel;
+    private final UserInterface userInterface;
 
-    public UserControllers(UserModel userModel) {
-        this.userModel = userModel;
+    public UserControllers(UserInterface userInterface) {
+        this.userInterface = userInterface;
     }
 
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @PostMapping(value = "/mocks/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> adduser(@Valid @RequestBody RegistrationVmodel vmodel, HttpServletRequest request) {
         try {
-            UserEntities userEntities = this.userModel.addUser(vmodel, this.getAuthenticationProfileModel());
+            UserEntities userEntities = this.userInterface.addUser(vmodel, this.getAuthenticationProfileModel());
             RegistrationResponseVmodel registrationResponseVmodel = RegistrationResponseVmodel
                     .builder().accessList(userEntities.getAccessList())
                     .id(userEntities.getId())
@@ -45,7 +45,7 @@ public class UserControllers extends BaseController {
     @DeleteMapping(value = "/mocks/user/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteUser(@PathVariable String id, HttpServletRequest request) {
         try {
-            this.userModel.deleteUser(id, this.getAuthenticationProfileModel());
+            this.userInterface.deleteUser(id, this.getAuthenticationProfileModel());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
@@ -59,7 +59,7 @@ public class UserControllers extends BaseController {
             Pageable pageable,
             @RequestParam(value = "q", required = false) String q, HttpServletRequest request) {
         try {
-            UserEntitiesPage pagingVmodel = this.userModel.paging(pageable, q);
+            UserEntitiesPage pagingVmodel = this.userInterface.paging(pageable, q);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
@@ -70,7 +70,7 @@ public class UserControllers extends BaseController {
     @GetMapping(value = "/mocks/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUserList(@RequestParam(value = "username", required = false) String username, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.listUsers(username, this.getAuthenticationProfileModel()));
+            return ResponseEntity.ok(this.userInterface.listUsers(username, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
@@ -80,7 +80,7 @@ public class UserControllers extends BaseController {
     @PutMapping(value = "/mocks/users/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUsers(@Valid @RequestBody UpdateUserVmodel vmodel, @PathVariable String id, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
+            return ResponseEntity.ok(this.userInterface.updateUser(vmodel, id));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
@@ -91,7 +91,7 @@ public class UserControllers extends BaseController {
     @GetMapping(value = "/mocks/users/{id}/detail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUserById(@PathVariable String id, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.getUserById(id));
+            return ResponseEntity.ok(this.userInterface.getUserById(id));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
