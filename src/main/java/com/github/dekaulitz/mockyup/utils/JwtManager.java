@@ -15,9 +15,9 @@ import java.util.Optional;
 
 public class JwtManager {
 
+    public static final String CAN_DO_REFRESH = "canRefresh";
+    public static final String EXPIRED_AT = "expiredAt";
     static final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
-    static final String CAN_DO_REFRESH = "canRefresh";
-    static final String EXPIRED_AT = "expiredAt";
     public static String SECCRET = "qwERTyuIODfghjK@#$%^7888ghjkbnhjkxzxzxAJSDHJASDHJHJS";
 
     public static String generateToken(String id) throws UnsupportedEncodingException {
