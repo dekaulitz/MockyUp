@@ -51,12 +51,10 @@ public class UserModel implements UserInterface {
     }
 
     @Override
-    public void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry {
+    public void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Optional<UserEntities> userEntities = this.userRepository.findById(userId);
-        if (!userEntities.isPresent()) {
-            throw new DuplicateDataEntry(ResponseCode.USER_NOT_FOUND);
-        }
-
+        if (!userEntities.isPresent())
+            throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
         this.userRepository.delete(userEntities.get());
     }
 
