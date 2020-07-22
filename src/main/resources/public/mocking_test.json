@@ -258,26 +258,12 @@
                 "value": "one"
               },
               "response": {
-                "httpCode": 200,
+                "httpCode": 403,
                 "headers": {
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
-              }
-            },
-            {
-              "property": {
-                "name": "client-id",
-                "value": "error_400"
-              },
-              "response": {
-                "httpCode": 400,
-                "headers": {
-                  "x-request-id": "this is from mocks",
-                  "x-limiter": "this is from mocks"
-                },
-                "$ref": "#/components/examples/ERROR_400"
+                "response": "DEFAULT"
               }
             }
           ],
@@ -405,7 +391,16 @@
                 "response": "DEFAULT"
               }
             }
-          ]
+          ],
+          "x-default": {
+            "response": {
+              "httpCode": 401,
+              "headers": {
+                "x-request-id": "this is from mocks"
+              },
+              "response": "DEFAULT"
+            }
+          }
         }
       }
     }
