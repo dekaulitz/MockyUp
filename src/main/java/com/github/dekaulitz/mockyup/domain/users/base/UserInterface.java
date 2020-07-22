@@ -14,7 +14,7 @@ import java.util.List;
 public interface UserInterface {
     UserEntities addUser(RegistrationVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry;
 
-    void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry;
+    void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry, NotFoundException;
 
     UserEntitiesPage paging(Pageable pageable, String q);
 
