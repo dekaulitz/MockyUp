@@ -2,7 +2,7 @@ package com.github.dekaulitz.mockyup.domain.mocks.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoPathItemOpenApiVmodel;
-import com.github.dekaulitz.mockyup.helperTest.MockTestHelper;
+import com.github.dekaulitz.mockyup.helperTest.Helper;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
@@ -28,11 +28,10 @@ class BaseMockModelTest {
     private OpenAPI openAPI;
     private BaseMockModel baseMockModel;
     private HttpServletRequest httpServletRequest;
-    private MockTestHelper mockTestHelper;
+
 
     @BeforeEach
     void setUp() throws IOException {
-        this.mockTestHelper = new MockTestHelper();
         this.baseMockModel = new BaseMockModel();
         this.httpServletRequest = Mockito.mock(HttpServletRequest.class);
         ClassLoader classLoader = getClass().getClassLoader();
@@ -62,7 +61,7 @@ class BaseMockModelTest {
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 200, "mockhelper was not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse() != null, "mockhelper was not expected");
         //its static from mocking_test.json
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper was not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper was not expected");
     }
 
     @Test
@@ -81,25 +80,25 @@ class BaseMockModelTest {
         //test when using example query=title:empty
         MockHelper mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
 
         //test when using example sort=published:asc
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books&sort=published:asc");
         mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
 
         //test when using example with query=title:one
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books&query=title:one");
         mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
 
         //test when using example default response
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books?query=title:1one");
         mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
 
     }
 
@@ -120,8 +119,8 @@ class BaseMockModelTest {
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("default");
         MockHelper mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 400, "mock helper is not expected");
 
 
@@ -129,16 +128,16 @@ class BaseMockModelTest {
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("one");
         mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 200, "mock helper is not expected");
 
         //test when using example header client-id=error_400
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("error_400");
         mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 400, "mock helper is not expected");
 
     }
@@ -159,8 +158,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 200, "mock helper is not expected");
     }
 
@@ -180,8 +179,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 500, "mock helper is not expected");
     }
 
@@ -201,8 +200,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 401, "mock helper is not expected");
     }
 
@@ -225,8 +224,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 200, "mock helper is not expected");
 
     }
@@ -249,8 +248,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 201, "mock helper is not expected");
     }
 
@@ -272,8 +271,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 500, "mock helper is not expected");
     }
 
@@ -295,8 +294,8 @@ class BaseMockModelTest {
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getResponse().equals(this.mockTestHelper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
-        Assert.isTrue(mockHelper.getResponse().getHeaders().get(this.mockTestHelper.DEFAULT_HEADER_NAME).equals(this.mockTestHelper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
+        Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 422, "mock helper is not expected");
     }
 
