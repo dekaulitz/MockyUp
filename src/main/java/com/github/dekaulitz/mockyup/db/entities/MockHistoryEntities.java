@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.db.entities;
+package com.github.dekaulitz.mockyup.db.entities;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

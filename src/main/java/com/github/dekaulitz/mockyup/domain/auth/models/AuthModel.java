@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.domain.auth.models;
 
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.domain.auth.base.AuthInterface;
 import com.github.dekaulitz.mockyup.domain.auth.vmodels.DtoAuthProfileVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.JwtManager;

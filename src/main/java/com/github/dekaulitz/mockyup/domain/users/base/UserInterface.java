@@ -1,10 +1,10 @@
 package com.github.dekaulitz.mockyup.domain.users.base;
 
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import org.springframework.data.domain.Pageable;

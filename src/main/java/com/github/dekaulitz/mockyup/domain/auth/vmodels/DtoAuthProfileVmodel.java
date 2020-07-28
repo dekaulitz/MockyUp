@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.domain.auth.vmodels;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

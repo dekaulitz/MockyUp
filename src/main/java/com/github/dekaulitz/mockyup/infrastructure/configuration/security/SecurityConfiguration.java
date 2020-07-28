@@ -36,6 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManager());
         filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
                 new AntPathRequestMatcher("/mocks/page"),
+                new AntPathRequestMatcher("/mocks/docs"),
                 new AntPathRequestMatcher("/mocks/**/update"),
                 new AntPathRequestMatcher("/mocks/**/delete"),
                 new AntPathRequestMatcher("/mocks/store"),

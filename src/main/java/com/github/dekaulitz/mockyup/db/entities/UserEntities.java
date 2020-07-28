@@ -1,5 +1,6 @@
-package com.github.dekaulitz.mockyup.infrastructure.db.entities;
+package com.github.dekaulitz.mockyup.db.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,4 +22,9 @@ public class UserEntities implements Serializable {
     private String password;
     private List<String> accessList;
     private Date updatedDate;
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 }

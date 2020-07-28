@@ -2,10 +2,10 @@ package com.github.dekaulitz.mockyup.domain.mocks.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.dekaulitz.mockyup.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;

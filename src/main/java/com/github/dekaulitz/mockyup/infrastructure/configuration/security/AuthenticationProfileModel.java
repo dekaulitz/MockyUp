@@ -14,21 +14,10 @@ import java.util.List;
 public class AuthenticationProfileModel implements UserDetails {
 
     private String _id;
-
-    public List<GrantedAuthority> getGrantedAuthorities() {
-        return grantedAuthorities;
-    }
-
     @Setter
     private String username;
     @Setter
     private List<GrantedAuthority> grantedAuthorities;
-
-    public AuthenticationProfileModel(String userId, String username, List<GrantedAuthority> grantedAuthorities) {
-        this.username = username;
-        this.grantedAuthorities = grantedAuthorities;
-        this._id = userId;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

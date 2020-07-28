@@ -33,6 +33,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleInvalidMockException(Exception ex, HttpServletRequest request) {
         log.error("error occured : ", ex);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage()).requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
                         .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());

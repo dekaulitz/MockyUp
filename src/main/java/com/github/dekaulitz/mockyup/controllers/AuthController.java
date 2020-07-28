@@ -35,7 +35,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping(value = "/mocks/auth/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> logOut(HttpServletRequest request) {
+    public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
         try {
             String headerAuth = request.getHeader("Authorization");
             String authorization = JwtManager.getAuthorizationHeader(headerAuth);

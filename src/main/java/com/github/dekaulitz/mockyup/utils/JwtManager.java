@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
@@ -17,7 +18,7 @@ public class JwtManager {
 
     public static final String CAN_DO_REFRESH = "canRefresh";
     public static final String EXPIRED_AT = "expiredAt";
-    static final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+    public static final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
     public static String SECCRET = "qwERTyuIODfghjK@#$%^7888ghjkbnhjkxzxzxAJSDHJASDHJHJS";
 
     public static String generateToken(String id) throws UnsupportedEncodingException {
@@ -31,7 +32,7 @@ public class JwtManager {
                 .withIssuedAt(new Date()).sign(algorithm);
     }
 
-    public static AuthenticationProfileModel validateToken(String token) throws UnsupportedEncodingException {
+    public static AuthenticationProfileModel validateToken(String token) {
         try {
             DecodedJWT jwt = decodeToken(token);
             Date canRefresh = jwt.getClaim(CAN_DO_REFRESH).asDate();
@@ -47,7 +48,7 @@ public class JwtManager {
             AuthenticationProfileModel jwtUserModel = new AuthenticationProfileModel();
             jwtUserModel.set_id(jwt.getClaim("id").asString());
             return jwtUserModel;
-        } catch (JWTVerificationException e) {
+        } catch (JWTVerificationException | UnsupportedEncodingException e) {
             throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
         }
     }
@@ -64,10 +65,15 @@ public class JwtManager {
         return Optional.ofNullable(jwt.getClaim("id").asString());
     }
 
-    static DecodedJWT decodeToken(String token) throws UnsupportedEncodingException, JWTVerificationException {
-        Algorithm algorithm = Algorithm.HMAC256(SECCRET);
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        return verifier.verify(token);
+    static DecodedJWT decodeToken(String token) throws UnsupportedEncodingException {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECCRET);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            return verifier.verify(token);
+        } catch (SignatureVerificationException signatureVerificationException) {
+            throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID, signatureVerificationException);
+        }
+
     }
 
     public static String getAuthorizationHeader(String AuthHeader) {

@@ -65,7 +65,7 @@ public class BaseController {
     }
 
 
-    private ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel, HttpServletRequest request) {
+    public ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel, HttpServletRequest request) {
         return ResponseEntity.status(errorVmodel.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
                         .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))

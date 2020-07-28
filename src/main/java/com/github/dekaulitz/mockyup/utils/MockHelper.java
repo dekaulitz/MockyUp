@@ -6,7 +6,6 @@ import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockResponseVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.Components;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
 @NoArgsConstructor
 public class MockHelper {
     public static final String X_PATH = "x-path-including";
@@ -52,7 +50,7 @@ public class MockHelper {
             try {
                 MockHelper mockHelper = new MockHelper();
                 parsingMockFromJsonMapper(mockHelper, stringObjectMap);
-                throwInvalidMockExample(mockHelper, X_HEADERS);
+                throwInvalidMockExample(mockHelper);
                 String requestHeader = request.getHeader((String) mockHelper.getProperty().get(MockHelper.NAME_PROPERTY));
                 if (requestHeader != null) {
                     if (requestHeader.equals(mockHelper.getProperty().get(MockHelper.VALUE_PROPERTY))) {
@@ -88,7 +86,7 @@ public class MockHelper {
                 JsonNode requestBody = Json.mapper().readTree(body);
                 MockHelper mockHelper = new MockHelper();
                 parsingMockFromJsonMapper(mockHelper, stringObjectMap);
-                throwInvalidMockExample(mockHelper, X_BODY);
+                throwInvalidMockExample(mockHelper);
                 boolean isBodyExist = requestBody.has((String) mockHelper.getProperty().get(MockHelper.NAME_PROPERTY));
                 if (isBodyExist) {
                     String bodyRequest = requestBody.findPath((String) mockHelper.getProperty().get(MockHelper.NAME_PROPERTY)).asText();
@@ -123,7 +121,7 @@ public class MockHelper {
             MockHelper mockHelper = new MockHelper();
             parsingMockFromJsonMapper(mockHelper, stringObjectMap);
 
-            throwInvalidMockExample(mockHelper, X_PATH);
+            throwInvalidMockExample(mockHelper);
             for (int i = 0; i < openAPIPaths.length; i++) {
                 if (!openAPIPaths[i].equals(paths[i])) {
                     if (openAPIPaths[i].contains((CharSequence) mockHelper.getProperty().get(MockHelper.NAME_PROPERTY))) {
@@ -151,7 +149,7 @@ public class MockHelper {
         for (Map<String, Object> stringObjectMap : extension) {
             MockHelper mockHelper = new MockHelper();
             parsingMockFromJsonMapper(mockHelper, stringObjectMap);
-            throwInvalidMockExample(mockHelper, X_QUERY);
+            throwInvalidMockExample(mockHelper);
             String cleanQueryString = java.net.URLDecoder.decode(request.getQueryString(), String.valueOf(StandardCharsets.UTF_8));
             String[] queryStrings = cleanQueryString.split("\\?");
             if (queryStrings.length > 1) {
@@ -232,7 +230,7 @@ public class MockHelper {
         return map;
     }
 
-    private static void throwInvalidMockExample(MockHelper mockHelper, String type) throws InvalidMockException {
+    private static void throwInvalidMockExample(MockHelper mockHelper) throws InvalidMockException {
         if (mockHelper.getResponse() == null || mockHelper.getProperty() == null) {
             throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE);
         }

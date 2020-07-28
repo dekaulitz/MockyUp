@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging;
+package com.github.dekaulitz.mockyup.db.repositories.paging;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +34,8 @@ public abstract class AbstractPage<T> implements BasePage, Serializable {
     private MongoTemplate mongoTemplate;
     private Pageable pageable;
     @Getter
-    private Query query = new Query();
-    private Query count = new Query();
+    private final Query query = new Query();
+    private final Query count = new Query();
 
     @Autowired
     @Override

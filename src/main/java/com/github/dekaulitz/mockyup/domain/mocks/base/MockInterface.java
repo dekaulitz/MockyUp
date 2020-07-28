@@ -1,15 +1,15 @@
 package com.github.dekaulitz.mockyup.domain.mocks.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockLookupVmodel;
+import com.github.dekaulitz.mockyup.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
+import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupHistoryVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockHistoryEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface MockInterface {
-    List<MockEntities> all();
 
     MockEntities getById(String id, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException;
 
@@ -34,9 +33,7 @@ public interface MockInterface {
 
     List<MockHistoryEntities> getMockHistories(String id);
 
-    MockEntities getUserMocks(String id);
-
-    List<DtoMockLookupVmodel> getUsersListOfMocks(String mockId);
+    List<DtoMockUserLookupVmodel> getUsersListOfMocks(String mockId);
 
     List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel);
 

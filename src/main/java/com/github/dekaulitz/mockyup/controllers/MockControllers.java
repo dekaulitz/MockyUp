@@ -2,12 +2,12 @@ package com.github.dekaulitz.mockyup.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.base.controller.BaseController;
+import com.github.dekaulitz.mockyup.db.entities.MockEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.mocks.base.MockInterface;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
@@ -37,7 +37,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 @RestController
-//@Log4j2
 public class MockControllers extends BaseController {
     @Autowired
     private final MongoTemplate mongoTemplate;
@@ -84,7 +83,7 @@ public class MockControllers extends BaseController {
     public ResponseEntity<Object> mockingPath(@NonNull @RequestParam(value = "path") String path,
                                               @PathVariable String id, @RequestBody(required = false) String body,
                                               HttpServletRequest request) {
-        MockHelper mock = null;
+        MockHelper mock;
         try {
             mock = this.mockInterface.getMockMocking(request, path, id, body);
             if (mock != null)
@@ -107,13 +106,17 @@ public class MockControllers extends BaseController {
     @GetMapping(value = "/mocks/{id}/detailWithAccess",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> getCurrentAccess(@PathVariable String id) {
-        List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockInterface.getDetailMockUpIdByUserAccess(id,
-                this.getAuthenticationProfileModel());
-        if (mockDetailWithAccess.isEmpty()) {
-            throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+    public ResponseEntity<Object> getCurrentAccess(@PathVariable String id, HttpServletRequest request) {
+        try {
+            List<DtoMockupDetailVmodel> mockDetailWithAccess = this.mockInterface.getDetailMockUpIdByUserAccess(id,
+                    this.getAuthenticationProfileModel());
+            if (mockDetailWithAccess.isEmpty()) {
+                throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
+            }
+            return ResponseEntity.ok(mockDetailWithAccess.get(0));
+        } catch (Exception e) {
+            return this.handlingErrorResponse(e, request);
         }
-        return ResponseEntity.ok(mockDetailWithAccess.get(0));
     }
 
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
@@ -196,11 +199,8 @@ public class MockControllers extends BaseController {
             BsonDocument b = new BsonDocument();
             b.put("ping", new BsonString("1"));
             Document doc = mongoTemplate.getDb().runCommand(b);
-            if (doc.get("ok").equals(1.0)) {
-                return ResponseEntity.ok("up");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
-            }
+            if (doc.get("ok").equals(1.0)) return ResponseEntity.ok("up");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("down");
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
