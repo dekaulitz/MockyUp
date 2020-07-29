@@ -47,6 +47,20 @@
             {
               "property": {
                 "name": "client-id",
+                "value": null
+              },
+              "response": {
+                "httpCode": 422,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
                 "value": "default"
               },
               "response": {
@@ -88,6 +102,20 @@
             }
           ],
           "x-query-including": [
+            {
+              "property": {
+                "name": "query",
+                "value": null
+              },
+              "response": {
+                "httpCode": 422,
+                "headers": {
+                  "x-request-id": "this is from mocks",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
             {
               "property": {
                 "name": "query",
@@ -368,6 +396,19 @@
             {
               "property": {
                 "name": "title",
+                "value": null
+              },
+              "response": {
+                "httpCode": 422,
+                "headers": {
+                  "x-request-id": "this is from mocks"
+                },
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "title",
                 "value": "noRef"
               },
               "response": {
@@ -406,7 +447,33 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "RESPONSE": {
+        "type": "object",
+        "properties": {
+          "response_code": {
+            "type": "string"
+          },
+          "response_message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RESPONSE_DATA"
+          }
+        }
+      },
+      "RESPONSE_GENERAL": {
+        "$ref": "#/components/schemas/RESPONSE_DATA"
+      },
+      "RESPONSE_DATA": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "parameters": {},
     "examples": {
       "LIST_OF_BOOKS": {
