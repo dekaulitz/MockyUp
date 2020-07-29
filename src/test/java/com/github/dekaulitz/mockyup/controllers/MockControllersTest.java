@@ -115,7 +115,7 @@ class MockControllersTest extends BaseTest {
     void getCurrentAccess() throws IOException {
         //given
         List<DtoMockupDetailVmodel> given = Helper.getDtoMockupDetailVmodels();
-        when(this.mockRepository.getDetailMockUpIdByUserAccess(any(), any())).thenReturn(given);
+        when(this.mockRepository.getMockDetailWithCurrentAccess(any(), any())).thenReturn(given);
         //when user do request
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + Helper.generateToken(givenId, 10, 10));
@@ -123,7 +123,7 @@ class MockControllersTest extends BaseTest {
         ResponseEntity<Object> response1 = this.restTemplate
                 .exchange(baseUrl + "/mocks/x/detailWithAccess", HttpMethod.GET, request1, Object.class);
         isTrue(response1.getStatusCode().value() == 200, HTTPCODE_NOT_EXPECTED);
-        when(this.mockRepository.getDetailMockUpIdByUserAccess(any(), any())).thenReturn(new ArrayList<>());
+        when(this.mockRepository.getMockDetailWithCurrentAccess(any(), any())).thenReturn(new ArrayList<>());
 
         //when user do request with not data found
         headers = new HttpHeaders();
@@ -157,7 +157,7 @@ class MockControllersTest extends BaseTest {
             userMocksEntities.setAccess(Role.MOCKS_READ_WRITE.name());
         });
         when(this.mockRepository.findById(any())).thenReturn(Optional.of(mockEntities));
-        when(this.mockRepository.addUserToMock(any(), any(), any())).thenReturn(Helper.getMockEntities());
+        when(this.mockRepository.registeringUserToMock(any(), any(), any())).thenReturn(Helper.getMockEntities());
         AddUserAccessVmodel addUserAccessVmodel = Helper.getAddUserAccessVmodel();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + Helper.generateToken(givenId, 10, 10));
@@ -239,7 +239,7 @@ class MockControllersTest extends BaseTest {
     @Test
     void getSpecHistory() throws IOException {
         //given
-        when(this.mockRepository.findMockByIdAndUserId(any(), any())).thenReturn(Helper.getMockEntitiesList());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntitiesList());
         when(this.mockHistoryRepository.getMockHistoryByIdAndMockId(any(), any())).thenReturn(Helper.getDtoMockupHistoryVmodel());
 
         //when user do request
@@ -251,7 +251,7 @@ class MockControllersTest extends BaseTest {
         isTrue(response1.getStatusCode().value() == 200, HTTPCODE_NOT_EXPECTED);
 
         //given
-        when(this.mockRepository.findMockByIdAndUserId(any(), any())).thenReturn(new ArrayList<>());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(new ArrayList<>());
         //when user do request but there no spec history base on user access
         headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + Helper.generateToken(givenId, 10, 10));
@@ -262,7 +262,7 @@ class MockControllersTest extends BaseTest {
         isTrue(response2.getBody().getResponseCode().equals(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode()), HTTPCODE_NOT_EXPECTED);
 
         //given
-        when(this.mockRepository.findMockByIdAndUserId(any(), any())).thenReturn(Helper.getMockEntitiesList());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntitiesList());
         when(this.mockHistoryRepository.getMockHistoryByIdAndMockId(any(), any())).thenReturn(null);
         //when user do request but there no spec history base on user access
         headers = new HttpHeaders();
@@ -473,7 +473,36 @@ class MockControllersTest extends BaseTest {
         MockEntities mockEntities = Helper.getMockEntities();
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
         HttpHeaders headers = new HttpHeaders();
+        headers.set("client-id", "");
+        HttpEntity<HttpHeaders> headersHttpEntity2 = new HttpEntity<>(headers);
+
+        //test mock response from query but some header was missing
+        ResponseEntity<String> responseEntity3 = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/books?query=123", HttpMethod.GET, headersHttpEntity2, String.class);
+        isTrue(responseEntity3.getStatusCodeValue() == 422, "http code is not expected");
+        if (responseEntity3.getBody() != null)
+            isTrue(responseEntity3.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "response is not expected");
+
+        mockEntities = Helper.getMockEntities();
+        when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
+        headers = new HttpHeaders();
+        headers.set("client-id", "asd");
         HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
+
+        //test mock response from query=
+        ResponseEntity<String> responseEntity2 = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/books?query=", HttpMethod.GET, headersHttpEntity, String.class);
+        isTrue(responseEntity2.getStatusCodeValue() == 422, "http code is not expected");
+        if (responseEntity2.getBody() != null)
+            isTrue(responseEntity2.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "response is not expected");
+
+        //test mock response from query was not initiate
+        responseEntity2 = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/books?sort=published:sdesc", HttpMethod.GET, headersHttpEntity, String.class);
+        isTrue(responseEntity2.getStatusCodeValue() == 422, "http code is not expected");
+        if (responseEntity2.getBody() != null)
+            isTrue(responseEntity2.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "response is not expected");
+
 
         //test mock response from query=title:empty
         ResponseEntity<String> responseEntity = this.restTemplate
@@ -635,21 +664,34 @@ class MockControllersTest extends BaseTest {
                 .equals(Helper.DEFAULT_HEADER_VALUE), "header not expected");
     }
 
+
     void getMocksMockingDetailUpdate() throws IOException {
         MockEntities mockEntities = Helper.getMockEntities();
         when(this.mockRepository.findById(any(String.class))).thenReturn(java.util.Optional.ofNullable(mockEntities));
 
-        String payload = "{}";
+        String payload3 = "{}";
         HttpHeaders headers = new HttpHeaders();
 
-        HttpEntity<String> headersHttpEntity = new HttpEntity<>(payload, headers);
+        HttpEntity<String> headersHttpEntity2 = new HttpEntity<>(payload3, headers);
+        //test mock response from BOOK_ID=10
+        ResponseEntity<String> responseEntity2 = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/books/x/update", HttpMethod.PUT, headersHttpEntity2, String.class);
+        isTrue(responseEntity2.getStatusCodeValue() == 422, "http code is not expected");
+        if (responseEntity2.getBody() != null)
+            isTrue(responseEntity2.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "response is not expected");
+
+        String payload1 = "{\n" +
+                "\t\"title\":null\n" +
+                "}";
+
+        HttpEntity<String> headersHttpEntity = new HttpEntity<>(payload1, headers);
         //test mock response from BOOK_ID=10
         ResponseEntity<String> responseEntity = this.restTemplate
                 .exchange(baseUrl + "/mocks/mocking/id?path=/books/x/update", HttpMethod.PUT, headersHttpEntity, String.class);
-        isTrue(responseEntity.getStatusCodeValue() == 401, "http code is not expected");
+        isTrue(responseEntity.getStatusCodeValue() == 422, "http code is not expected");
         if (responseEntity.getBody() != null)
-            isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK), "response is not expected");
-
+            isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "response is not expected");
+        String payload = "{}";
         //test mock response from query query=title:empty
         responseEntity = this.restTemplate
                 .exchange(baseUrl + "/mocks/mocking/id?path=/books/x/update?query=title:empty", HttpMethod.PUT, headersHttpEntity, String.class);

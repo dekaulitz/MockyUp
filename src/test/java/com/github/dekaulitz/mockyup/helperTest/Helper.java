@@ -88,12 +88,13 @@ public class Helper {
         mockEntities.setTitle(MOCK_TITLE);
         mockEntities.setDescription(MOCK_DESC);
         mockEntities.setSwagger(getDefaultJsonContract());
-        mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(openAPI));
+        mockEntities.setSpec(JsonMapper.mapper().writeValueAsString(getOpenApi()));
         List<UserMocksEntities> userMocksEntitiesList = new ArrayList<>();
         userMocksEntitiesList.add(UserMocksEntities.builder()
                 .userId("x")
                 .access(Role.MOCKS_READ_WRITE.name())
                 .build());
+        mockEntities.setUpdatedDate(new Date());
         mockEntities.setUsers(userMocksEntitiesList);
         return mockEntities;
     }
@@ -152,7 +153,7 @@ public class Helper {
                         .username(DEFAULT_USERNAME)
                         .userId(DEFAULT_USER_ID)
                         .build())
-                .spec(getDefaultJsonContract())
+                .spec(JsonMapper.mapper().writeValueAsString(getOpenApi()))
                 .currentAccessUser(DtoMockupDetailCurrentAccessVmodel.builder()
                         .username(DEFAULT_USERNAME)
                         .access(Role.MOCKS_READ_WRITE.name())
@@ -166,7 +167,8 @@ public class Helper {
                 .id(DEFAULT_MOCK_ID)
                 .title(MOCK_TITLE)
                 .description(MOCK_DESC)
-                .spec(getDefaultJsonContract())
+                .spec(JsonMapper.mapper().writeValueAsString(getOpenApi()))
+                .swagger(getDefaultJsonContract())
                 .build();
     }
 
@@ -189,7 +191,7 @@ public class Helper {
         return mockEntitiesList;
     }
 
-    public static OpenAPI generateOpenAoi() throws IOException {
+    public static OpenAPI getOpenApi() throws IOException {
         SwaggerParseResult result = new OpenAPIParser().readContents(getDefaultJsonContract(), null, null);
         openAPI = result.getOpenAPI();
         Paths newPath = new Paths();
@@ -282,4 +284,6 @@ public class Helper {
                 .access(Role.MOCKS_READ_WRITE.name())
                 .build();
     }
+
+
 }
