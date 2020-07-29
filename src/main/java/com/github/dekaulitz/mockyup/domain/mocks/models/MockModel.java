@@ -131,7 +131,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
 
     @Override
     public List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
-        return this.mockRepository.getDetailMockUpIdByUserAccess(id, authenticationProfileModel);
+        return this.mockRepository.getMockDetailWithCurrentAccess(id, authenticationProfileModel);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
             throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
         }
         this.checkAccessModificationMocks(mockEntities.get(), authenticationProfileModel);
-        return this.mockRepository.addUserToMock(id, vmodel, mockEntities.get());
+        return this.mockRepository.registeringUserToMock(id, vmodel, mockEntities.get());
     }
 
     @Override
@@ -186,7 +186,8 @@ public class MockModel extends BaseMockModel implements MockInterface {
     @Override
     public DtoMockupHistoryVmodel geMockHistoryId(String id, String historyId, AuthenticationProfileModel authenticationProfileModel)
             throws NotFoundException {
-        List<MockEntities> mockEntitiesList = this.mockRepository.findMockByIdAndUserId(id, authenticationProfileModel.get_id());
+        //check access permission user on mock
+        List<MockEntities> mockEntitiesList = this.mockRepository.checkMockUserAccessPermission(id, authenticationProfileModel.get_id());
         if (mockEntitiesList.isEmpty())
             throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
 

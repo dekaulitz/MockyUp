@@ -1,7 +1,6 @@
 package com.github.dekaulitz.mockyup.db.repositories.support;
 
-import com.github.dekaulitz.mockyup.db.entities.MockEntities;
-import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.entities.*;
 import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
@@ -9,6 +8,7 @@ import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.utils.Role;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,7 +35,7 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
     }
 
     @Override
-    public List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
+    public List<DtoMockupDetailVmodel> getMockDetailWithCurrentAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
         Aggregation aggregation = Aggregation.newAggregation(
                 //find by criteria
                 Aggregation.match(Criteria.where("_id").is(id)),
@@ -114,10 +116,6 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.aggregate(aggregation, "mockup", DtoMockUserLookupVmodel.class).getMappedResults();
     }
 
-    @Override
-    public Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) {
-        return null;
-    }
 
     @Override
     public MockEntitiesPage paging(Pageable pageable, String q, AuthenticationProfileModel authenticationProfileModel) {
@@ -142,13 +140,6 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
     }
 
     @Override
-    public MockEntities getUserMocks(String id) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id)).fields().include("_id").include("users");
-        return mongoTemplate.findOne(query, MockEntities.class);
-    }
-
-    @Override
     public Object removeAccessUserOnMock(String id, String userId, MockEntities mockEntities) throws NotFoundException {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
@@ -167,7 +158,7 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
     }
 
     @Override
-    public Object addUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities) {
+    public Object registeringUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
         AtomicBoolean addUserExist = new AtomicBoolean(false);
@@ -186,10 +177,36 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
     }
 
     @Override
-    public List<MockEntities> findMockByIdAndUserId(String id, String userId) {
+    public List<MockEntities> checkMockUserAccessPermission(String id, String userId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
         query.addCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(userId)));
         return mongoTemplate.find(query, MockEntities.class);
+    }
+
+    @Override
+    public void injectRootIntoAllMocks(UserEntities user) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("users").is(null));
+        List<MockEntities> mocksHasNoUsers = mongoTemplate.find(query, MockEntities.class);
+        if (mocksHasNoUsers.size() > 0)
+            mocksHasNoUsers.forEach(mockEntities -> {
+                List<UserMocksEntities> userMocksEntitiesList = new ArrayList<>();
+                userMocksEntitiesList.add(UserMocksEntities.builder()
+                        .userId(user.getId())
+                        .access(Role.MOCKS_READ_WRITE.toString())
+                        .build());
+                MockEntities updateMockenties = MockEntities.builder()
+                        .id(mockEntities.getId())
+                        .description(mockEntities.getDescription())
+                        .title(mockEntities.getTitle())
+                        .spec(mockEntities.getSpec())
+                        .swagger(mockEntities.getSwagger())
+                        .updatedDate(new Date())
+                        .users(userMocksEntitiesList)
+                        .updatedBy(MockCreatorEntities.builder().userId(user.getId()).username(user.getUsername()).build())
+                        .build();
+                mongoTemplate.save(updateMockenties);
+            });
     }
 }

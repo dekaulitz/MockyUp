@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.db.repositories.support;
 
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
@@ -13,22 +14,73 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface MockRepositorySupport {
-    List<DtoMockupDetailVmodel> getDetailMockUpIdByUserAccess(String id, AuthenticationProfileModel authenticationProfileModel);
+    /**
+     * get mock detail with current access
+     *
+     * @param id                         id from mock collection
+     * @param authenticationProfileModel user auth data
+     * @return List<DtoMockupDetailVmodel>
+     */
+    List<DtoMockupDetailVmodel> getMockDetailWithCurrentAccess(String id, AuthenticationProfileModel authenticationProfileModel);
 
-    List<DtoMockUserLookupVmodel> getUsersMock(String mockId);
+    /**
+     * get users mock that has access
+     *
+     * @param id id from mock collection
+     * @return List<DtoMockUserLookupVmodel>
+     */
+    List<DtoMockUserLookupVmodel> getUsersMock(String id);
 
-    Object addUserAccessOnMock(String id, AddUserAccessVmodel vmodel, AuthenticationProfileModel authenticationProfileModel);
-
+    /**
+     * paging mock data
+     *
+     * @param pageable                   Spring data pageable
+     * @param q                          query data like example q=firstname:fahmi mean field firstname with value fahmi
+     * @param authenticationProfileModel user auth data
+     * @return
+     */
     MockEntitiesPage paging(Pageable pageable, String q, AuthenticationProfileModel authenticationProfileModel);
 
+    /**
+     * get mock histories
+     *
+     * @param id id from mock colelction
+     * @return List<MockHistoryEntities>
+     */
     List<MockHistoryEntities> getMockHistories(String id);
 
-    MockEntities getUserMocks(String id);
-
+    /**
+     * @param id
+     * @param userId
+     * @param mockEntities
+     * @return
+     * @throws NotFoundException
+     */
     Object removeAccessUserOnMock(String id, String userId, MockEntities mockEntities) throws NotFoundException;
 
-    Object addUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities);
+    /**
+     * registering user to mock
+     *
+     * @param id           id from mock collection
+     * @param accessVmodel access data user that want to register
+     * @param mockEntities mockentities
+     * @return Object
+     */
+    Object registeringUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities);
 
-    List<MockEntities> findMockByIdAndUserId(String id, String userId);
+    /**
+     * check user access permision on mock
+     *
+     * @param id     id from mock collection
+     * @param userId id from user colelction
+     * @return List<MockEntities>
+     */
+    List<MockEntities> checkMockUserAccessPermission(String id, String userId);
 
+    /**
+     * injecting user root for the firstime
+     *
+     * @param user user root
+     */
+    void injectRootIntoAllMocks(UserEntities user);
 }

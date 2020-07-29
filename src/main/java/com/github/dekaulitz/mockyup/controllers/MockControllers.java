@@ -1,6 +1,5 @@
 package com.github.dekaulitz.mockyup.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.base.controller.BaseController;
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
@@ -36,6 +35,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+/**
+ * mocks handling
+ */
 @RestController
 public class MockControllers extends BaseController {
     @Autowired
@@ -51,9 +53,10 @@ public class MockControllers extends BaseController {
     }
 
     /**
-     * @return
-     * @throws IOException
-     * @desc showing swagger doc
+     * get the mockyup swagger contract
+     *
+     * @return ResponseEntity
+     * @throws IOException IOException
      */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/docs", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,10 +73,10 @@ public class MockControllers extends BaseController {
     }
 
     /**
-     * @param path
-     * @param id
-     * @param body
-     * @return
+     * @param path path on mock swagger pathitem that want to get mocking the response
+     * @param id   mock id from  mock collection
+     * @param body optional depend on the contract that registered
+     * @return ResponseEntity
      */
     @RequestMapping(value = "/mocks/mocking/{id}", method = {RequestMethod.OPTIONS, RequestMethod.DELETE,
             RequestMethod.POST, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.PATCH, RequestMethod.PUT,
@@ -94,6 +97,12 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * getting all user on the mock
+     *
+     * @param id mockid from mock collection
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/users",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -102,6 +111,13 @@ public class MockControllers extends BaseController {
         return ResponseEntity.ok(this.mockInterface.getUsersListOfMocks(id));
     }
 
+    /**
+     * get access permission base on token for checking has access to modified
+     *
+     * @param id      mockid from mock collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/detailWithAccess",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -119,6 +135,12 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * getting all histories on the mock
+     *
+     * @param id id from mock collection
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/histories",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -127,6 +149,14 @@ public class MockControllers extends BaseController {
         return ResponseEntity.ok(this.mockInterface.getMockHistories(id));
     }
 
+    /**
+     * add user access into mock
+     *
+     * @param id      mockid from mock  collection
+     * @param vmodel  user data
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @PutMapping(value = "/mocks/{id}/addUser",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -140,11 +170,19 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * removing access user on mock
+     *
+     * @param id      id from mock collection
+     * @param userId  id id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @DeleteMapping(value = "/mocks/{id}/remove/{userId}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> removeUserAccessOnMock(@PathVariable String id, @PathVariable String userId, HttpServletRequest request) {
+    public ResponseEntity<Object> removingAccessUser(@PathVariable String id, @PathVariable String userId, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.mockInterface.removeAccessUserOnMock(id, userId, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
@@ -152,7 +190,14 @@ public class MockControllers extends BaseController {
         }
     }
 
-
+    /**
+     * get swagger mock history
+     *
+     * @param id        id from mock collection
+     * @param historyId id from mock history collection
+     * @param request   HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/histories/{historyId}",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -166,10 +211,8 @@ public class MockControllers extends BaseController {
     }
 
     /**
-     * @param body
-     * @return
-     * @throws JsonProcessingException
-     * @desc storing the mocks
+     * @param body mock payload data
+     * @return ResponseEntity
      */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @PostMapping(value = "/mocks/store")
@@ -191,6 +234,11 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * for checking database health
+     *
+     * @return ResponseEntity
+     */
     @GetMapping(value = "/health",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -209,15 +257,16 @@ public class MockControllers extends BaseController {
 
 
     /**
-     * @param id
-     * @return
-     * @desc delete mock by id
+     * delete mock base on id
+     *
+     * @param id id from mock collection
+     * @return ResponseEntity
      */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @DeleteMapping(value = "/mocks/{id}/delete",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> deleteByMockId(@PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity<Object> deleteMock(@PathVariable String id, HttpServletRequest request) {
         try {
             this.mockInterface.deleteById(id, this.getAuthenticationProfileModel());
             return ResponseEntity.ok().build();
@@ -226,9 +275,16 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * get spec mock
+     *
+     * @param id      id from mock collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/{id}/spec", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getMockSpecById(@PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity<Object> getSpecMock(@PathVariable String id, HttpServletRequest request) {
         try {
             MockEntities mock = this.mockInterface.getById(id, this.getAuthenticationProfileModel());
             MockVmodel mockResponseVmodel = new MockVmodel();
@@ -239,6 +295,14 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * update mock
+     *
+     * @param id      id from mock collection
+     * @param body    mock payload data
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ_WRITE')")
     @PutMapping(value = "/mocks/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateMockById(@PathVariable String id, @Valid @RequestBody MockVmodel body, HttpServletRequest request) {
@@ -253,6 +317,14 @@ public class MockControllers extends BaseController {
         }
     }
 
+    /**
+     * mocks pagination base on user access permission
+     *
+     * @param pageable Spring data pageable
+     * @param q        query data example q=name:fahmi => meaning field name with value fahmi
+     * @param request  HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('MOCKS_READ','MOCKS_READ_WRITE')")
     @GetMapping(value = "/mocks/page", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getMocksPagination(

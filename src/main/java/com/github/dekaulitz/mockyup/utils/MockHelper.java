@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 @NoArgsConstructor
+/**
+ * mock helper for handling mock extesion from openapi
+ */
 public class MockHelper {
     public static final String X_PATH = "x-path-including";
     public final static String NAME_PROPERTY = "name";

@@ -11,8 +11,15 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.io.Serializable;
 import java.util.List;
 
-
-public abstract class AbstractPage<T> implements BasePage, Serializable {
+/**
+ * for
+ *
+ * @param <T>
+ */
+public abstract class AbstractPage<T> implements BasePage<T>, Serializable {
+    @Getter
+    private final Query query = new Query();
+    private final Query count = new Query();
     @Setter
     @Getter
     protected List<T> rows;
@@ -33,9 +40,6 @@ public abstract class AbstractPage<T> implements BasePage, Serializable {
     private Criteria criteria;
     private MongoTemplate mongoTemplate;
     private Pageable pageable;
-    @Getter
-    private final Query query = new Query();
-    private final Query count = new Query();
 
     @Autowired
     @Override

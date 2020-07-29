@@ -20,14 +20,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * this is the base controller for handling response mock and error response
+ */
 public class BaseController {
 
     protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * @param mock
-     * @return
-     * @desc generate mock response base mock data
+     * generate mock response
+     *
+     * @param mock Response mock
+     * @return ResponseEntity
      */
     protected ResponseEntity<Object> generateMockResponseEntity(MockHelper mock) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -39,7 +43,13 @@ public class BaseController {
         return ResponseEntity.status(mock.getResponse().getHttpCode()).headers(httpHeaders).body(mock.getResponse().getResponse());
     }
 
-
+    /**
+     * handling error response with type of class exception
+     *
+     * @param ex      exception throwable
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     protected ResponseEntity<Object> handlingErrorResponse(Exception ex, HttpServletRequest request) {
         if (ex instanceof DuplicateDataEntry) {
             return this.responseHandling(((DuplicateDataEntry) ex).getErrorVmodel(), request);
@@ -56,6 +66,8 @@ public class BaseController {
                             .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
                             .build());
         }
+        //if there no exception that match with existing exception handler
+        //will handling with global error model
         LOGGER.error("exception occured " + ex.getMessage(), ex);
         return ResponseEntity.status(ResponseCode.GLOBAL_ERROR_MESSAGE.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(ex.getMessage())
@@ -64,7 +76,13 @@ public class BaseController {
                         .build());
     }
 
-
+    /**
+     * handling the error exception into json
+     *
+     * @param errorVmodel ErrorVmodel
+     * @param request     HttpServletRequest for getting attribute from request
+     * @return ResponseEntity<ResponseVmodel>
+     */
     public ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel, HttpServletRequest request) {
         return ResponseEntity.status(errorVmodel.getHttpCode()).body(
                 ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
@@ -72,6 +90,11 @@ public class BaseController {
                         .responseCode(errorVmodel.getErrorCode()).build());
     }
 
+    /**
+     * rendering user auth from security context
+     *
+     * @return AuthenticationProfileModel
+     */
     public AuthenticationProfileModel getAuthenticationProfileModel() {
         return (AuthenticationProfileModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }

@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor
-
 public class AuthenticationProfileModel implements UserDetails {
 
     private String _id;

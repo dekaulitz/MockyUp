@@ -14,6 +14,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * jwt manager for handling jwt
+ */
 public class JwtManager {
 
     public static final String CAN_DO_REFRESH = "canRefresh";

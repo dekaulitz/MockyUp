@@ -26,6 +26,13 @@ public class UserControllers extends BaseController {
         this.userInterface = userInterface;
     }
 
+    /**
+     * registering new user
+     *
+     * @param vmodel  new user payload data
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @PostMapping(value = "/mocks/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> adduser(@Valid @RequestBody RegistrationVmodel vmodel, HttpServletRequest request) {
@@ -41,6 +48,13 @@ public class UserControllers extends BaseController {
         }
     }
 
+    /**
+     * delete user
+     *
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @DeleteMapping(value = "/mocks/user/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteUser(@PathVariable String id, HttpServletRequest request) {
@@ -53,9 +67,17 @@ public class UserControllers extends BaseController {
 
     }
 
+    /**
+     * user pagination
+     *
+     * @param pageable Spring data pageable
+     * @param q        query data example q=name:fahmi => meaning field name with value fahmi
+     * @param request  HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUsersPagination(
+    public ResponseEntity<Object> getUsersPagination(
             Pageable pageable,
             @RequestParam(value = "q", required = false) String q, HttpServletRequest request) {
         try {
@@ -66,9 +88,16 @@ public class UserControllers extends BaseController {
         }
     }
 
+    /**
+     * for getting all users that can be inserted into mock
+     *
+     * @param username username
+     * @param request  HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserList(@RequestParam(value = "username", required = false) String username, HttpServletRequest request) {
+    public ResponseEntity<Object> getUserList(@RequestParam(value = "username", required = false) String username, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.userInterface.listUsers(username, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
@@ -76,9 +105,17 @@ public class UserControllers extends BaseController {
         }
     }
 
+    /**
+     * for update user profile
+     *
+     * @param vmodel  update data user property
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @PutMapping(value = "/mocks/users/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUsers(@Valid @RequestBody UpdateUserVmodel vmodel, @PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UpdateUserVmodel vmodel, @PathVariable String id, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.userInterface.updateUser(vmodel, id));
         } catch (Exception e) {
@@ -86,10 +123,16 @@ public class UserControllers extends BaseController {
         }
     }
 
-
+    /**
+     * get user detail
+     *
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users/{id}/detail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserById(@PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity getUser(@PathVariable String id, HttpServletRequest request) {
         try {
             return ResponseEntity.ok(this.userInterface.getUserById(id));
         } catch (Exception e) {

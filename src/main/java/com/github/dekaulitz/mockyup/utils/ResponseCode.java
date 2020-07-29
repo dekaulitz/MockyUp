@@ -3,13 +3,14 @@ package com.github.dekaulitz.mockyup.utils;
 import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ErrorVmodel;
 import org.springframework.http.HttpStatus;
 
-
+/**
+ * all response code
+ */
 public class ResponseCode {
 
     public static ErrorVmodel TOKEN_INVALID = new ErrorVmodel(HttpStatus.UNAUTHORIZED, "MOCK010", "Token invalid!");
     public static ErrorVmodel REFRESH_TOKEN_REQUIRED = new ErrorVmodel(HttpStatus.FORBIDDEN, "MOCK011", "Refresh token required!");
     public static ErrorVmodel TOKEN_EXPIRED = new ErrorVmodel(HttpStatus.UNAUTHORIZED, "MOCK012", "Token expired please login!");
-    public static ErrorVmodel TOKEN_NOT_FOUND = new ErrorVmodel(HttpStatus.UNAUTHORIZED, "MOCK010", "Token invalid!");
     public static ErrorVmodel INVALID_USERNAME_OR_PASSWORD = new ErrorVmodel(HttpStatus.UNAUTHORIZED, "MOCK014", "Invalid username or password!");
     public static ErrorVmodel INVALID_ACCESS_PERMISSION = new ErrorVmodel(HttpStatus.FORBIDDEN, "MOCK015", "Invalid access permissions, you dont have access to modify data!");
 
