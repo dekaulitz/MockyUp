@@ -52,7 +52,7 @@ public class MockHelper {
                 parsingMockFromJsonMapper(mockHelper, stringObjectMap);
                 throwInvalidMockExample(mockHelper);
                 String requestHeader = request.getHeader((String) mockHelper.getProperty().get(MockHelper.NAME_PROPERTY));
-                if (requestHeader != null) {
+                if (!requestHeader.isEmpty()) {
                     if (requestHeader.equals(mockHelper.getProperty().get(MockHelper.VALUE_PROPERTY))) {
                         getComponentReference(mockHelper, components);
                         return mockHelper;
@@ -96,13 +96,15 @@ public class MockHelper {
                                 getComponentReference(mockHelper, components);
                                 return mockHelper;
                             }
-                        } else {
-                            if (mockHelper.getProperty().get(VALUE_PROPERTY) == null) {
+                            if (bodyRequest.equalsIgnoreCase("null") && mockHelper.getProperty().get(VALUE_PROPERTY) == null) {
                                 getComponentReference(mockHelper, components);
                                 return mockHelper;
                             }
                         }
                     }
+                } else if (mockHelper.getProperty().get(VALUE_PROPERTY) == null) {
+                    getComponentReference(mockHelper, components);
+                    return mockHelper;
                 }
             }
         return null;
@@ -160,8 +162,13 @@ public class MockHelper {
                             getComponentReference(mockHelper, components);
                             return mockHelper;
                         }
+                        if (mockHelper.getProperty().get(VALUE_PROPERTY) == null && qmap.getValue().equals("null")) {
+                            getComponentReference(mockHelper, components);
+                            return mockHelper;
+                        }
                     } else {
-                        if (mockHelper.getProperty().get(VALUE_PROPERTY) == null) {
+                        if (mockHelper.getProperty().get(VALUE_PROPERTY) == null &&
+                                !cleanQueryString.contains(mockHelper.getProperty().get(MockHelper.NAME_PROPERTY).toString())) {
                             getComponentReference(mockHelper, components);
                             return mockHelper;
                         }
@@ -220,13 +227,20 @@ public class MockHelper {
 
     private static Map<String, String> decodeQueryString(String query) throws InvalidMockException {
         String[] params = query.split("\\&");
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
+        String value = "";
+        String name = "";
         for (String param : params) {
-            if (param.split("=").length <= 1) throw new InvalidMockException(ResponseCode.INVALID_MOCKUP_STRUCTURE);
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
+            if (param.split("=").length <= 1) {
+                name = param.split("=")[0];
+                value = "null";
+            } else {
+                name = param.split("=")[0];
+                value = param.split("=")[1];
+            }
             map.put(name, value);
         }
+
         return map;
     }
 
