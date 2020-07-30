@@ -444,6 +444,72 @@
           }
         }
       }
+    },
+    "/categories/{CAT_ID}/books/{BOOK_ID}": {
+      "get": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "",
+        "operationId": "",
+        "parameters": [
+        ],
+        "responses": {},
+        "x-examples": {
+          "x-path-including": [
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": "1"
+              },
+              "response": {
+                "httpCode": 201,
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": "1"
+              },
+              "response": {
+                "httpCode": 403,
+                "response": "DEFAULT"
+              }
+            },
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": "0"
+              },
+              "response": {
+                "httpCode": 200,
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              }
+            },
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": null
+              },
+              "response": {
+                "httpCode": 500,
+                "response": "DEFAULT"
+              }
+            }
+          ],
+          "x-body-including": [
+          ],
+          "x-header-including": [],
+          "x-query-including": [],
+          "x-default": {
+            "response": {
+              "httpCode": 200,
+              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+            }
+          }
+        }
+      }
     }
   },
   "components": {
