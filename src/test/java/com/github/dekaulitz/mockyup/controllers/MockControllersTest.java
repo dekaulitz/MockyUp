@@ -20,6 +20,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -79,6 +80,8 @@ class MockControllersTest extends BaseTest {
         //when user do mock request with valid path and correct mockid
         //path mock contract path=/mocks/mocking/id?path=/books/x/update method put
         this.getMocksMockingDetailUpdate();
+
+        this.getMocksCategoriesCatIdBooksBookId();
 
 
         //when user do refresh with valid token
@@ -239,7 +242,7 @@ class MockControllersTest extends BaseTest {
     @Test
     void getSpecHistory() throws IOException {
         //given
-        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntitiesList());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntities());
         when(this.mockHistoryRepository.getMockHistoryByIdAndMockId(any(), any())).thenReturn(Helper.getDtoMockupHistoryVmodel());
 
         //when user do request
@@ -251,7 +254,7 @@ class MockControllersTest extends BaseTest {
         isTrue(response1.getStatusCode().value() == 200, HTTPCODE_NOT_EXPECTED);
 
         //given
-        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(new ArrayList<>());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(null);
         //when user do request but there no spec history base on user access
         headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + Helper.generateToken(givenId, 10, 10));
@@ -262,7 +265,7 @@ class MockControllersTest extends BaseTest {
         isTrue(response2.getBody().getResponseCode().equals(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode()), HTTPCODE_NOT_EXPECTED);
 
         //given
-        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntitiesList());
+        when(this.mockRepository.checkMockUserAccessPermission(any(), any())).thenReturn(Helper.getMockEntities());
         when(this.mockHistoryRepository.getMockHistoryByIdAndMockId(any(), any())).thenReturn(null);
         //when user do request but there no spec history base on user access
         headers = new HttpHeaders();
@@ -468,6 +471,29 @@ class MockControllersTest extends BaseTest {
         isTrue(responseEntity.getStatusCodeValue() == 404, "http code is not expected");
 
     }
+
+    void getMocksCategoriesCatIdBooksBookId() throws IOException {
+        //
+        MockEntities mockEntities = Helper.getMockEntities();
+        when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
+
+        //test mock response from query but some header was missing
+        ResponseEntity<String> response = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/categories/1/books/x", HttpMethod.GET, request, String.class);
+        Assert.isTrue(response.getStatusCodeValue() == 201, "http code is not expected");
+
+        response = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/categories/any/books/1", HttpMethod.GET, request, String.class);
+        Assert.isTrue(response.getStatusCodeValue() == 403, "http code is not expected");
+
+        response = this.restTemplate
+                .exchange(baseUrl + "/mocks/mocking/id?path=/categories/0/books/11", HttpMethod.GET, request, String.class);
+        Assert.isTrue(response.getStatusCodeValue() == 200, "http code is not expected");
+
+    }
+
 
     void getMocksMockingIdPathBooksQuery() throws IOException {
         MockEntities mockEntities = Helper.getMockEntities();

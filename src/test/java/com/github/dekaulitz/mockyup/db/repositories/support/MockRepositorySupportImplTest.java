@@ -227,8 +227,8 @@ class MockRepositorySupportImplTest {
                 .build()));
         mockRepository.save(mockEntities);
 
-        List<MockEntities> mockEntitiesList = mockRepository.checkMockUserAccessPermission(mockEntities.getId(), userEntities.getId());
-        Assert.isTrue(mockEntitiesList.size() == 1, "size is not expected");
+        MockEntities mockEntitiesList = mockRepository.checkMockUserAccessPermission(mockEntities.getId(), userEntities.getId());
+        Assert.isTrue(mockEntitiesList != null, "size is not expected");
     }
 
     @Test

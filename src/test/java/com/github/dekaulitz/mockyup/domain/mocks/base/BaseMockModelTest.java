@@ -58,7 +58,7 @@ class BaseMockModelTest {
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("get");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("any");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(item, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(item, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 422, "mockhelper was not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse() != null, "mockhelper was not expected");
         //its static from mocking_test.json
@@ -80,25 +80,25 @@ class BaseMockModelTest {
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books?query=title:empty&sort=published:desc");
 
         //test when using example query=title:empty
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
 
         //test when using example sort=published:asc
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books&sort=published:asc");
-        mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
 
         //test when using example with query=title:one
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books&query=title:one");
-        mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
 
         //test when using example default response
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books?query=title:1one");
-        mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
 
@@ -119,7 +119,7 @@ class BaseMockModelTest {
 
         //test when using example header client-id=default
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("default");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
@@ -128,7 +128,7 @@ class BaseMockModelTest {
 
         //test when using example header client-id=one
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("one");
-        mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_RESPONSE_MOCK), "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
@@ -136,7 +136,7 @@ class BaseMockModelTest {
 
         //test when using example header client-id=error_400
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("error_400");
-        mockHelper = this.baseMockModel.getMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
+        mockHelper = this.baseMockModel.renderingMockResponse(pathItem, this.httpServletRequest, body, openAPIPaths, paths, openAPI.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getResponse().equals(Helper.DEFAULT_COMPONENT_EXAMPLE), "mockhelper is not expected");
         Assert.isTrue(mockHelper.getResponse().getHeaders().get(Helper.DEFAULT_HEADER_NAME).equals(Helper.DEFAULT_HEADER_VALUE), "mock helper is not expected");
@@ -156,7 +156,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("get");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -177,7 +177,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("get");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -199,7 +199,7 @@ class BaseMockModelTest {
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("get");
         Mockito.when(this.httpServletRequest.getHeader("client-id")).thenReturn("any");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -223,7 +223,7 @@ class BaseMockModelTest {
         //default method from servlet request using UPPERCASE
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("PUT");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -247,7 +247,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("PUT");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -270,7 +270,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("PUT");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -293,7 +293,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("PUT");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/books/12/update?query=title:empty");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.notNull(mockHelper, "mockhelper is not expected");
@@ -316,7 +316,7 @@ class BaseMockModelTest {
         generatePathMockPath(dtoPathItemOpenApiVmodel, this.openAPI);
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn("PUT");
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("");
-        MockHelper mockHelper = this.baseMockModel.getMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
+        MockHelper mockHelper = this.baseMockModel.renderingMockResponse(dtoPathItemOpenApiVmodel.getPathItem(),
                 this.httpServletRequest, body, dtoPathItemOpenApiVmodel.getOpenAPIPaths(),
                 paths, dtoPathItemOpenApiVmodel.getComponents());
         Assert.isTrue(mockHelper.getResponse().getHttpCode() == 401, "mock helper is not expected");
