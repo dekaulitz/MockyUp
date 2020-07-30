@@ -16,4 +16,5 @@ public class SecurityAuthenticationFail implements AuthenticationFailureHandler 
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         log.error(e.getMessage());
     }
+
 }

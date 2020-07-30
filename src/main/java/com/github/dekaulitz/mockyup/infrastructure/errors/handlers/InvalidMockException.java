@@ -5,26 +5,7 @@ import lombok.Getter;
 
 public class InvalidMockException extends Exception {
     @Getter
-    private ErrorVmodel errorVmodel;
-
-    public InvalidMockException() {
-    }
-
-    public InvalidMockException(String message) {
-        super(message);
-    }
-
-    public InvalidMockException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidMockException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidMockException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+    private final ErrorVmodel errorVmodel;
 
     public InvalidMockException(ErrorVmodel errorVmodel) {
         super(errorVmodel.getErrorMessage());

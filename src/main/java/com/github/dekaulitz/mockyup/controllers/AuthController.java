@@ -24,7 +24,11 @@ public class AuthController extends BaseController {
         this.authInterfaceModel = authInterfaceModel;
     }
 
-
+    /**
+     * @param vmodel  auth payload user authentication data
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PostMapping(value = "/mocks/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@Valid @RequestBody DoAuthVmodel vmodel, HttpServletRequest request) {
         try {
@@ -34,8 +38,14 @@ public class AuthController extends BaseController {
         }
     }
 
+    /**
+     * every token that generated has limited time need to refresh if the token expired
+     *
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @GetMapping(value = "/mocks/auth/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> logOut(HttpServletRequest request) {
+    public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
         try {
             String headerAuth = request.getHeader("Authorization");
             String authorization = JwtManager.getAuthorizationHeader(headerAuth);

@@ -8,6 +8,12 @@ import java.util.Map;
 
 public class OpenAPITools {
 
+    /**
+     * get component name from reff schema
+     *
+     * @param ref reff schema
+     * @return String
+     */
     public static String getSimpleRef(String ref) {
         if (ref.startsWith("#/components/")) {
             ref = ref.substring(ref.lastIndexOf("/") + 1);
@@ -15,6 +21,13 @@ public class OpenAPITools {
         return ref;
     }
 
+    /**
+     * get schema object base on schema name
+     *
+     * @param name    schema name
+     * @param openAPI openapi object
+     * @return Schema
+     */
     public static Schema getSchemaFromName(String name, OpenAPI openAPI) {
         if (openAPI.getComponents() == null) {
             return null;
@@ -26,6 +39,13 @@ public class OpenAPITools {
         return mapSchema.get(name);
     }
 
+    /**
+     * get schma base on reff schema
+     *
+     * @param refSchema reffschema link
+     * @param openAPI   openapi object
+     * @return Schema
+     */
     public static Schema getSchemaFromRefSchema(Schema refSchema, OpenAPI openAPI) {
         if (StringUtils.isBlank(refSchema.get$ref())) {
             return null;

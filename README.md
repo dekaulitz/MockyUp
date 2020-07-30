@@ -1,3 +1,5 @@
+[![dekaulitz](https://circleci.com/gh/dekaulitz/MockyUp.svg?style=shield)](https://app.circleci.com/pipelines/github/dekaulitz/MockyUp)
+
 <h2 align="left">MOCKYUP</h2>
 MockyUp is a mockup server that release with java version that following OASOPENAPI version 3.xx. You can easyly to integration your swagger documentation with this mockup server with injecting some vendor extension for generating some example.
 **We only supported for json request and response**.

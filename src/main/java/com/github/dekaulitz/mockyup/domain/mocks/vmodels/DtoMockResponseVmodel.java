@@ -1,13 +1,11 @@
 package com.github.dekaulitz.mockyup.domain.mocks.vmodels;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Map;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
