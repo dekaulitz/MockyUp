@@ -5,26 +5,7 @@ import lombok.Getter;
 
 public class DuplicateDataEntry extends Exception {
     @Getter
-    private ErrorVmodel errorVmodel;
-
-    public DuplicateDataEntry() {
-    }
-
-    public DuplicateDataEntry(String message) {
-        super(message);
-    }
-
-    public DuplicateDataEntry(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public DuplicateDataEntry(Throwable cause) {
-        super(cause);
-    }
-
-    public DuplicateDataEntry(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+    private final ErrorVmodel errorVmodel;
 
     public DuplicateDataEntry(ErrorVmodel errorVmodel) {
         super(errorVmodel.getErrorMessage());

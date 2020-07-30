@@ -23,6 +23,8 @@ public class SecurityAuthenticationFilter extends AbstractAuthenticationProcessi
         String authenticationHeader = request.getHeader("Authorization");
         if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer"))
             throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
+        if (authenticationHeader.length() <= 7)
+            throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
         String token = authenticationHeader.substring(7);
         SecurityUsernameAuthenticationToken auth = new SecurityUsernameAuthenticationToken(token);
         return getAuthenticationManager().authenticate(auth);

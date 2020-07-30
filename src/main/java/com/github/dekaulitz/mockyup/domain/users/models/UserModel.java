@@ -1,22 +1,18 @@
 package com.github.dekaulitz.mockyup.domain.users.models;
 
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.users.base.UserInterface;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.UserRepository;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,21 +23,24 @@ import java.util.Optional;
 public class UserModel implements UserInterface {
     @Autowired
     private final UserRepository userRepository;
-    @Autowired
-    private final MongoTemplate mongoTemplate;
 
 
-    public UserModel(UserRepository userRepository, MongoTemplate mongoTemplate) {
+    public UserModel(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * for registering new user
+     *
+     * @param vmodel                     {@link RegistrationVmodel} user data
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth profile
+     * @return UserEntities user data profile
+     * @throws DuplicateDataEntry when username alrady exist will thrown
+     */
     @Override
     public UserEntities addUser(RegistrationVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry {
         boolean isExist = this.userRepository.existsByUsername(vmodel.getUsername());
-        if (isExist) {
-            throw new DuplicateDataEntry(ResponseCode.USER_ALREADY_EXIST);
-        }
+        if (isExist) throw new DuplicateDataEntry(ResponseCode.USER_ALREADY_EXIST);
         UserEntities userEntities = new UserEntities();
         userEntities.setUsername(vmodel.getUsername());
         userEntities.setPassword(Hash.hashing(vmodel.getPassword()));
@@ -50,57 +49,65 @@ public class UserModel implements UserInterface {
         return this.userRepository.save(userEntities);
     }
 
+    /**
+     * for deleting the user
+     *
+     * @param userId                     {@link String} id from user collection
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth profile
+     * @throws NotFoundException when user not found
+     */
     @Override
-    public void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry {
+    public void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
         Optional<UserEntities> userEntities = this.userRepository.findById(userId);
-        if (!userEntities.isPresent()) {
-            throw new DuplicateDataEntry(ResponseCode.USER_NOT_FOUND);
-        }
-
+        if (!userEntities.isPresent()) throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
         this.userRepository.delete(userEntities.get());
     }
 
-
+    /**
+     * user pagination
+     *
+     * @param pageable {@link Pageable} spring data pagiable
+     * @param q        {@link String} query data example q=name:fahmi => meaning field name with value fahmi
+     * @return UserEntitiesPage
+     */
     @Override
     public UserEntitiesPage paging(Pageable pageable, String q) {
-        UserEntitiesPage basePage = new UserEntitiesPage();
-        basePage.setConnection(mongoTemplate);
-        //add search query param
-        basePage.addCriteria(q);
-        //selected field
-        basePage.getQuery().fields().include("_id").include("username").include("updatedDate");
-        //add additional criteria or custom criteria
-//        basePage.addAdditionalCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is("5ec41562b5a0ae5108a31c1d")));
-        basePage.setPageable(pageable).build(UserEntities.class);
-        return basePage;
+        return this.userRepository.paging(pageable, q);
     }
 
     @Override
     public List<UserEntities> listUsers(String username, AuthenticationProfileModel authenticationProfileModel) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("username").regex(".*" + username + ".*", "i"))
-                .addCriteria(Criteria.where("id").ne(new ObjectId(authenticationProfileModel.get_id()))).limit(25);
-        query.fields().include("id").include("username");
-        return this.mongoTemplate.find(query, UserEntities.class);
+        return this.userRepository.getUserListByUserName(username, authenticationProfileModel.get_id());
     }
 
+    /**
+     * get user detail
+     *
+     * @param id {@link String} id from user collection
+     * @return UserEntities user data
+     * @throws NotFoundException if user is not found will thrown
+     */
     @Override
     public UserEntities getUserById(String id) throws NotFoundException {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(id));
-        query.fields().include("_id").include("username").include("accessList");
-        UserEntities userEntities = this.mongoTemplate.findOne(query, UserEntities.class);
-        if (userEntities == null)
-            throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
-        return userEntities;
+        Optional<UserEntities> userEntities = this.userRepository.findById(id);
+        if (!userEntities.isPresent()) throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
+        return userEntities.get();
     }
 
+    /**
+     * for update the user
+     *
+     * @param vmodel {@link UpdateUserVmodel} update user data
+     * @param id     {@link String} id from user collection
+     * @return UserEntities user data profile
+     * @throws DuplicateDataEntry when username that will updated is already used by other user
+     * @throws NotFoundException  when id from user collection is not found
+     */
     @Override
     public UserEntities updateUser(UpdateUserVmodel vmodel, String id) throws DuplicateDataEntry, NotFoundException {
         UserEntities userExist = this.userRepository.findFirstByUsername(vmodel.getUsername());
-        if (userExist != null && !userExist.getId().equals(id)) {
-            throw new DuplicateDataEntry("user already exist");
-        }
+        if (userExist != null && !userExist.getId().equals(id))
+            throw new DuplicateDataEntry(ResponseCode.USER_ALREADY_EXIST);
         Optional<UserEntities> userEntities = this.userRepository.findById(id);
         if (!userEntities.isPresent()) throw new NotFoundException(ResponseCode.USER_NOT_FOUND);
         if (vmodel.getPassword().isEmpty()) vmodel.setPassword(userEntities.get().getPassword());
@@ -111,6 +118,5 @@ public class UserModel implements UserInterface {
                 .accessList(vmodel.getAccessList()).build();
         return this.userRepository.save(userEntitiesUpdate);
     }
-
 }
 

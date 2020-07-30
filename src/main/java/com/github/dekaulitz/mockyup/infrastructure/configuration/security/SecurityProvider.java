@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.infrastructure.configuration.security;
 
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
@@ -14,7 +14,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,17 +34,13 @@ public class SecurityProvider extends AbstractUserDetailsAuthenticationProvider 
     @Override
     protected UserDetails retrieveUser(String s, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
         SecurityUsernameAuthenticationToken authenticationToken = (SecurityUsernameAuthenticationToken) usernamePasswordAuthenticationToken;
-        try {
-            AuthenticationProfileModel authenticationProfileModel = JwtManager.validateToken(authenticationToken.getToken());
-            Optional<UserEntities> userEntities = this.userRepository.findById(authenticationProfileModel.get_id());
-            if (!userEntities.isPresent()) throw new UnathorizedAccess(ResponseCode.USER_NOT_FOUND);
-            authenticationProfileModel.setUsername(userEntities.get().getUsername());
-            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",", userEntities.get().getAccessList()));
-            authenticationProfileModel.setGrantedAuthorities(grantedAuthorities);
-            return authenticationProfileModel;
-        } catch (UnsupportedEncodingException e) {
-            throw new UnathorizedAccess(e.getMessage());
-        }
+        AuthenticationProfileModel authenticationProfileModel = JwtManager.validateToken(authenticationToken.getToken());
+        Optional<UserEntities> userEntities = this.userRepository.findById(authenticationProfileModel.get_id());
+        if (!userEntities.isPresent()) throw new UnathorizedAccess(ResponseCode.USER_NOT_FOUND);
+        authenticationProfileModel.setUsername(userEntities.get().getUsername());
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",", userEntities.get().getAccessList()));
+        authenticationProfileModel.setGrantedAuthorities(grantedAuthorities);
+        return authenticationProfileModel;
     }
 
     @Override

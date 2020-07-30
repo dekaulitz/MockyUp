@@ -16,7 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ErrorHandlerController extends BaseController implements ErrorController {
-
+    /**
+     * centralized error on that not catched with Advisor controller
+     *
+     * @param request HttpServletRequest for getting attribute from request
+     * @return
+     */
     @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> handleError(HttpServletRequest request) {
@@ -26,6 +31,7 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
                     .responseCode(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorCode())
                     .responseMessage(ResponseCode.GLOBAL_PAGE_NOT_FOUND.getErrorMessage()).build());
         }
+        //if the exception is part of HttpServletRequest should be extracted
         Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         if (exception == null) {
             exception = (Exception) request.getAttribute("org.springframework.boot.web.servlet.error.DefaultErrorAttributes.ERROR");
@@ -34,6 +40,11 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
 
     }
 
+    /**
+     * entrypoint for error handling when the error is not catched with Advisor controller
+     *
+     * @return String
+     */
     @Override
     public String getErrorPath() {
         return "/error";

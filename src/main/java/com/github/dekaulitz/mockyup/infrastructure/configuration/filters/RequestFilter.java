@@ -64,17 +64,6 @@ public class RequestFilter extends OncePerRequestFilter {
         return token;
     }
 
-
-    @Override
-    protected boolean isAsyncDispatch(final HttpServletRequest request) {
-        return false;
-    }
-
-    @Override
-    protected boolean shouldNotFilterErrorDispatch() {
-        return false;
-    }
-
     private Map<String, Object> getRequestHeaders(HttpServletRequest request) {
         Map<String, Object> headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();

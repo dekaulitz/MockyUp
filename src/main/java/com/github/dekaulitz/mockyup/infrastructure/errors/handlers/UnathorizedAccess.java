@@ -6,15 +6,8 @@ import org.springframework.security.core.AuthenticationException;
 
 public class UnathorizedAccess extends AuthenticationException {
     @Getter
-    private ErrorVmodel errorVmodel;
+    private final ErrorVmodel errorVmodel;
 
-    public UnathorizedAccess(String msg, Throwable t) {
-        super(msg, t);
-    }
-
-    public UnathorizedAccess(String msg) {
-        super(msg);
-    }
 
     public UnathorizedAccess(ErrorVmodel errorVmodel) {
         super(errorVmodel.getErrorMessage());

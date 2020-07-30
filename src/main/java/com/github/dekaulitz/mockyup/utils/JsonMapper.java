@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.v3.parser.ObjectMapperFactory;
 
+/**
+ * json mapper
+ */
 public class JsonMapper {
     private static ObjectMapper mapper;
 

@@ -1,12 +1,12 @@
 package com.github.dekaulitz.mockyup.domain.auth.vmodels;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
 public class DoAuthVmodel {

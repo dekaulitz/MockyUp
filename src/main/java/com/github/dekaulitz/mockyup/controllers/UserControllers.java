@@ -1,12 +1,12 @@
 package com.github.dekaulitz.mockyup.controllers;
 
 import com.github.dekaulitz.mockyup.base.controller.BaseController;
-import com.github.dekaulitz.mockyup.domain.users.models.UserModel;
+import com.github.dekaulitz.mockyup.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
+import com.github.dekaulitz.mockyup.domain.users.base.UserInterface;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationResponseVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.db.entities.UserEntities;
-import com.github.dekaulitz.mockyup.infrastructure.db.repositories.paging.UserEntitiesPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -20,17 +20,24 @@ import javax.validation.Valid;
 @RestController
 public class UserControllers extends BaseController {
     @Autowired
-    private final UserModel userModel;
+    private final UserInterface userInterface;
 
-    public UserControllers(UserModel userModel) {
-        this.userModel = userModel;
+    public UserControllers(UserInterface userInterface) {
+        this.userInterface = userInterface;
     }
 
+    /**
+     * registering new user
+     *
+     * @param vmodel  new user payload data
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @PostMapping(value = "/mocks/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> adduser(@Valid @RequestBody RegistrationVmodel vmodel, HttpServletRequest request) {
         try {
-            UserEntities userEntities = this.userModel.addUser(vmodel, this.getAuthenticationProfileModel());
+            UserEntities userEntities = this.userInterface.addUser(vmodel, this.getAuthenticationProfileModel());
             RegistrationResponseVmodel registrationResponseVmodel = RegistrationResponseVmodel
                     .builder().accessList(userEntities.getAccessList())
                     .id(userEntities.getId())
@@ -41,11 +48,18 @@ public class UserControllers extends BaseController {
         }
     }
 
+    /**
+     * delete user
+     *
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @DeleteMapping(value = "/mocks/user/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteUser(@PathVariable String id, HttpServletRequest request) {
         try {
-            this.userModel.deleteUser(id, this.getAuthenticationProfileModel());
+            this.userInterface.deleteUser(id, this.getAuthenticationProfileModel());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
@@ -53,45 +67,74 @@ public class UserControllers extends BaseController {
 
     }
 
+    /**
+     * user pagination
+     *
+     * @param pageable Spring data pageable
+     * @param q        query data example q=name:fahmi => meaning field name with value fahmi
+     * @param request  HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUsersPagination(
+    public ResponseEntity<Object> getUsersPagination(
             Pageable pageable,
             @RequestParam(value = "q", required = false) String q, HttpServletRequest request) {
         try {
-            UserEntitiesPage pagingVmodel = this.userModel.paging(pageable, q);
+            UserEntitiesPage pagingVmodel = this.userInterface.paging(pageable, q);
             return ResponseEntity.ok(pagingVmodel);
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
     }
 
+    /**
+     * for getting all users that can be inserted into mock
+     *
+     * @param username username
+     * @param request  HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserList(@RequestParam(value = "username", required = false) String username, HttpServletRequest request) {
+    public ResponseEntity<Object> getUserList(@RequestParam(value = "username", required = false) String username, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.listUsers(username, this.getAuthenticationProfileModel()));
+            return ResponseEntity.ok(this.userInterface.listUsers(username, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
     }
 
+    /**
+     * for update user profile
+     *
+     * @param vmodel  update data user property
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE')")
     @PutMapping(value = "/mocks/users/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUsers(@Valid @RequestBody UpdateUserVmodel vmodel, @PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UpdateUserVmodel vmodel, @PathVariable String id, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.updateUser(vmodel, id));
+            return ResponseEntity.ok(this.userInterface.updateUser(vmodel, id));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }
     }
 
-
+    /**
+     * get user detail
+     *
+     * @param id      id from user collection
+     * @param request HttpServletRequest for getting attribute from request
+     * @return ResponseEntity
+     */
     @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
     @GetMapping(value = "/mocks/users/{id}/detail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserById(@PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity getUser(@PathVariable String id, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.userModel.getUserById(id));
+            return ResponseEntity.ok(this.userInterface.getUserById(id));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }

@@ -12,10 +12,11 @@ import lombok.*;
 public class DtoMockupHistoryVmodel {
     private String id;
     private String mockId;
-    private String swagger;
+    private Object swagger;
+
 
     public Object getSwagger() throws JsonProcessingException {
-        return Json.mapper().readTree(this.swagger);
+        return Json.mapper().readTree((String) this.swagger);
     }
 
 

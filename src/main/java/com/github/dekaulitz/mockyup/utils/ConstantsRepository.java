@@ -1,5 +1,8 @@
 package com.github.dekaulitz.mockyup.utils;
 
+/**
+ * constant repository
+ */
 public class ConstantsRepository {
 
     public final static String REQUEST_ID = "requestId";
