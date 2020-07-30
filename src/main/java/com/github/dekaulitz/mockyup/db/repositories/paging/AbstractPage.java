@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * for
+ * for paging the collection
  *
  * @param <T>
  */

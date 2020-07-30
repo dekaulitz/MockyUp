@@ -9,6 +9,7 @@ import com.github.dekaulitz.mockyup.infrastructure.configuration.security.Authen
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,13 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * get mock detail with current access
+     *
+     * @param id                         {@link String} id from mock collection
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth data
+     * @return List<DtoMockupDetailVmodel>
+     */
     @Override
     public List<DtoMockupDetailVmodel> getMockDetailWithCurrentAccess(String id, AuthenticationProfileModel authenticationProfileModel) {
         Aggregation aggregation = Aggregation.newAggregation(
@@ -87,11 +95,17 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.aggregate(aggregation, "mockup", DtoMockupDetailVmodel.class).getMappedResults();
     }
 
+    /**
+     * get users mock that has access
+     *
+     * @param id {@link String} id from mock collection
+     * @return List<DtoMockUserLookupVmodel>
+     */
     @Override
-    public List<DtoMockUserLookupVmodel> getUsersMock(String mockId) {
+    public List<DtoMockUserLookupVmodel> getUsersMock(String id) {
         Aggregation aggregation = Aggregation.newAggregation(
                 //find the collection base on id
-                Aggregation.match(Criteria.where("_id").is(mockId)),
+                Aggregation.match(Criteria.where("_id").is(id)),
                 //extract the collection base on users
                 Aggregation.unwind("users"),
                 //setup project fields and convert users.userId to object id
@@ -116,7 +130,14 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.aggregate(aggregation, "mockup", DtoMockUserLookupVmodel.class).getMappedResults();
     }
 
-
+    /**
+     * paging mock data
+     *
+     * @param pageable                   {@link Pageable} Spring data pageable
+     * @param q                          {@link String} query data like example q=firstname:fahmi mean field firstname with value fahmi
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth data
+     * @return MockEntitiesPage mockentities page
+     */
     @Override
     public MockEntitiesPage paging(Pageable pageable, String q, AuthenticationProfileModel authenticationProfileModel) {
         MockEntitiesPage basePage = new MockEntitiesPage();
@@ -131,6 +152,12 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return basePage;
     }
 
+    /**
+     * get mock histories
+     *
+     * @param id {@link String}id from mock colelction
+     * @return List<MockHistoryEntities>
+     */
     @Override
     public List<MockHistoryEntities> getMockHistories(String id) {
         Query query = new Query();
@@ -139,6 +166,13 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.find(query, MockHistoryEntities.class);
     }
 
+    /**
+     * @param id           {@link String} id from mock collection
+     * @param userId       {@link String} id from user collection
+     * @param mockEntities {@link MockEntities} mockentitites page
+     * @return Object {@link UpdateResult} response mongo client
+     * @throws NotFoundException
+     */
     @Override
     public Object removeAccessUserOnMock(String id, String userId, MockEntities mockEntities) throws NotFoundException {
         Query query = new Query();
@@ -157,6 +191,14 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.updateFirst(query, update, MockEntities.class);
     }
 
+    /**
+     * registering user to mock
+     *
+     * @param id           {@link String} id from mock collection
+     * @param accessVmodel {@link AddUserAccessVmodel}access data user that want to register
+     * @param mockEntities {@link MockEntities} mock enttitis data for checking user entities is already exist for modification
+     * @return Object {@link UpdateResult} response mongo client
+     */
     @Override
     public Object registeringUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities) {
         Query query = new Query();
@@ -176,14 +218,26 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         return mongoTemplate.updateFirst(query, update, MockEntities.class);
     }
 
+    /**
+     * check user access permision on mock
+     *
+     * @param id     {@link String} id from mock collection
+     * @param userId {@link String} id from user colelction
+     * @return List<MockEntities>
+     */
     @Override
-    public List<MockEntities> checkMockUserAccessPermission(String id, String userId) {
+    public MockEntities checkMockUserAccessPermission(String id, String userId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(new ObjectId(id)));
         query.addCriteria(Criteria.where("users").elemMatch(Criteria.where("userId").is(userId)));
-        return mongoTemplate.find(query, MockEntities.class);
+        return mongoTemplate.findOne(query, MockEntities.class);
     }
 
+    /**
+     * injecting user root for the firstime
+     *
+     * @param user user root
+     */
     @Override
     public void injectRootIntoAllMocks(UserEntities user) {
         Query query = new Query();

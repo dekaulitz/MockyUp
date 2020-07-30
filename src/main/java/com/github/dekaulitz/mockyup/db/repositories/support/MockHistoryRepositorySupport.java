@@ -6,8 +6,8 @@ public interface MockHistoryRepositorySupport {
     /**
      * get all mock history
      *
-     * @param mockId    id from mock colelction
-     * @param historyId id from history collection
+     * @param mockId    {@link String} id from mock colelction
+     * @param historyId {@link String} id from history collection
      * @return DtoMockupHistoryVmodel
      */
     DtoMockupHistoryVmodel getMockHistoryByIdAndMockId(String mockId, String historyId);

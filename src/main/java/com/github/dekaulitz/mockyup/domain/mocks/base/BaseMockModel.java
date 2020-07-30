@@ -17,7 +17,6 @@ import io.swagger.v3.oas.models.*;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.query.Criteria;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -77,33 +76,57 @@ public class BaseMockModel {
 
     }
 
-    public MockHelper getMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openAPIPaths, String[] paths, Components components)
+    /**
+     * @param pathItem         {@link PathItem}
+     * @param request          {@link HttpServletRequest}
+     * @param body             {@link String}
+     * @param openApiRoutePath {@link String[]}[swagger_path_contract] that mapped with [contract_path_that_want_to_mock]
+     * @param paths            {@link String[]} [contract_path_that_want_to_mock]
+     * @param components       {@link Components} components from open api
+     * @return MockHelper {@link MockHelper} the response from mock response
+     * @throws NotFoundException            if there no mock response detected
+     * @throws JsonProcessingException      if parsing body was fail
+     * @throws InvalidMockException         if mock response is invalid
+     * @throws UnsupportedEncodingException if encoding query string is fail
+     */
+    public MockHelper renderingMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openApiRoutePath, String[] paths, Components components)
             throws NotFoundException, JsonProcessingException, InvalidMockException, UnsupportedEncodingException {
         MockHelper mock = null;
+
+        //parsing pathitem into JsonNode
+        //its because from the pathItem you its more easier for geting type of method request that wanted
         JsonNode jsonNode = JsonMapper.mapper().valueToTree(pathItem);
+
+        //find from node that matched with request method and convert into Operation
         Operation ops = JsonMapper.mapper().treeToValue(jsonNode.get(request.getMethod().toLowerCase()), Operation.class);
+
+        //if there is no request method that matched with operation method bas on the [swagger_path_contract]
         if (ops.getExtensions() == null) throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
+
+        //get custom extension for mock response from operation with extension [x-examples]
         Map<String, Object> examples = (Map<String, Object>) ops.getExtensions().get(MockHelper.X_EXAMPLES);
         if (examples == null) throw new NotFoundException(ResponseCode.MOCKUP_NOT_FOUND);
+
+        //iterate [x-examples] that available from operation extensions
         for (Map.Entry<String, Object> extension : examples.entrySet()) {
-            /**
+            /*
              *  for the mock it will responding by the order
-             *             1. path
-             *             2. query
-             *             3. headers
-             *             4. body
-             *             5. default
-             *             if the mock found with the expected criteria
-             *             will stop the other search and returning the response
+             *  1. path
+             *  2. query
+             *  3. headers
+             *  4. body
+             *  5. default
+             *  if the mock found with the expected criteria
+             *  will stop the other search and returning the response
              */
 
-            //checking the mock from path
+            //get mock response from path
             if (extension.getKey() == MockHelper.X_PATH) {
-                mock = MockHelper.generateResponsePath((List<Map<String, Object>>) extension.getValue(), openAPIPaths, paths, components);
+                mock = MockHelper.generateResponsePath((List<Map<String, Object>>) extension.getValue(), openApiRoutePath, paths, components);
                 if (mock != null) return mock;
             }
 
-            //checking the mock from the query
+            //get mock from query string
             if (extension.getKey() == MockHelper.X_QUERY) {
                 mock = MockHelper.generateResponseQuery(request, (List<Map<String, Object>>) extension.getValue(), components);
                 if (mock != null) return mock;
@@ -129,20 +152,4 @@ public class BaseMockModel {
         }
         return mock;
     }
-
-    protected Criteria getSearchParameter(String q) {
-        Criteria criteria = null;
-        if (q != null) {
-            String[] search = q.split(":");
-            if (search.length == 2 && !search[1].isEmpty()) {
-                if (search[0].equals("_id") || search[0].equals("id")) {
-                    criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
-                } else
-                    criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
-            }
-        }
-        return criteria;
-    }
-
-
 }

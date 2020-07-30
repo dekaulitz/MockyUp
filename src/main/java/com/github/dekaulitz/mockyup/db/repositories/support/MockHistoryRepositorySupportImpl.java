@@ -15,10 +15,17 @@ public class MockHistoryRepositorySupportImpl implements MockHistoryRepositorySu
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * get all mock history
+     *
+     * @param mockId    {@link String} id from mock colelction
+     * @param historyId {@link String} id from history collection
+     * @return DtoMockupHistoryVmodel
+     */
     @Override
-    public DtoMockupHistoryVmodel getMockHistoryByIdAndMockId(String mockId, String id) {
+    public DtoMockupHistoryVmodel getMockHistoryByIdAndMockId(String mockId, String historyId) {
         Query queryHistory = new Query();
-        queryHistory.addCriteria(Criteria.where("mockId").is(mockId).and("id").is(new ObjectId(id)));
+        queryHistory.addCriteria(Criteria.where("mockId").is(mockId).and("id").is(new ObjectId(historyId)));
         queryHistory.fields().include("mockId").include("swagger");
 
         return mongoTemplate.findOne(queryHistory, DtoMockupHistoryVmodel.class,

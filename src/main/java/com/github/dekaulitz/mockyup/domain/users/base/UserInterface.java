@@ -11,50 +11,64 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * user interface for user modification
+ */
 public interface UserInterface {
     /**
-     * @param vmodel
-     * @param authenticationProfileModel
-     * @return
-     * @throws DuplicateDataEntry
+     * for registering new user
+     *
+     * @param vmodel                     {@link RegistrationVmodel} user data
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth profile
+     * @return UserEntities user data profile
+     * @throws DuplicateDataEntry when username alrady exist will thrown
      */
     UserEntities addUser(RegistrationVmodel vmodel, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry;
 
     /**
-     * @param userId
-     * @param authenticationProfileModel
-     * @throws DuplicateDataEntry
-     * @throws NotFoundException
+     * for deleting the user
+     *
+     * @param userId                     {@link String} id from user collection
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth profile
+     * @throws NotFoundException when user not found
      */
-    void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws DuplicateDataEntry, NotFoundException;
+    void deleteUser(String userId, AuthenticationProfileModel authenticationProfileModel) throws NotFoundException;
 
     /**
-     * @param pageable
-     * @param q
-     * @return
+     * user pagination
+     *
+     * @param pageable {@link Pageable} spring data pagiable
+     * @param q        {@link String} query data example q=name:fahmi => meaning field name with value fahmi
+     * @return UserEntitiesPage
      */
     UserEntitiesPage paging(Pageable pageable, String q);
 
     /**
-     * @param username
-     * @param authenticationProfileModel
-     * @return
+     * searching all user base on regex username
+     *
+     * @param username                   {@link String} username user
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} auth profile
+     * @return List<UserEntities>
      */
     List<UserEntities> listUsers(String username, AuthenticationProfileModel authenticationProfileModel);
 
     /**
-     * @param id
-     * @return
-     * @throws NotFoundException
+     * get user detail
+     *
+     * @param id {@link String} id from user collection
+     * @return UserEntities user data
+     * @throws NotFoundException if user is not found will thrown
      */
     UserEntities getUserById(String id) throws NotFoundException;
 
     /**
-     * @param vmodel
-     * @param id
-     * @return
-     * @throws DuplicateDataEntry
-     * @throws NotFoundException
+     * for update the user
+     *
+     * @param vmodel {@link UpdateUserVmodel} update user data
+     * @param id     {@link String} id from user collection
+     * @return UserEntities user data profile
+     * @throws DuplicateDataEntry when username that will updated is already used by other user
+     * @throws NotFoundException  when id from user collection is not found
      */
     UserEntities updateUser(UpdateUserVmodel vmodel, String id) throws DuplicateDataEntry, NotFoundException;
 }

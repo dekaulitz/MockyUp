@@ -164,7 +164,7 @@ public class MockControllers extends BaseController {
     public ResponseEntity<Object> addUserAccess(@PathVariable String id, @Valid @RequestBody AddUserAccessVmodel vmodel,
                                                 HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(this.mockInterface.addUserAccessOnMock(id, vmodel, this.getAuthenticationProfileModel()));
+            return ResponseEntity.ok(this.mockInterface.addUserToMock(id, vmodel, this.getAuthenticationProfileModel()));
         } catch (Exception e) {
             return this.handlingErrorResponse(e, request);
         }

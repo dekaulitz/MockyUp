@@ -19,6 +19,11 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * @param pageable Spring data pageable
+     * @param q        query data like example q=firstname:fahmi mean field firstname with value fahmi
+     * @return UserEntitiesPage
+     */
     @Override
     public UserEntitiesPage paging(Pageable pageable, String q) {
         UserEntitiesPage basePage = new UserEntitiesPage();
@@ -33,6 +38,13 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
         return basePage;
     }
 
+    /**
+     * geting all users base on username
+     *
+     * @param username      parameter that will searching on user collection
+     * @param excludeUserId user id that not included for query
+     * @return List<UserEntities>
+     */
     @Override
     public List<UserEntities> getUserListByUserName(String username, String excludeUserId) {
         Query query = new Query();

@@ -17,8 +17,8 @@ public interface MockRepositorySupport {
     /**
      * get mock detail with current access
      *
-     * @param id                         id from mock collection
-     * @param authenticationProfileModel user auth data
+     * @param id                         {@link String} id from mock collection
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth data
      * @return List<DtoMockupDetailVmodel>
      */
     List<DtoMockupDetailVmodel> getMockDetailWithCurrentAccess(String id, AuthenticationProfileModel authenticationProfileModel);
@@ -26,7 +26,7 @@ public interface MockRepositorySupport {
     /**
      * get users mock that has access
      *
-     * @param id id from mock collection
+     * @param id {@link String} id from mock collection
      * @return List<DtoMockUserLookupVmodel>
      */
     List<DtoMockUserLookupVmodel> getUsersMock(String id);
@@ -34,26 +34,26 @@ public interface MockRepositorySupport {
     /**
      * paging mock data
      *
-     * @param pageable                   Spring data pageable
-     * @param q                          query data like example q=firstname:fahmi mean field firstname with value fahmi
-     * @param authenticationProfileModel user auth data
-     * @return
+     * @param pageable                   {@link Pageable} Spring data pageable
+     * @param q                          {@link String} query data like example q=firstname:fahmi mean field firstname with value fahmi
+     * @param authenticationProfileModel {@link AuthenticationProfileModel} user auth data
+     * @return MockEntitiesPage mockentities page
      */
     MockEntitiesPage paging(Pageable pageable, String q, AuthenticationProfileModel authenticationProfileModel);
 
     /**
      * get mock histories
      *
-     * @param id id from mock colelction
+     * @param id {@link String}id from mock colelction
      * @return List<MockHistoryEntities>
      */
     List<MockHistoryEntities> getMockHistories(String id);
 
     /**
-     * @param id
-     * @param userId
-     * @param mockEntities
-     * @return
+     * @param id           {@link String} id from mock collection
+     * @param userId       {@link String} id from user collection
+     * @param mockEntities {@link MockEntities} mockentitites page
+     * @return Object {@link com.mongodb.client.result.UpdateResult} response mongo client
      * @throws NotFoundException
      */
     Object removeAccessUserOnMock(String id, String userId, MockEntities mockEntities) throws NotFoundException;
@@ -61,21 +61,21 @@ public interface MockRepositorySupport {
     /**
      * registering user to mock
      *
-     * @param id           id from mock collection
-     * @param accessVmodel access data user that want to register
-     * @param mockEntities mockentities
-     * @return Object
+     * @param id           {@link String} id from mock collection
+     * @param accessVmodel {@link AddUserAccessVmodel}access data user that want to register
+     * @param mockEntities {@link MockEntities} mock enttitis data for checking user entities is already exist for modification
+     * @return Object {@link com.mongodb.client.result.UpdateResult} response mongo client
      */
     Object registeringUserToMock(String id, AddUserAccessVmodel accessVmodel, MockEntities mockEntities);
 
     /**
      * check user access permision on mock
      *
-     * @param id     id from mock collection
-     * @param userId id from user colelction
+     * @param id     {@link String} id from mock collection
+     * @param userId {@link String} id from user colelction
      * @return List<MockEntities>
      */
-    List<MockEntities> checkMockUserAccessPermission(String id, String userId);
+    MockEntities checkMockUserAccessPermission(String id, String userId);
 
     /**
      * injecting user root for the firstime

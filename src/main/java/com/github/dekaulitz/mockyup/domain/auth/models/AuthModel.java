@@ -23,8 +23,15 @@ public class AuthModel implements AuthInterface {
         this.userRepository = userRepository;
     }
 
+    /**
+     * @param username username of user
+     * @param password password of user
+     * @return DtoAuthProfileVmodel   auth profile data
+     * @throws UnathorizedAccess            when username or password was not valid or
+     * @throws UnsupportedEncodingException when something bad happen when generate token
+     */
     @Override
-    public DtoAuthProfileVmodel generateAccessToken(String username, String password) throws UnsupportedEncodingException {
+    public DtoAuthProfileVmodel generateAccessToken(String username, String password) throws UnathorizedAccess, UnsupportedEncodingException {
         UserEntities userExist = this.userRepository.findFirstByUsername(username);
         if (userExist == null) {
             throw new UnathorizedAccess(ResponseCode.INVALID_USERNAME_OR_PASSWORD);
@@ -34,8 +41,14 @@ public class AuthModel implements AuthInterface {
         return this.renderingAccessToken(userExist);
     }
 
+    /**
+     * @param token current access token that expired
+     * @return DtoAuthProfileVmodel  auth profile data
+     * @throws UnathorizedAccess            when user id or not found or token not valid
+     * @throws UnsupportedEncodingException when something bad happen when generate token
+     */
     @Override
-    public DtoAuthProfileVmodel refreshingToken(String token) throws UnsupportedEncodingException {
+    public DtoAuthProfileVmodel refreshingToken(String token) throws UnathorizedAccess, UnsupportedEncodingException {
         Optional<String> userId = JwtManager.getUserIdFromToken(token);
         if (!userId.isPresent()) throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
         Optional<UserEntities> userEntities = this.userRepository.findById(userId.get());
@@ -52,4 +65,5 @@ public class AuthModel implements AuthInterface {
         auth.setToken(JwtManager.generateToken(userEntities.getId()));
         return auth;
     }
+
 }
