@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class BaseMockModel {
      * @throws UnsupportedEncodingException if encoding query string is fail
      */
     public MockHelper renderingMockResponse(PathItem pathItem, HttpServletRequest request, String body, String[] openApiRoutePath, String[] paths, Components components)
-            throws NotFoundException, JsonProcessingException, InvalidMockException, UnsupportedEncodingException {
+            throws NotFoundException, IOException, InvalidMockException {
         MockHelper mock;
 
         //parsing pathitem into JsonNode
@@ -122,42 +123,42 @@ public class BaseMockModel {
              */
 
             //get mock response from path
-            if (extension.getKey() == MockHelper.X_PATH) {
+            if (extension.getKey().equals(MockHelper.X_PATH)) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> extensionValues = (List<Map<String, Object>>) extension.getValue();
-                mock = MockHelper.generateResponsePath(extensionValues, openApiRoutePath, paths, components);
-                return mock;
+                mock = MockHelper.generateResponsePath(request,extensionValues, openApiRoutePath, paths, components);
+                if (mock != null) return mock;
             }
 
             //get mock from query string
-            if (extension.getKey() == MockHelper.X_QUERY) {
+            if (extension.getKey().equals(MockHelper.X_QUERY)) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> extensionValues = (List<Map<String, Object>>) extension.getValue();
                 mock = MockHelper.generateResponseQuery(request, extensionValues, components);
-                return mock;
+                if (mock != null) return mock;
             }
 
             //checking the mock from the headers
-            if (extension.getKey() == MockHelper.X_HEADERS) {
+            if (extension.getKey().equals(MockHelper.X_HEADERS)) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> extensionValues = (List<Map<String, Object>>) extension.getValue();
                 mock = MockHelper.generateResponseHeader(request, extensionValues, components);
-                return mock;
+                if (mock != null) return mock;
             }
 
             //checking the mock from the boyd
-            if (extension.getKey() == MockHelper.X_BODY) {
+            if (extension.getKey().equals(MockHelper.X_BODY)) {
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> extensionValues = (List<Map<String, Object>>) extension.getValue();
                 mock = MockHelper.generateResponseBody(request, extensionValues, body, components);
-                return mock;
+                if (mock != null) return mock;
             }
 
             //if there is no mock defined on path,header,query and body but default was defined
-            if (extension.getKey() == MockHelper.X_DEFAULT) {
+            if (extension.getKey().equals(MockHelper.X_DEFAULT)) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> extensionValues = (Map<String, Object>) extension.getValue();
-                mock = MockHelper.generateResponseDefault(extensionValues, components);
+                mock = MockHelper.generateResponseDefault(request,extensionValues, components);
                 return mock;
             }
         }

@@ -23,7 +23,10 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
 @NoArgsConstructor
-public class XmlHandler {
+/**
+ * @see  https://swagger.io/docs/specification/data-models/representing-xml/
+ */
+public class OpenApiXExampleXmlHandler {
     private final DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
     @Getter
     @Setter
@@ -32,7 +35,7 @@ public class XmlHandler {
     @Setter
     private String rootNode;
 
-    public String getDOM() throws ParserConfigurationException, JsonProcessingException, TransformerException {
+    public String getDomXml() throws ParserConfigurationException, JsonProcessingException, TransformerException {
         Assert.notNull(stringNode, "node cannot be null");
         Assert.notNull(rootNode, "rootNode cannot be null");
         DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -57,6 +60,7 @@ public class XmlHandler {
 
 
     private void transformNode(Document document, Element root) throws JsonProcessingException {
+        //@FIXME if you have another way for handling xml
         JsonNode node = JsonMapper.mapper().readTree(this.stringNode);
         if (node instanceof ArrayNode) {
             this.iterateArrayNode("", node, document, root);
@@ -68,10 +72,13 @@ public class XmlHandler {
     private void iterateArrayNode(String elementName, Object arrayNode, Document document, Element root) {
         ArrayNode node = (ArrayNode) arrayNode;
         Element element;
-        if (!elementName.isEmpty())
+        //check if root node is initialized or not if not then create as new node
+        if (!elementName.isEmpty()) {
             element = document.createElement(elementName);
-        else
+        } else {
+            // root  was initialized then continue the node
             element = root;
+        }
         Element finalElement = element;
         node.forEach(jsonNode -> {
             if (jsonNode instanceof ObjectNode) {

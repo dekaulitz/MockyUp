@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc()
 public abstract class BaseTest {
+    protected final String MEDIA_TYPE_ACCEPT = "accept";
     protected final String HTTPCODE_NOT_EXPECTED = "http code is not expected";
     protected final String RESPONSE_BODY_NOT_EXPECTED = "response body is not expected";
     protected String givenId = "x";

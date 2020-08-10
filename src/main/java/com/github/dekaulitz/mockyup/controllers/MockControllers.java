@@ -80,8 +80,7 @@ public class MockControllers extends BaseController {
      */
     @RequestMapping(value = "/mocks/mocking/{id}", method = {RequestMethod.OPTIONS, RequestMethod.DELETE,
             RequestMethod.POST, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.PATCH, RequestMethod.PUT,
-            RequestMethod.TRACE},
-            produces = MediaType.APPLICATION_JSON_VALUE
+            RequestMethod.TRACE}
     )
     public ResponseEntity<Object> mockingPath(@NonNull @RequestParam(value = "path") String path,
                                               @PathVariable String id, @RequestBody(required = false) String body,
