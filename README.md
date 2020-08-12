@@ -138,8 +138,7 @@ Before that you should add new server env on youre spec.
 ```
 You can check the example configuration spec from <a href="https://raw.githubusercontent.com/dekaulitz/MockyUp/master/src/main/resources/public/example_mocking_books.json">here</a> 
 ## Supported
-<a href=" https://www.jetbrains.com/?from=MockyUp"> ![Image of jetbrain](https://www.jetbrains.com/company/press/#images-logos)</a>
-
+![Image of jetbrain](https://www.jetbrains.com/company/press/#images-logos)
 
 
 
