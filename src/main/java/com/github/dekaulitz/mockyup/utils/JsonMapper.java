@@ -12,7 +12,7 @@ import io.swagger.v3.parser.ObjectMapperFactory;
 public class JsonMapper {
     private static ObjectMapper mapper;
 
-    public static com.fasterxml.jackson.databind.ObjectMapper mapper() {
+    public static ObjectMapper mapper() {
         if (mapper == null) {
             mapper = ObjectMapperFactory.createJson();
         }

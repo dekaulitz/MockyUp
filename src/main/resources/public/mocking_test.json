@@ -55,7 +55,18 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  },
+                  "application/xhtml+xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_HTML"
+                  }
+                }
               }
             },
             {
@@ -69,7 +80,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -83,7 +102,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -97,7 +124,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -113,7 +148,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -127,7 +170,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -141,7 +192,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -155,7 +214,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -166,7 +233,15 @@
                 "x-request-id": "this is from mocks",
                 "x-limiter": "this is from mocks"
               },
-              "response": "DEFAULT"
+              "response": "DEFAULT",
+              "content": {
+                "application/xml": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                },
+                "application/json": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                }
+              }
             }
           }
         }
@@ -192,7 +267,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -205,7 +288,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -220,7 +311,15 @@
                 "x-request-id": "this is from mocks",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+              "content": {
+                "application/xml": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                },
+                "application/json": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                }
+              }
             }
           }
         }
@@ -247,7 +346,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -260,7 +367,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -277,7 +392,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -291,7 +414,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -303,7 +434,15 @@
               "headers": {
                 "x-request-id": "this is from mocks"
               },
-              "response": "DEFAULT"
+              "response": "DEFAULT",
+              "content": {
+                "application/xml": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                },
+                "application/json": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                }
+              }
             }
           }
         }
@@ -332,7 +471,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -346,7 +493,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -360,7 +515,15 @@
                   "x-request-id": "this is from mocks",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -375,7 +538,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -388,7 +559,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -403,7 +582,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -416,7 +603,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -429,7 +624,15 @@
                 "headers": {
                   "x-request-id": "this is from mocks"
                 },
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -439,7 +642,15 @@
               "headers": {
                 "x-request-id": "this is from mocks"
               },
-              "response": "DEFAULT"
+              "response": "DEFAULT",
+              "content": {
+                "application/xml": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                },
+                "application/json": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                }
+              }
             }
           }
         }
@@ -464,7 +675,18 @@
               },
               "response": {
                 "httpCode": 201,
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "response":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  },
+                  "application/xhtml+xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_HTML"
+                  }
+                }
               }
             },
             {
@@ -474,7 +696,15 @@
               },
               "response": {
                 "httpCode": 403,
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -484,7 +714,15 @@
               },
               "response": {
                 "httpCode": 200,
-                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             },
             {
@@ -494,7 +732,15 @@
               },
               "response": {
                 "httpCode": 500,
-                "response": "DEFAULT"
+                "response": "DEFAULT",
+                "content": {
+                  "application/xml": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE_XML"
+                  },
+                  "application/json": {
+                    "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                  }
+                }
               }
             }
           ],
@@ -505,7 +751,15 @@
           "x-default": {
             "response": {
               "httpCode": 200,
-              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+              "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
+              "content": {
+                "application/xml": {
+                  "response":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
+                },
+                "application/json": {
+                  "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
+                }
+              }
             }
           }
         }
@@ -586,120 +840,14 @@
       "DEFAULT_COMPONENT_EXAMPLE": {
         "value": "DEFAULT_COMPONENT_EXAMPLE"
       },
-      "LIST_OF_BOOKS_ONLY_ONE": {
-        "value": [
-          {
-            "id": 1,
-            "title": "BOOK_1",
-            "author": "string",
-            "category": [
-              "string"
-            ],
-            "images": [
-              {
-                "url": "string",
-                "order": 0
-              }
-            ],
-            "publisher": "string",
-            "publishedDate": "2020-06-13T16:05:04.126Z"
-          }
-        ]
+      "DEFAULT_COMPONENT_EXAMPLE_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
       },
-      "BOOKS_DETAIL": {
-        "value": {
-          "id": 2,
-          "title": "BOOK_2",
-          "author": "string",
-          "category": [
-            "cat1",
-            "cat2"
-          ],
-          "images": [
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 1
-            },
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 2
-            }
-          ],
-          "publisher": "string",
-          "publishedDate": "2020-06-13T16:05:04.126Z"
-        }
+      "DEFAULT_COMPONENT_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT</name></component></xml>"
       },
-      "BOOKS_DETAIL_WITH_PATH": {
-        "value": {
-          "id": 1,
-          "title": "BOOK_2_WITH_PATH_REFF",
-          "author": "string",
-          "category": [
-            "cat1",
-            "cat2"
-          ],
-          "images": [
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 1
-            },
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 2
-            }
-          ],
-          "publisher": "string",
-          "publishedDate": "2020-06-13T16:05:04.126Z"
-        }
-      },
-      "BOOKS_FROM_STORE_REF": {
-        "value": {
-          "id": 2,
-          "title": "BOOK_2_THIS IS FROM STORE",
-          "author": "string",
-          "category": [
-            "cat1",
-            "cat2"
-          ],
-          "images": [
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 1
-            },
-            {
-              "url": "http://any.domain.com/any_image.jpg",
-              "order": 2
-            }
-          ],
-          "publisher": "string",
-          "publishedDate": "2020-06-13T16:05:04.126Z"
-        }
-      },
-      "ERROR_400": {
-        "value": {
-          "response_code": "ANY_400",
-          "response_message": "ANY MESSAGE 400",
-          "data": {}
-        }
-      },
-      "ERROR_500": {
-        "value": {
-          "response_code": "ANY_500",
-          "response_message": "ANY MESSAGE 400",
-          "data": {}
-        }
-      },
-      "BOOKS_DELETED": {
-        "value": {
-          "id": 1,
-          "status": "deleted"
-        }
-      },
-      "BOOKS_DELETED_FORBIDEN": {
-        "value": {
-          "id": 99,
-          "status": "forbiden"
-        }
+      "DEFAULT_COMPONENT_EXAMPLE_HTML": {
+        "value": "<html><body>DEFAULT_COMPONENT_EXAMPLE</body></html>"
       }
     }
   }

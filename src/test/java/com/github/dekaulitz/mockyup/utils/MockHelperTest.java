@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import static org.springframework.util.Assert.isNull;
 import static org.springframework.util.Assert.isTrue;
 
 class MockHelperTest {
+    private static final String APPLICATION_TYPE_ACCEPT = "accept";
     private final String DEFAULT_COMPONENT_VALUE = "ok";
     private final String DEFAULT_COMPONENT_NAME = "componentResponse";
     private final String DEFAULT_COMPONENT_NAME_2 = "componentResponse2";
@@ -82,8 +84,8 @@ class MockHelperTest {
 
         Mockito.when(this.httpServletRequest.getHeader("clientId")).thenReturn("clientId");
         MockHelper mockHelper = MockHelper.generateResponseHeader(this.httpServletRequest, varResponseHeader, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
     }
 
     @Test
@@ -123,8 +125,8 @@ class MockHelperTest {
         Mockito.when(this.openAPI.getComponents()).thenReturn(this.generateComponents());
         Mockito.when(this.httpServletRequest.getHeader("clientId")).thenReturn("clientId");
         MockHelper mockHelper = MockHelper.generateResponseHeader(this.httpServletRequest, varResponseHeader, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
 
     }
 
@@ -176,7 +178,7 @@ class MockHelperTest {
 
 
     @Test
-    void generateResponseBody() throws JsonProcessingException, InvalidMockException {
+    void generateResponseBody() throws IOException, InvalidMockException {
         /**
          * Var response json structure
          *             [{
@@ -211,15 +213,15 @@ class MockHelperTest {
                 "}";
 
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
-
+        Mockito.when(this.httpServletRequest.getHeader(APPLICATION_TYPE_ACCEPT)).thenReturn("application/json");
         MockHelper mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
 
     }
 
     @Test
-    void generateResponseBodyWhenNoMockFound() throws JsonProcessingException, InvalidMockException {
+    void generateResponseBodyWhenNoMockFound() throws IOException, InvalidMockException {
         /**
          * Var response json structure
          *             [{
@@ -253,12 +255,13 @@ class MockHelperTest {
         String jsonPayload = "{\n" +
                 "  \"firstname\": \"ajo\"\n" +
                 "}";
+        Mockito.when(this.httpServletRequest.getHeader(APPLICATION_TYPE_ACCEPT)).thenReturn("application/json");
         MockHelper mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
         isNull(mockHelper, "mockhelper is not null");
     }
 
     @Test
-    void generateResponseBodyFromComponentsExample() throws JsonProcessingException, InvalidMockException {
+    void generateResponseBodyFromComponentsExample() throws IOException, InvalidMockException {
         /**
          * Var response json structure
          *             [{
@@ -319,17 +322,18 @@ class MockHelperTest {
 
         Mockito.when(this.openAPI.getComponents()).thenReturn(this.generateComponents());
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+        Mockito.when(this.httpServletRequest.getHeader(APPLICATION_TYPE_ACCEPT)).thenReturn("application/json");
 
         MockHelper mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 400, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 400, "response is not expected");
 
         jsonPayload = "{\n" +
                 "  \"firstname\": \"ajo\"\n" +
                 "}";
         mockHelper = MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_NAME_2_VALUE), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals(this.DEFAULT_COMPONENT_NAME_2_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
     }
 
     @Test
@@ -369,10 +373,11 @@ class MockHelperTest {
 
         Mockito.when(this.openAPI.getComponents()).thenReturn(this.generateComponents());
         Mockito.when(this.httpServletRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+        Mockito.when(this.httpServletRequest.getHeader(APPLICATION_TYPE_ACCEPT)).thenReturn("application/json");
 
         try {
             MockHelper.generateResponseBody(this.httpServletRequest, varResponseBody, jsonPayload, this.openAPI.getComponents());
-        } catch (InvalidMockException e) {
+        } catch (InvalidMockException | IOException e) {
             isTrue(e.getMessage().equals("Rereference mocks its not valid"), "exception get message is not same");
         }
     }
@@ -393,11 +398,10 @@ class MockHelperTest {
         dtoMockResponseVmodel.setHttpCode(200);
         dtoMockResponseVmodel.setResponse("ok");
         varResponse.put(MockHelper.RESPONSE, dtoMockResponseVmodel);
-
-        MockHelper mockHelper = MockHelper.generateResponseDefault(varResponse, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isNull(mockHelper.getResponse().getHeaders(), "headers is not null");
+        MockHelper mockHelper = MockHelper.generateResponseDefault(this.httpServletRequest,varResponse, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isNull(mockHelper.getResponseProperty().getHeaders(), "headers is not null");
 
     }
 
@@ -426,11 +430,11 @@ class MockHelperTest {
 
         Mockito.when(this.openAPI.getComponents()).thenReturn(this.generateComponents());
 
-        MockHelper mockHelper = MockHelper.generateResponseDefault(varResponse, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        MockHelper mockHelper = MockHelper.generateResponseDefault(this.httpServletRequest,varResponse, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
     }
 
@@ -473,11 +477,11 @@ class MockHelperTest {
         //path request example `/path2/10
         String[] extractedPathRequest = {"", "path2", "10"};
 
-        MockHelper mockHelper = MockHelper.generateResponsePath(varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        MockHelper mockHelper = MockHelper.generateResponsePath(this.httpServletRequest,varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
     }
 
@@ -517,10 +521,10 @@ class MockHelperTest {
         //path request example `/path2/10
         String[] extractedPathRequest = {"", "path2", "10"};
 
-        MockHelper mockHelper = MockHelper.generateResponsePath(varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isNull(mockHelper.getResponse().getHeaders(), "headers is not null");
+        MockHelper mockHelper = MockHelper.generateResponsePath(this.httpServletRequest,varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals(this.DEFAULT_COMPONENT_VALUE), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isNull(mockHelper.getResponseProperty().getHeaders(), "headers is not null");
 
     }
 
@@ -559,7 +563,7 @@ class MockHelperTest {
         //path request example `/path2/10
         String[] extractedPathRequest = {"", "path2", "110", "test"};
 
-        MockHelper mockHelper = MockHelper.generateResponsePath(varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
+        MockHelper mockHelper = MockHelper.generateResponsePath(this.httpServletRequest,varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
         isNull(mockHelper, "mockhelper is not null");
 
     }
@@ -621,22 +625,22 @@ class MockHelperTest {
         //path request example `/path2/10
         String[] extractedPathRequest = {"", "path2", "10", "test", "112"};
 
-        MockHelper mockHelper = MockHelper.generateResponsePath(varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        MockHelper mockHelper = MockHelper.generateResponsePath(this.httpServletRequest,varResponse, extractedResultOpenapiPath, extractedPathRequest, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
         //openapi path example `/path2/{id}
         String[] extractedResultOpenapiPath1 = {"", "path2", "*{ID}", "test", "*{test}"};
         //path request example `/path2/10
         String[] extractedPathRequest1 = {"", "path2", "110", "test", "10"};
 
-        mockHelper = MockHelper.generateResponsePath(varResponse, extractedResultOpenapiPath1, extractedPathRequest1, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 400, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        mockHelper = MockHelper.generateResponsePath(this.httpServletRequest,varResponse, extractedResultOpenapiPath1, extractedPathRequest1, this.openAPI.getComponents());
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 400, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
     }
 
@@ -678,16 +682,16 @@ class MockHelperTest {
         //example query string `path=/books&query=title:empty&sort=published:desc`
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/test?query=test&sort=published:desc");
         MockHelper mockHelper = MockHelper.generateResponseQuery(this.httpServletRequest, varResponse, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders() != null, "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders() != null, "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/test&query=test&sort=published:desc");
         mockHelper = MockHelper.generateResponseQuery(this.httpServletRequest, varResponse, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 200, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 200, "response is not expected");
 
         //getting from component example
         dtoMockResponseVmodel = new DtoMockResponseVmodel();
@@ -700,10 +704,10 @@ class MockHelperTest {
         Mockito.when(this.httpServletRequest.getQueryString()).thenReturn("path=/test&query=test&sort=published:desc");
         Mockito.when(this.openAPI.getComponents()).thenReturn(this.generateComponents());
         mockHelper = MockHelper.generateResponseQuery(this.httpServletRequest, varResponse, this.openAPI.getComponents());
-        isTrue(mockHelper.getResponse().getResponse().equals("ok"), "response is not expected");
-        isTrue(mockHelper.getResponse().getHttpCode() == 500, "response is not expected");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
-        isTrue(mockHelper.getResponse().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getResponse().equals("ok"), "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHttpCode() == 500, "response is not expected");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_1).equals(DEFAULT_RESPONSE_HEADER_VALUE_1), "response header is null");
+        isTrue(mockHelper.getResponseProperty().getHeaders().get(DEFAULT_RESPONSE_HEADER_2).equals(DEFAULT_RESPONSE_HEADER_VALUE_2), "response header is null");
 
     }
 

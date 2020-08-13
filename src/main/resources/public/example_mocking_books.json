@@ -71,6 +71,29 @@
                     "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BOOKS_MODEL"
+                  },
+                  "xml": {
+                    "name": "books",
+                    "wrapped": true
+                  }
+                },
+                "examples": {
+                  "LIST_OF_BOOKS": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  },
+                  "LIST_OF_BOOKS_EMPTY": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  },
+                  "LIST_OF_BOOKS_ONLY_ONE": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             }
           },
@@ -86,6 +109,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -99,6 +132,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -120,6 +163,14 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                },
                 "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
               }
             },
@@ -134,6 +185,14 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                },
                 "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
               }
             },
@@ -147,6 +206,14 @@
                 "headers": {
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
                 },
                 "$ref": "#/components/examples/ERROR_400"
               }
@@ -164,7 +231,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                }
               }
             },
             {
@@ -178,7 +253,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS"
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
               }
             },
             {
@@ -192,7 +275,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             },
             {
@@ -205,6 +296,31 @@
                 "headers": {
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "response": [
+                      {
+                        "id": 1,
+                        "title": "BOOK_1_query response without reff",
+                        "author": "string",
+                        "category": [
+                          "string"
+                        ],
+                        "images": [
+                          {
+                            "url": "string",
+                            "order": 0
+                          }
+                        ],
+                        "publisher": "string",
+                        "publishedDate": "2020-06-13T16:05:04.126Z"
+                      }
+                    ]
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
                 },
                 "response": [
                   {
@@ -272,7 +388,53 @@
                   "publisher": "string",
                   "publishedDate": "2020-06-13T16:05:04.126Z"
                 }
-              ]
+              ],
+              "content": {
+                "application/json": {
+                  "response": [
+                    {
+                      "id": 1,
+                      "title": "BOOK_1",
+                      "author": "string",
+                      "category": [
+                        "string"
+                      ],
+                      "images": [
+                        {
+                          "url": "string",
+                          "order": 0
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    },
+                    {
+                      "id": 2,
+                      "title": "BOOK_2",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  ]
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                }
+              }
             }
           }
         }
@@ -294,6 +456,11 @@
               "schema": {
                 "$ref": "#/components/schemas/BOOKS_MODEL"
               }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/BOOKS_MODEL"
+              }
             }
           }
         },
@@ -308,6 +475,16 @@
                 "examples": {
                   "BOOKS_DETAIL": {
                     "$ref": "#/components/examples/BOOKS_DETAIL"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/BOOKS_MODEL"
+                },
+                "examples": {
+                  "BOOKS_DETAIL": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
                   }
                 }
               }
@@ -325,6 +502,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -338,6 +525,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -357,7 +554,15 @@
                 "headers": {
                   "x-store-noreff": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_FROM_STORE_REF"
+                "$ref": "#/components/examples/BOOKS_FROM_STORE_REF",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF_XML"
+                  }
+                }
               }
             },
             {
@@ -390,6 +595,34 @@
                   ],
                   "publisher": "string",
                   "publishedDate": "2020-06-13T16:05:04.126Z"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 2,
+                      "title": "BOOK_2_THIS IS FROM STORE with reff",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF_XML"
+                  }
                 }
               }
             }
@@ -406,7 +639,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                }
               }
             },
             {
@@ -420,7 +661,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             },
             {
@@ -434,7 +683,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -447,7 +704,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/BOOKS_DETAIL"
+              "$ref": "#/components/examples/BOOKS_DETAIL",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                }
+              }
             }
           }
         }
@@ -484,6 +749,16 @@
                     "$ref": "#/components/examples/BOOKS_DETAIL"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/BOOKS_MODEL"
+                },
+                "examples": {
+                  "BOOKS_DETAIL": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
               }
             }
           },
@@ -499,6 +774,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -512,6 +797,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -531,7 +826,15 @@
                   "x-auhtorization-id": "this is from mock",
                   "x-limiter-block": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DETAIL_WITH_PATH"
+                "$ref": "#/components/examples/BOOKS_DETAIL_WITH_PATH",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_WITH_PATH"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_WITH_PATH_XML"
+                  }
+                }
               }
             },
             {
@@ -544,6 +847,34 @@
                 "headers": {
                   "x-auhtorization-id": "this is from mock",
                   "x-limiter-block": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 99,
+                      "title": "BOOK_2_THIS IS FROM STORE with out reff",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_WITH_PATH_XML"
+                  }
                 },
                 "response": {
                   "id": 99,
@@ -582,7 +913,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                }
               }
             },
             {
@@ -596,7 +935,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             },
             {
@@ -610,7 +957,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -623,7 +978,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/BOOKS_DETAIL"
+              "$ref": "#/components/examples/BOOKS_DETAIL",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                }
+              }
             }
           }
         }
@@ -650,6 +1013,11 @@
                 "schema": {
                   "$ref": "#/components/schemas/BOOKS_DELETED"
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/BOOKS_DELETED"
+                }
               }
             }
           },
@@ -665,6 +1033,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -678,6 +1056,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -697,7 +1085,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DELETED"
+                "$ref": "#/components/examples/BOOKS_DELETED",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DELETED"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_XML"
+                  }
+                }
               }
             },
             {
@@ -711,7 +1107,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                  }
+                }
               }
             },
             {
@@ -728,6 +1132,17 @@
                 "response": {
                   "id": 99,
                   "status": "forbidden"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 99,
+                      "status": "forbidden"
+                    }
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                  }
                 }
               }
             }
@@ -745,7 +1160,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -758,7 +1181,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/BOOKS_DELETED"
+              "$ref": "#/components/examples/BOOKS_DELETED",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/BOOKS_DELETED"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/BOOKS_DELETED_XML"
+                }
+              }
             }
           }
         }
@@ -785,6 +1216,11 @@
               "schema": {
                 "$ref": "#/components/schemas/BOOKS_MODEL"
               }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/BOOKS_MODEL"
+              }
             }
           }
         },
@@ -799,6 +1235,16 @@
                 "examples": {
                   "BOOKS_DETAIL": {
                     "$ref": "#/components/examples/BOOKS_DETAIL"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/BOOKS_MODEL"
+                },
+                "examples": {
+                  "BOOKS_DETAIL": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
                   }
                 }
               }
@@ -816,6 +1262,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -829,6 +1285,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -848,7 +1314,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DELETED"
+                "$ref": "#/components/examples/BOOKS_DELETED",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DELETED"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_XML"
+                  }
+                }
               }
             },
             {
@@ -862,7 +1336,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DELETED_FORBIDEN_XML"
+                  }
+                }
               }
             },
             {
@@ -879,6 +1361,17 @@
                 "response": {
                   "id": 99,
                   "status": "forbidden"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 99,
+                      "status": "forbidden"
+                    }
+                  },
+                  "application/xml": {
+                    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>0</id>\n\t<title>string</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T16:14:03.009Z</publishedDate>\n</book>"
+                  }
                 }
               }
             }
@@ -894,7 +1387,15 @@
                 "headers": {
                   "x-store-noreff": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_FROM_STORE_REF"
+                "$ref": "#/components/examples/BOOKS_FROM_STORE_REF",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF_XML"
+                  }
+                }
               }
             },
             {
@@ -927,6 +1428,34 @@
                   ],
                   "publisher": "string",
                   "publishedDate": "2020-06-13T16:05:04.126Z"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 2,
+                      "title": "BOOK_2_THIS IS FROM STORE with reff",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  },
+                  "application/xml": {
+                    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>0</id>\n\t<title>string</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T16:14:03.009Z</publishedDate>\n</book>"
+                  }
                 }
               }
             }
@@ -943,7 +1472,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -956,7 +1493,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/BOOKS_DETAIL"
+              "$ref": "#/components/examples/BOOKS_DETAIL",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                }
+              }
             }
           }
         }
@@ -996,6 +1541,23 @@
                     "$ref": "#/components/examples/LIST_OF_BOOKS"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BOOKS_MODEL"
+                  },
+                  "xml": {
+                    "name": "books",
+                    "wrapped": true
+                  }
+                },
+                "examples": {
+                  "BOOKS_DETAIL": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
               }
             }
           },
@@ -1011,6 +1573,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -1024,6 +1596,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -1043,7 +1625,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS"
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
               }
             },
             {
@@ -1057,7 +1647,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  }
+                }
               }
             },
             {
@@ -1071,7 +1669,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS"
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
               }
             }
           ],
@@ -1089,7 +1695,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -1105,7 +1719,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                }
               }
             },
             {
@@ -1119,7 +1741,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS"
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  }
+                }
               }
             },
             {
@@ -1133,7 +1763,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             },
             {
@@ -1164,7 +1802,32 @@
                     "publisher": "string",
                     "publishedDate": "2020-06-13T16:05:04.126Z"
                   }
-                ]
+                ],
+                "content": {
+                  "application/json": {
+                    "response": [
+                      {
+                        "id": 1,
+                        "title": "BOOK_1_query response without reff",
+                        "author": "string",
+                        "category": [
+                          "string"
+                        ],
+                        "images": [
+                          {
+                            "url": "string",
+                            "order": 0
+                          }
+                        ],
+                        "publisher": "string",
+                        "publishedDate": "2020-06-13T16:05:04.126Z"
+                      }
+                    ]
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
               }
             }
           ],
@@ -1175,7 +1838,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+              "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                }
+              }
             }
           }
         }
@@ -1209,6 +1880,16 @@
                     "$ref": "#/components/examples/BOOKS_DETAIL"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/BOOKS_MODEL"
+                },
+                "examples": {
+                  "BOOKS_DETAIL": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
               }
             }
           },
@@ -1224,6 +1905,16 @@
                     "$ref": "#/components/examples/ERROR_400"
                   }
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_400": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           },
@@ -1237,6 +1928,16 @@
                 "examples": {
                   "ERROR_500": {
                     "$ref": "#/components/examples/ERROR_500"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERROR_MODEL"
+                },
+                "examples": {
+                  "ERROR_500": {
+                    "$ref": "#/components/examples/ERROR_500_XML"
                   }
                 }
               }
@@ -1256,7 +1957,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/LIST_OF_BOOKS"
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
               }
             },
             {
@@ -1270,7 +1979,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DETAIL"
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
               }
             },
             {
@@ -1284,7 +2001,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DETAIL"
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
               }
             },
             {
@@ -1298,7 +2023,15 @@
                   "x-request-id-deleted": "this is from mock",
                   "x-limiter-deleted": "this is from mocks"
                 },
-                "$ref": "#/components/examples/BOOKS_DETAIL"
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
               }
             }
           ],
@@ -1316,7 +2049,15 @@
                   "x-request-id": "this is from mock",
                   "x-limiter": "this is from mocks"
                 },
-                "$ref": "#/components/examples/ERROR_400"
+                "$ref": "#/components/examples/ERROR_400",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                }
               }
             }
           ],
@@ -1328,7 +2069,15 @@
                 "x-request-id": "this is from mock",
                 "x-limiter": "this is from mocks"
               },
-              "$ref": "#/components/examples/BOOKS_DETAIL"
+              "$ref": "#/components/examples/BOOKS_DETAIL",
+              "content": {
+                "application/json": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL"
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                }
+              }
             }
           }
         }
@@ -1349,6 +2098,9 @@
           "data": {
             "type": "object"
           }
+        },
+        "xml": {
+          "name": "error"
         }
       },
       "IMAGES_MODEL": {
@@ -1361,6 +2113,9 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "xml": {
+          "name": "image"
         }
       },
       "BOOKS_MODEL": {
@@ -1380,12 +2135,18 @@
             "type": "array",
             "items": {
               "type": "string"
+            },
+            "xml": {
+              "wrapped": true
             }
           },
           "images": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/IMAGES_MODEL"
+            },
+            "xml": {
+              "wrapped": true
             }
           },
           "publisher": {
@@ -1395,6 +2156,9 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "xml": {
+          "name": "book"
         }
       },
       "BOOKS_DELETED": {
@@ -1407,6 +2171,9 @@
           "status": {
             "type": "string"
           }
+        },
+        "xml": {
+          "name": "books_deleted"
         }
       }
     },
@@ -1479,8 +2246,14 @@
           }
         ]
       },
+      "LIST_OF_BOOKS_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<books>\n\t<book>\n\t\t<id>1</id>\n\t\t<title>string</title>\n\t\t<author>string</author>\n\t\t<category>\n\t\t\t<category>string</category>\n\t\t</category>\n\t\t<images>\n\t\t\t<image>\n\t\t\t\t<url>string</url>\n\t\t\t\t<order>0</order>\n\t\t\t</image>\n\t\t</images>\n\t\t<publisher>string</publisher>\n\t\t<publishedDate>2020-08-12T15:55:35.442Z</publishedDate>\n\t</book><book>\n\t\t<id>2</id>\n\t\t<title>string</title>\n\t\t<author>string</author>\n\t\t<category>\n\t\t\t<category>string</category>\n\t\t</category>\n\t\t<images>\n\t\t\t<image>\n\t\t\t\t<url>string</url>\n\t\t\t\t<order>0</order>\n\t\t\t</image>\n\t\t</images>\n\t\t<publisher>string</publisher>\n\t\t<publishedDate>2020-08-12T15:55:35.442Z</publishedDate>\n\t</book>\n</books>"
+      },
       "LIST_OF_BOOKS_EMPTY": {
         "value": []
+      },
+      "LIST_OF_BOOKS_EMPTY_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<books>\n\t<book></book>\n</books>"
       },
       "LIST_OF_BOOKS_ONLY_ONE": {
         "value": [
@@ -1501,6 +2274,9 @@
             "publishedDate": "2020-06-13T16:05:04.126Z"
           }
         ]
+      },
+      "LIST_OF_BOOKS_ONLY_ONE_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<books>\n\t<book>\n\t\t<id>1</id>\n\t\t<title>BOOK_1</title>\n\t\t<author>string</author>\n\t\t<category>\n\t\t\t<category>string</category>\n\t\t</category>\n\t\t<images>\n\t\t\t<image>\n\t\t\t\t<url>string</url>\n\t\t\t\t<order>0</order>\n\t\t\t</image>\n\t\t</images>\n\t\t<publisher>string</publisher>\n\t\t<publishedDate>2020-08-12T15:55:35.442Z</publishedDate>\n\t</book>\n</books>"
       },
       "BOOKS_DETAIL": {
         "value": {
@@ -1525,6 +2301,9 @@
           "publishedDate": "2020-06-13T16:05:04.126Z"
         }
       },
+      "BOOKS_DETAIL_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>2</id>\n\t<title>BOOK_2</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T15:53:16.422Z</publishedDate>\n</book>"
+      },
       "BOOKS_DETAIL_WITH_PATH": {
         "value": {
           "id": 1,
@@ -1547,6 +2326,9 @@
           "publisher": "string",
           "publishedDate": "2020-06-13T16:05:04.126Z"
         }
+      },
+      "BOOKS_DETAIL_WITH_PATH_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>1</id>\n\t<title>BOOK_2_WITH_PATH_REFF</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T15:53:16.422Z</publishedDate>\n</book>"
       },
       "BOOKS_FROM_STORE_REF": {
         "value": {
@@ -1571,6 +2353,9 @@
           "publishedDate": "2020-06-13T16:05:04.126Z"
         }
       },
+      "BOOKS_FROM_STORE_REF_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>2</id>\n\t<title>BOOK_2_THIS IS FROM STORE</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T15:53:16.422Z</publishedDate>\n</book>"
+      },
       "ERROR_400": {
         "value": {
           "response_code": "ANY_400",
@@ -1591,11 +2376,23 @@
           "status": "deleted"
         }
       },
+      "BOOKS_DELETED_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<books_deleted>\n\t<id>1</id>\n\t<status>deleted</status>\n</books_deleted>"
+      },
       "BOOKS_DELETED_FORBIDEN": {
         "value": {
           "id": 99,
           "status": "forbiden"
         }
+      },
+      "BOOKS_DELETED_FORBIDEN_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<books_deleted>\n\t<id>99</id>\n\t<status>forbidden</status>\n</books_deleted>"
+      },
+      "ERROR_400_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n\t<response_code>error_400</response_code>\n\t<response_message>something bad happen</response_message>\n\t<data>\n\t</data>\n</error>"
+      },
+      "ERROR_500_XML": {
+        "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n\t<response_code>error_500</response_code>\n\t<response_message>something bad happen</response_message>\n\t<data>\n\t</data>\n</error>"
       }
     }
   }
