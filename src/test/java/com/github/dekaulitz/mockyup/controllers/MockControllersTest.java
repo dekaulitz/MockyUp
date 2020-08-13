@@ -16,12 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.Assert;
 
+import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -463,6 +461,7 @@ class MockControllersTest extends BaseTest {
         MockEntities mockEntities = Helper.getMockEntities();
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
         HttpHeaders headers = new HttpHeaders();
+        headers.set("accept", "");
         HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
 
         //test mock response from query=title:empty
@@ -500,6 +499,7 @@ class MockControllersTest extends BaseTest {
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
         HttpHeaders headers = new HttpHeaders();
         headers.set("client-id", "");
+        headers.set("accept", "");
         HttpEntity<HttpHeaders> headersHttpEntity2 = new HttpEntity<>(headers);
 
         //test mock response from query but some header was missing
@@ -513,6 +513,7 @@ class MockControllersTest extends BaseTest {
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.ofNullable(mockEntities));
         headers = new HttpHeaders();
         headers.set("client-id", "asd");
+        headers.set("accept", "");
         HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
 
         //test mock response from query=
@@ -596,6 +597,7 @@ class MockControllersTest extends BaseTest {
         MockEntities mockEntities = Helper.getMockEntities();
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.of(mockEntities));
         HttpHeaders headers = new HttpHeaders();
+        headers.set("accept", "");
         HttpEntity<String> headersHttpEntity = new HttpEntity<>(payload, headers);
         //test mock response default
         ResponseEntity<String> responseEntity = this.restTemplate
@@ -634,6 +636,7 @@ class MockControllersTest extends BaseTest {
         when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.of(mockEntities));
 
         HttpHeaders headers = new HttpHeaders();
+        headers.set("accept", "");
         HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
         //test mock response from BOOK_ID=10
         ResponseEntity<String> responseEntity = this.restTemplate
@@ -697,7 +700,7 @@ class MockControllersTest extends BaseTest {
 
         String payload3 = "{}";
         HttpHeaders headers = new HttpHeaders();
-
+        headers.set("accept", "");
         HttpEntity<String> headersHttpEntity2 = new HttpEntity<>(payload3, headers);
         //test mock response from BOOK_ID=10
         ResponseEntity<String> responseEntity2 = this.restTemplate

@@ -51,7 +51,7 @@ public class RequestFilter extends OncePerRequestFilter {
         req.put("responseStatus", response.getStatus());
         log.info("{}", this.logsMapper.logRequest(req));
         MDC.remove(ConstantsRepository.REQUEST_ID);
-        MDC.remove(ConstantsRepository.REQUEST_TIME);
+        MDC.remove(ConstantsRepository.PATH_ENDPOINT);
     }
 
     private String getxRequestID(HttpServletRequest request) {

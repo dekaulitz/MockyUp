@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public class BaseController {
 
+    private static final String XML_MEDIA_TYPE = "application/xml";
+    private static final String JSON_MEDIA_TYPE = "application/json";
     protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -35,13 +37,14 @@ public class BaseController {
      */
     protected ResponseEntity<Object> generateMockResponseEntity(MockHelper mock) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        if (mock.getResponse().getHeaders() != null) {
-            for (Map.Entry headerMap : mock.getResponse().getHeaders().entrySet()) {
+        if (mock.getResponseProperty().getHeaders() != null) {
+            for (Map.Entry headerMap : mock.getResponseProperty().getHeaders().entrySet()) {
                 httpHeaders.add(headerMap.getKey().toString(), headerMap.getValue().toString());
             }
         }
-        return ResponseEntity.status(mock.getResponse().getHttpCode()).headers(httpHeaders).body(mock.getResponse().getResponse());
+        return ResponseEntity.status(mock.getResponseProperty().getHttpCode()).headers(httpHeaders).body(mock.getResponseProperty().getResponse());
     }
+
 
     /**
      * handling error response with type of class exception

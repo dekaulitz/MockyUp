@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.helperTest;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.entities.MockHistoryEntities;
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
@@ -12,10 +13,7 @@ import com.github.dekaulitz.mockyup.domain.mocks.vmodels.*;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
-import com.github.dekaulitz.mockyup.utils.Hash;
-import com.github.dekaulitz.mockyup.utils.JsonMapper;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
-import com.github.dekaulitz.mockyup.utils.Role;
+import com.github.dekaulitz.mockyup.utils.*;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -285,5 +283,9 @@ public class Helper {
                 .build();
     }
 
+    public static String parseXmlComponentTest(String xml) throws IOException {
+        JsonNode jsonNode= XmlMapper.mapper().readTree(xml.getBytes());
+        return jsonNode.get("name").asText();
+    }
 
 }

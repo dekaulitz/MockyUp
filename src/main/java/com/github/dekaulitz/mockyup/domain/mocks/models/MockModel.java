@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -196,7 +197,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
      * @throws InvalidMockException         when the contract is not valid with the request
      */
     @Override
-    public MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException {
+    public MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, IOException, InvalidMockException {
         //find the collection base on mock id
         Optional<MockEntities> mockEntities = this.mockRepository.findById(id);
         if (!mockEntities.isPresent())
@@ -331,7 +332,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
      * @throws JsonProcessingException
      */
     private MockHelper validatePathWithOpenApiPaths(HttpServletRequest request, String body, OpenAPI openAPI, String[] extractPathRequest)
-            throws UnsupportedEncodingException, InvalidMockException, NotFoundException, JsonProcessingException {
+            throws IOException, InvalidMockException, NotFoundException {
         //iterate all pathitem from openApi
         for (Map.Entry<String, PathItem> entry : openAPI.getPaths().entrySet()) {
             //get path route from pathItem from openapi path
