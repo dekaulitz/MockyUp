@@ -16,6 +16,7 @@ import com.github.dekaulitz.mockyup.utils.MockHelper;
 import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public interface MockInterface {
      * @throws UnsupportedEncodingException when the contract is not valid structure
      * @throws InvalidMockException         when the contract is not valid with the request
      */
-    MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, JsonProcessingException, UnsupportedEncodingException, InvalidMockException;
+    MockHelper getMockMocking(HttpServletRequest request, String path, String id, String body) throws NotFoundException, IOException, InvalidMockException;
 
     /**
      * add user to mock
