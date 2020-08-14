@@ -25,8 +25,7 @@ Describe the changes, what is the impact into the application
 - [ ] are not breaking changes.
 - [ ] breaking current unit test.
 - [ ] will implement new api endpoint.
-- [ ] will implement new api endpoint.
-- [ ] create UI implementation
+- [ ] will implement new UI implementation.
 
 ## Documentation
 
