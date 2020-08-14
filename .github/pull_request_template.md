@@ -1,0 +1,32 @@
+## Description & Technical Solution
+
+Describe the changes, what is the impact into the application
+
+
+## Type of Change
+
+- [ ] Bug fix
+- [ ] Enhancement
+- [ ] New feature 
+- [ ] Documentation
+- [ ] Ui enhancement
+
+## Mandatory Checklist:
+
+- [ ] Important comments are added to all hard-to-understand areas.
+- [ ] Add unit test.
+- [ ] All new and existing tests passed.
+
+## My changes ...
+
+- [ ] breaking current mock structure.
+- [ ] breaking current UI implementation.
+- [ ] need database migration.
+- [ ] are not breaking changes.
+- [ ] add new api endpoint.
+
+## Documentation
+
+- [ ] My changes are no require a change to the project documentation.
+- [ ] My changes are require to change the project documentation.
+- [ ] If yes to above: I have updated the documentation accordingly.
