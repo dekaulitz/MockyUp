@@ -24,7 +24,9 @@ Describe the changes, what is the impact into the application
 - [ ] need database migration.
 - [ ] are not breaking changes.
 - [ ] breaking current unit test.
-- [ ] add new api endpoint.
+- [ ] will implement new api endpoint.
+- [ ] will implement new api endpoint.
+- [ ] create UI implementation
 
 ## Documentation
 
