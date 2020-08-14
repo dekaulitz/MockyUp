@@ -23,6 +23,7 @@ Describe the changes, what is the impact into the application
 - [ ] breaking current UI implementation.
 - [ ] need database migration.
 - [ ] are not breaking changes.
+- [ ] breaking current unit test.
 - [ ] add new api endpoint.
 
 ## Documentation
