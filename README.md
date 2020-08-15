@@ -33,7 +33,9 @@ This will helping You to try perfect integration before the real integration bef
 
 ## How to use
 You can refer the example of OpenApi spec that already including the `x-examples` properties from <a href="https://raw.githubusercontent.com/dekaulitz/MockyUp/master/src/main/resources/public/example_mocking_books.json">here</a> 
-or for more context you can check the documentation about OpenApi <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md">here</a>.<br/>
+or for more context you can check the documentation about OpenApi <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md">here</a>.
+When the MockyUp running will checks the default account root if account `root` its not exist will create the new one with password `root` * youre should change later.
+<br/>
 
 We adding new extension for set mock configuration. They are:
 
@@ -109,7 +111,8 @@ if the property matched with request properties will rendering the response as t
 This `x-default` configuration when the request is not matched with other configuration `x-default` will rendering the responsse.
 
 ### How to integrate
-MockyUp will running as mock server and mock collection server. You can directly hit the MockypUp mocking endpoint for test mocking the response. 
+MockyUp will running as mock server and mock collection server. MockyUp will check 
+You can directly hit the MockypUp mocking endpoint for test mocking the response. 
 ```
 http://[mockyup_hostname]/mocks/mocking/[mock_id]?path=[contract_endpoint]
 ```
