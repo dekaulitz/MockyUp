@@ -22,7 +22,10 @@ public class ResponseCode {
     public static ErrorVmodel INVALID_MOCK_REF = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK024", "Rereference mocks its not valid");
     public static ErrorVmodel INVALID_MOCK_HEADER = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK025", "Invalid mock header");
     public static ErrorVmodel INVALID_MOCK_DEFAULT = new ErrorVmodel(HttpStatus.BAD_REQUEST, "MOCK026", "Invalid mock default");
-    public static ErrorVmodel VALIDATION_FAIL = new ErrorVmodel(HttpStatus.UNPROCESSABLE_ENTITY, "MOCK027", "Validation fail");
+    public static ErrorVmodel VALIDATION_FAIL = new ErrorVmodel(HttpStatus.UNPROCESSABLE_ENTITY,
+        "MOCK027", "Validation fail");
+  public static ErrorVmodel INVALID_MOCKUP_RESPONSE_ISNULL = new ErrorVmodel(
+      HttpStatus.UNPROCESSABLE_ENTITY, "MOCK028", "Invlid mock, response is null");
 
 
     public static ErrorVmodel GLOBAL_ERROR_MESSAGE = new ErrorVmodel(HttpStatus.INTERNAL_SERVER_ERROR, "MOCK001", "Something bad happen");
