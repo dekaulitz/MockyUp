@@ -678,7 +678,7 @@
                 "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
                 "content": {
                   "application/xml": {
-                    "response":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
+                    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
                   },
                   "application/json": {
                     "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"
@@ -754,7 +754,7 @@
               "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE",
               "content": {
                 "application/xml": {
-                  "response":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
+                  "response": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><component><name>DEFAULT_COMPONENT_EXAMPLE</name></component></xml>"
                 },
                 "application/json": {
                   "$ref": "#/components/examples/DEFAULT_COMPONENT_EXAMPLE"

@@ -1,8 +1,11 @@
 package com.github.dekaulitz.mockyup.domain.users.vmodels;
 
-import lombok.*;
-
 import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
@@ -10,8 +13,9 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 public class AddUserAccessVmodel {
-    @NotEmpty(message = "Please provide a userId")
-    private String userId;
-    @NotEmpty(message = "Please provide a access")
-    private String access;
+
+  @NotEmpty(message = "Please provide a userId")
+  private String userId;
+  @NotEmpty(message = "Please provide a access")
+  private String access;
 }

@@ -63,8 +63,9 @@ public abstract class AbstractPage<T> implements BasePage<T>, Serializable {
             if (search.length == 2 && !search[1].isEmpty()) {
                 if (search[0].equals("_id") || search[0].equals("id")) {
                     this.criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
-                } else
+                } else {
                     this.criteria = Criteria.where(search[0]).regex(".*" + search[1] + ".*", "i");
+                }
             }
         }
     }

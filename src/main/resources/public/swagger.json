@@ -60,6 +60,11 @@
         "tags": [
           "auth"
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -71,7 +76,7 @@
         },
         "responses": {
           "200": {
-            "description": "when user successfully login",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
@@ -131,11 +136,21 @@
         ],
         "responses": {
           "200": {
-            "description": "when user successfully refreshing token",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RESPONSE_AUTH_LOGIN"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
                 }
               }
             }
@@ -200,7 +215,7 @@
                 }
               }
             },
-            "description": "when user success fully request page"
+            "description": "when request success"
           },
           "401": {
             "content": {
@@ -210,7 +225,17 @@
                 }
               }
             },
-            "description": "when user has no access or using invalid token"
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
           },
           "500": {
             "content": {
@@ -259,7 +284,7 @@
                 }
               }
             },
-            "description": ""
+            "description": "when request success"
           },
           "422": {
             "description": "when the request is not valid",
@@ -272,7 +297,17 @@
             }
           },
           "401": {
-            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
             "content": {
               "application/json": {
                 "schema": {
@@ -280,6 +315,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
           }
         }
       }
@@ -305,7 +350,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
@@ -314,8 +359,8 @@
               }
             }
           },
-          "401": {
-            "description": "when user has expired token or invalid token",
+          "400": {
+            "description": "when data not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -324,8 +369,18 @@
               }
             }
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
           "403": {
-            "description": "when user has no access for viewing data",
+            "description": "when user has no access for viewing data ",
             "content": {
               "application/json": {
                 "schema": {
@@ -333,13 +388,23 @@
                 }
               }
             }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
           }
         }
       }
     },
     "/mocks/users/list": {
       "get": {
-        "summary": "",
+        "summary": "get user list that search from username",
         "tags": [
           "mocks"
         ],
@@ -358,7 +423,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
@@ -367,8 +432,18 @@
               }
             }
           },
-          "422": {
-            "description": "when the request is not valid",
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
             "content": {
               "application/json": {
                 "schema": {
@@ -377,15 +452,15 @@
               }
             }
           },
-          "401": {
-            "description": "when user has expired token or invalid token",
+          "500": {
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RESPONSE_ERROR"
                 }
               }
-            }
+            },
+            "description": "when something bad happen in our backend"
           }
         }
       }
@@ -397,7 +472,7 @@
             "BearerAuth": []
           }
         ],
-        "summary": "",
+        "summary": "get mock history of mock",
         "tags": [
           "mocks"
         ],
@@ -418,7 +493,7 @@
                 }
               }
             },
-            "description": ""
+            "description": "when request success"
           },
           "422": {
             "description": "when the request is not valid",
@@ -431,11 +506,109 @@
             }
           },
           "401": {
-            "description": "when user has expired token or invalid token",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/addUser": {
+      "put": {
+        "summary": "add user access to mock",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_ADD_ACCESS_USER_INTO_MOCK"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "when request succcess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ADD_ACCESS_USER_INTO_MOCK"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/remove/{userId}": {
+      "delete": {
+        "summary": "remove user access from mock",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/USER_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "responses": {
+          "200": {
+            "description": "when request succcess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ADD_ACCESS_USER_INTO_MOCK"
                 }
               }
             }
@@ -453,7 +626,7 @@
         "tags": [
           "mocks"
         ],
-        "summary": "",
+        "summary": "get user list that has access into mock",
         "parameters": [
           {
             "$ref": "#/components/parameters/DATA_ID"
@@ -464,7 +637,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
@@ -474,17 +647,17 @@
             }
           },
           "401": {
-            "description": "when user has expired token or invalid token",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RESPONSE_ERROR"
                 }
               }
-            }
+            },
+            "description": "when user has expired token or using invalid token"
           },
           "403": {
-            "description": "when user has no access for viewing data",
+            "description": "when user has no access for viewing data ",
             "content": {
               "application/json": {
                 "schema": {
@@ -492,58 +665,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/mocks/users/page": {
-      "get": {
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "summary": "for paging the users",
-        "tags": [
-          "users"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/SIZE"
-          },
-          {
-            "$ref": "#/components/parameters/CLIENT_ID"
-          },
-          {
-            "$ref": "#/components/parameters/PAGE"
-          },
-          {
-            "$ref": "#/components/parameters/SORT"
-          },
-          {
-            "$ref": "#/components/parameters/SEARCH"
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PAGING_USERS_RESPONSE"
-                }
-              }
-            },
-            "description": "when user success fully request page"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_ERROR"
-                }
-              }
-            },
-            "description": "when user has no access or using invalid token"
           },
           "500": {
             "content": {
@@ -554,140 +675,6 @@
               }
             },
             "description": "when something bad happen in our backend"
-          }
-        }
-      }
-    },
-    "/mocks/users/{dataId}/detail": {
-      "get": {
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "summary": "for view user detail",
-        "tags": [
-          "users"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/CLIENT_ID"
-          },
-          {
-            "$ref": "#/components/parameters/DATA_ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_ERROR"
-                }
-              }
-            },
-            "description": "when user has no access or using invalid token"
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_ERROR"
-                }
-              }
-            },
-            "description": "when something bad happen in our backend"
-          }
-        }
-      }
-    },
-    "/mocks/addUser": {
-      "post": {
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "tags": [
-          "users"
-        ],
-        "summary": "",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/CLIENT_ID"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
-                }
-              }
-            },
-            "description": ""
-          }
-        }
-      }
-    },
-    "/mocks/users/{dataId}/update": {
-      "put": {
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "tags": [
-          "users"
-        ],
-        "summary": "",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/DATA_ID"
-          },
-          {
-            "$ref": "#/components/parameters/CLIENT_ID"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
-                }
-              }
-            },
-            "description": ""
           }
         }
       }
@@ -708,7 +695,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "when request success",
             "content": {
               "application/json": {
                 "schema": {
@@ -898,6 +885,529 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/spec": {
+      "get": {
+        "summary": "get detail spec",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "when request success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "this youre openApi spec base on mockId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/histories/{historyId}": {
+      "get": {
+        "summary": "get detail spec",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/HISTORY_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "when request success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "this youre openApi spec base on mockId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/users": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "for paging the users",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SIZE"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PAGE"
+          },
+          {
+            "$ref": "#/components/parameters/SORT"
+          },
+          {
+            "$ref": "#/components/parameters/SEARCH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAGING_USERS_RESPONSE"
+                }
+              }
+            },
+            "description": "when request success"
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/users/{dataId}/detail": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "for view user detail",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "when request success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/addUser": {
+      "post": {
+        "summary": "add user access",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            },
+            "description": "when request success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/users/{dataId}/update": {
+      "put": {
+        "summary": "update user information",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            },
+            "description": "when request success"
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/users/{dataId}/delete": {
+      "delete": {
+        "summary": "delete user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "when request success"
+          },
+          "400": {
+            "description": "when data not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has expired token or using invalid token"
+          },
+          "403": {
+            "description": "when user has no access for viewing data ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
           }
         }
       }
@@ -1311,6 +1821,41 @@
             "type": "string"
           }
         }
+      },
+      "REQUEST_ADD_ACCESS_USER_INTO_MOCK": {
+        "type": "object",
+        "properties": {
+          "access": {
+            "type": "string",
+            "enum": [
+              "MOCKS_READ",
+              "MOCKS_READ_WRITE"
+            ]
+          },
+          "userId": {
+            "type": "string",
+            "description": "user id from database"
+          }
+        }
+      },
+      "RESPONSE_ADD_ACCESS_USER_INTO_MOCK": {
+        "type": "object",
+        "properties": {
+          "matchedCount": {
+            "type": "number",
+            "format": "int32"
+          },
+          "modifiedCount": {
+            "type": "number",
+            "format": "int32"
+          },
+          "upsertedId": {
+            "type": "string"
+          },
+          "modifiedCountAvailable": {
+            "type": "boolean"
+          }
+        }
       }
     },
     "parameters": {
@@ -1330,12 +1875,22 @@
         },
         "description": "it can be your`e mockId, mockHistoryId, and userId"
       },
+      "USER_ID": {
+        "name": "userId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "it can be your`e userId as another param"
+      },
       "PAGE": {
         "name": "page",
         "in": "query",
         "schema": {
           "type": "number",
-          "format": "int32"
+          "format": "int32",
+          "default": "1"
         }
       },
       "SIZE": {
@@ -1343,7 +1898,8 @@
         "in": "query",
         "schema": {
           "type": "number",
-          "format": "int32"
+          "format": "int32",
+          "default": "10"
         }
       },
       "SORT": {
@@ -1353,7 +1909,7 @@
           "type": "string"
         },
         "description": "for sorting attribute example to use it [field_data]:[desc/asc]",
-        "example": "sort=id:desc"
+        "example": "id:desc"
       },
       "SEARCH": {
         "name": "q",
@@ -1362,7 +1918,7 @@
           "type": "string"
         },
         "description": "for searching data example [field_data]:[your`e_query]",
-        "example": "q=username:root"
+        "example": "username:root"
       },
       "CLIENT_ID": {
         "name": "client-id",
@@ -1370,7 +1926,7 @@
         "schema": {
           "type": "string"
         },
-        "description": "youre client ",
+        "description": "your`e client ",
         "example": "mockup-frontend"
       },
       "PATH": {
@@ -1380,6 +1936,15 @@
           "type": "string"
         },
         "description": "this your mocking endpoint"
+      },
+      "HISTORY_ID": {
+        "name": "historyId",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "description": "this is your`e historyId",
+        "required": true
       }
     },
     "securitySchemes": {

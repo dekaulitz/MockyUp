@@ -44,6 +44,8 @@ We adding new extension for set mock configuration. They are:
 * x-path-including, it will matching the path parameter request
 * x-default, if you defined the x-default if above criterias does'nt matched it will rendering the response by default response.
 
+Since we are supporting multiple media type please make sure **you are using the correct accept header**. If you are not using the correct value for media type negotiation it can be causing some conflict from response. 
+
 ### x-query-including,x-header-including,x-body-including and x-path-including configurations
 ```
          [{
@@ -140,6 +142,10 @@ Before that you should add new server env on youre spec.
      ]
 ```
 You can check the example configuration spec from <a href="https://raw.githubusercontent.com/dekaulitz/MockyUp/master/src/main/resources/public/example_mocking_books.json">here</a> 
+
+### Troubleshoot 
+1. If you are facing unexpected response result please make sure **you are using expected accept header**
+
 ## Supported
 <a href="https://www.jetbrains.com/?from=MockyUp"><img src="https://github.com/dekaulitz/MockyUp/blob/master/src/main/resources/public/jetbrains-variant-2.png" height="100"/></a>
 

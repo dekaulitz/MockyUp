@@ -10,18 +10,19 @@ import io.swagger.v3.parser.ObjectMapperFactory;
  * json mapper
  */
 public class JsonMapper {
-    private static ObjectMapper mapper;
 
-    public static ObjectMapper mapper() {
-        if (mapper == null) {
-            mapper = ObjectMapperFactory.createJson();
-        }
-        mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        return mapper;
-    }
+  private static ObjectMapper mapper;
 
-    public static ObjectWriter pretty() {
-        return mapper().writer(new DefaultPrettyPrinter());
+  public static ObjectMapper mapper() {
+    if (mapper == null) {
+      mapper = ObjectMapperFactory.createJson();
     }
+    mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+    return mapper;
+  }
+
+  public static ObjectWriter pretty() {
+    return mapper().writer(new DefaultPrettyPrinter());
+  }
 
 }
