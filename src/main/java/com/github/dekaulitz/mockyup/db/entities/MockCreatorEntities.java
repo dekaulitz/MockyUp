@@ -1,6 +1,10 @@
 package com.github.dekaulitz.mockyup.db.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -8,6 +12,7 @@ import lombok.*;
 @Setter
 @Builder
 public class MockCreatorEntities {
-    private String userId;
-    private String username;
+
+  private String userId;
+  private String username;
 }

@@ -9,18 +9,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UiControllerTest extends BaseTest {
 
-    @Test
-    void loadUi() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+  @Test
+  void loadUi() throws Exception {
+    this.mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
-    }
+  }
 
-    @Test
-    void redirect() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/anything"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-    }
+  @Test
+  void redirect() throws Exception {
+    this.mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/anything"))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+  }
 }

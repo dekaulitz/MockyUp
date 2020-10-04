@@ -280,25 +280,26 @@ public class MockHelper {
     return null;
   }
 
-    /**
-     * @param exampleExtensions {@link List<Map>} example extension [x-examples] from operation
-     * @param components        {@link Components} components from open api
-     * @return MockHelper mock response
-     */
-    public static MockHelper generateResponseDefault(HttpServletRequest request, Map<String, Object> exampleExtensions, Components components) throws InvalidMockException {
-        //if [x-default] was decided but there no request that matched with the mock response so it will rendering the response from [x-default]
-        MockHelper mockHelper = new MockHelper();
-        //parsing [x-default] into mockHelper
-        parsingMockFromJsonMapper(mockHelper, exampleExtensions);
-      mockHelper.getResponseProperty().setMediaType(request.getHeader(APPLICATION_TYPE_ACCEPT));
-      //reff component example was decided but there is no component that registered so will throw the exception
-      if (mockHelper.getResponseProperty() == null) {
-        throw new InvalidMockException(ResponseCode.INVALID_MOCK_DEFAULT);
-      }
-      //if the response from [x-default-including] is component that referencing with Componenents will get the value from components
-      getComponentExample(mockHelper, components);
-      return mockHelper;
+  /**
+   * @param exampleExtensions {@link List<Map>} example extension [x-examples] from operation
+   * @param components        {@link Components} components from open api
+   * @return MockHelper mock response
+   */
+  public static MockHelper generateResponseDefault(HttpServletRequest request,
+      Map<String, Object> exampleExtensions, Components components) throws InvalidMockException {
+    //if [x-default] was decided but there no request that matched with the mock response so it will rendering the response from [x-default]
+    MockHelper mockHelper = new MockHelper();
+    //parsing [x-default] into mockHelper
+    parsingMockFromJsonMapper(mockHelper, exampleExtensions);
+    mockHelper.getResponseProperty().setMediaType(request.getHeader(APPLICATION_TYPE_ACCEPT));
+    //reff component example was decided but there is no component that registered so will throw the exception
+    if (mockHelper.getResponseProperty() == null) {
+      throw new InvalidMockException(ResponseCode.INVALID_MOCK_DEFAULT);
     }
+    //if the response from [x-default-including] is component that referencing with Componenents will get the value from components
+    getComponentExample(mockHelper, components);
+    return mockHelper;
+  }
 
   private static void parsingMockFromJsonMapper(MockHelper mockHelper,
       Map<String, Object> xExamples) throws InvalidMockException {
