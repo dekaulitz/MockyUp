@@ -11,32 +11,25 @@
   },
   "servers": [
     {
-      "url": "http://localhost:{port}",
+      "url": "{host}",
+      "description": "mock api",
       "variables": {
-        "port": {
-          "description": "port",
-          "default": "8080"
+        "host": {
+          "description": "your`e host application",
+          "default": "http://localhost:7070"
         }
       }
     },
     {
-      "url": "{http}://localhost:{port}/mocks/mocking/{testing_path}?path=",
-      "description": "Testing locally",
+      "url": "{host}/mocks/mocking/{mockId}?path=",
+      "description": "testing mock request",
       "variables": {
-        "http": {
-          "description": "entry point The Data Set API is accessible via https and http",
-          "enum": [
-            "http",
-            "https"
-          ],
-          "default": "http"
+        "host": {
+          "description": "your`e host application",
+          "default": "http://localhost:7070"
         },
-        "port": {
-          "description": "port",
-          "default": "8080"
-        },
-        "testing_path": {
-          "description": "testing id path",
+        "mockId": {
+          "description": "your`e mockId",
           "default": "5e3aa62f11b5dc7e1bfaa1d6"
         }
       }
@@ -44,1474 +37,708 @@
   ],
   "tags": [
     {
-      "name": "Mocks",
-      "description": "Modification mocks example data "
+      "name": "auth",
+      "description": "User authentication"
     },
     {
-      "name": "Mocks Mocking",
-      "description": "Request for mocking response",
-      "externalDocs": {
-        "description": "follow this guide for mocking the example",
-        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-      }
+      "name": "users",
+      "description": "User data"
     },
     {
-      "name": "Docs",
-      "description": "show swagger docs"
+      "name": "mocks",
+      "description": "Mocks data"
+    },
+    {
+      "name": "mocking",
+      "description": "Mocks data"
     }
   ],
   "paths": {
-    "/mocks/docs": {
-      "get": {
+    "/mocks/login": {
+      "post": {
+        "summary": "for user login ",
         "tags": [
-          "Docs"
+          "auth"
         ],
-        "summary": "Get swagger documentation",
-        "operationId": "MockControllers.greeting",
-        "responses": {
-          "200": {
-            "description": "response when successfully get swagger docs",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/mockResponse"
-                  }
-                }
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_AUTH_LOGIN"
               }
             }
           }
         },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": {}
+        "responses": {
+          "200": {
+            "description": "when user successfully login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_AUTH_LOGIN"
+                }
+              }
             }
+          },
+          "401": {
+            "description": "when user not found or invalid username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "when the request is not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/auth/refresh": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "for user refreshing new token",
+        "tags": [
+          "auth"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "when user successfully refreshing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_AUTH_LOGIN"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/page": {
+      "get": {
+        "summary": "for paging the mocks",
+        "tags": [
+          "mocks"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/SIZE"
+          },
+          {
+            "$ref": "#/components/parameters/PAGE"
+          },
+          {
+            "$ref": "#/components/parameters/SORT"
+          },
+          {
+            "$ref": "#/components/parameters/SEARCH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAGING_MOCKS_RESPONSE"
+                }
+              }
+            },
+            "description": "when user success fully request page"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has no access or using invalid token"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
           }
         }
       }
     },
     "/mocks/store": {
       "post": {
-        "tags": [
-          "Mocks"
+        "security": [
+          {
+            "BearerAuth": []
+          }
         ],
-        "summary": "Storing mocks",
-        "operationId": "MockControllers.storeMocksEntity",
+        "tags": [
+          "mocks"
+        ],
+        "summary": "for storing new mock",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/mockRequest"
+                "$ref": "#/components/schemas/REQUEST_STORE_NEW_MOCK"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "response when mock successfully registered",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/mockResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": "200",
-              "response": {
-                "id": "5e3aa62f11b5dc7e1bfaa1d6",
-                "title": "Test",
-                "description": "yooo",
-                "spec": {
-                  "openapi": "3.0.2",
-                  "info": {
-                    "description": "Mockup server base on openAPI vers 3.xx",
-                    "version": "1",
-                    "title": "Mockup Server | MockyUp",
-                    "termsOfService": "",
-                    "contact": {
-                      "email": "sulaimanfahmi@gmail.com"
-                    }
-                  },
-                  "servers": [
-                    {
-                      "url": "{scheme}://192.10.180{port}",
-                      "variables": {
-                        "scheme": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "https"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        }
-                      }
-                    },
-                    {
-                      "url": "{http}://localhost:{port}{testing_path}",
-                      "description": "Testing locally",
-                      "variables": {
-                        "http": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "http"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        },
-                        "testing_path": {
-                          "description": "testing path",
-                          "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                        }
-                      }
-                    }
-                  ],
-                  "tags": [
-                    {
-                      "name": "Mocks",
-                      "description": "Modification mocks example data "
-                    },
-                    {
-                      "name": "Mocks Mocking",
-                      "description": "Request for mocking response",
-                      "externalDocs": {
-                        "description": "follow this guide for mocking the example",
-                        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                      }
-                    },
-                    {
-                      "name": "Docs",
-                      "description": "show swagger docs"
-                    }
-                  ],
-                  "paths": {
-                    "/": {
-                      "get": {
-                        "tags": [
-                          "Docs"
-                        ],
-                        "summary": "Get swagger documentation",
-                        "operationId": "MockControllers.greeting",
-                        "responses": {
-                          "200": {
-                            "description": "response when successfully get swagger docs",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "x-examples": {
-                          "x-default": {
-                            "property": {},
-                            "response": {
-                              "httpCode": 200,
-                              "response": {
-                                "statusCode": 4004,
-                                "message": "data not found",
-                                "data": {
-                                  "default": "x-response default"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks": {
-                      "post": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "summary": "Storing mocks",
-                        "operationId": "MockControllers.storeMocksEntity",
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully registered",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [],
-                        "summary": "get all mocks",
-                        "operationId": "MockControllers.mocks",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks/{id}": {
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "in": "query",
-                            "name": "spec",
-                            "required": false,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "boolean"
-                            }
-                          }
-                        ],
-                        "summary": "get mock detail",
-                        "operationId": "MockControllers.mockById",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "delete": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "summary": "delete by mock id",
-                        "operationId": "MockControllers.deleteByMockId",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "put": {
-                        "summary": "update mock by id",
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "components": {
-                    "schemas": {
-                      "mockRequest": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      },
-                      "mockResponse": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "id from mongodb"
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mocks/list": {
-      "get": {
-        "tags": [
-          "Mocks"
-        ],
-        "parameters": [],
-        "summary": "get all mocks",
-        "operationId": "MockControllers.mocks",
-        "responses": {
-          "200": {
-            "description": "response when mock successfully call",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/mockResponse"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": [
-                {
-                  "id": "5e3aa62f11b5dc7e1bfaa1d6",
-                  "title": "Test",
-                  "description": "yooo",
-                  "spec": {
-                    "openapi": "3.0.2",
-                    "info": {
-                      "description": "Mockup server base on openAPI vers 3.xx",
-                      "version": "1",
-                      "title": "Mockup Server | MockyUp",
-                      "termsOfService": "",
-                      "contact": {
-                        "email": "sulaimanfahmi@gmail.com"
-                      }
-                    },
-                    "servers": [
-                      {
-                        "url": "{scheme}://192.10.180{port}",
-                        "variables": {
-                          "scheme": {
-                            "description": "entry point The Data Set API is accessible via https and http",
-                            "enum": [
-                              "http",
-                              "https"
-                            ],
-                            "default": "https"
-                          },
-                          "port": {
-                            "description": "port",
-                            "default": "8080"
-                          }
-                        }
-                      },
-                      {
-                        "url": "{http}://localhost:{port}{testing_path}",
-                        "description": "Testing locally",
-                        "variables": {
-                          "http": {
-                            "description": "entry point The Data Set API is accessible via https and http",
-                            "enum": [
-                              "http",
-                              "https"
-                            ],
-                            "default": "http"
-                          },
-                          "port": {
-                            "description": "port",
-                            "default": "8080"
-                          },
-                          "testing_path": {
-                            "description": "testing path",
-                            "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                          }
-                        }
-                      }
-                    ],
-                    "tags": [
-                      {
-                        "name": "Mocks",
-                        "description": "Modification mocks example data "
-                      },
-                      {
-                        "name": "Mocks Mocking",
-                        "description": "Request for mocking response",
-                        "externalDocs": {
-                          "description": "follow this guide for mocking the example",
-                          "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                        }
-                      },
-                      {
-                        "name": "Docs",
-                        "description": "show swagger docs"
-                      }
-                    ],
-                    "paths": {
-                      "/": {
-                        "get": {
-                          "tags": [
-                            "Docs"
-                          ],
-                          "summary": "Get swagger documentation",
-                          "operationId": "MockControllers.greeting",
-                          "responses": {
-                            "200": {
-                              "description": "response when successfully get swagger docs",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "type": "array",
-                                    "items": {
-                                      "$ref": "#/components/schemas/mockResponse"
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "x-examples": {
-                            "x-default": {
-                              "property": {},
-                              "response": {
-                                "httpCode": 200,
-                                "response": {
-                                  "statusCode": 4004,
-                                  "message": "data not found",
-                                  "data": {
-                                    "default": "x-response default"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "/mocks": {
-                        "post": {
-                          "tags": [
-                            "Mocks"
-                          ],
-                          "summary": "Storing mocks",
-                          "operationId": "MockControllers.storeMocksEntity",
-                          "requestBody": {
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockRequest"
-                                }
-                              }
-                            }
-                          },
-                          "responses": {
-                            "200": {
-                              "description": "response when mock successfully registered",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "get": {
-                          "tags": [
-                            "Mocks"
-                          ],
-                          "parameters": [],
-                          "summary": "get all mocks",
-                          "operationId": "MockControllers.mocks",
-                          "responses": {
-                            "200": {
-                              "description": "response when mock successfully call",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "type": "array",
-                                    "items": {
-                                      "$ref": "#/components/schemas/mockResponse"
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "/mocks/{id}": {
-                        "get": {
-                          "tags": [
-                            "Mocks"
-                          ],
-                          "parameters": [
-                            {
-                              "in": "path",
-                              "name": "id",
-                              "required": true,
-                              "description": "id from mongodb collection",
-                              "schema": {
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "in": "query",
-                              "name": "spec",
-                              "required": false,
-                              "description": "id from mongodb collection",
-                              "schema": {
-                                "type": "boolean"
-                              }
-                            }
-                          ],
-                          "summary": "get mock detail",
-                          "operationId": "MockControllers.mockById",
-                          "responses": {
-                            "200": {
-                              "description": "response when mock successfully call",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "delete": {
-                          "tags": [
-                            "Mocks"
-                          ],
-                          "parameters": [
-                            {
-                              "in": "path",
-                              "name": "id",
-                              "required": true,
-                              "description": "id from mongodb collection",
-                              "schema": {
-                                "type": "string"
-                              }
-                            }
-                          ],
-                          "summary": "delete by mock id",
-                          "operationId": "MockControllers.deleteByMockId",
-                          "responses": {
-                            "200": {
-                              "description": "response when mock successfully call",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "put": {
-                          "summary": "update mock by id",
-                          "tags": [
-                            "Mocks"
-                          ],
-                          "parameters": [
-                            {
-                              "in": "path",
-                              "name": "id",
-                              "required": true,
-                              "description": "id from mongodb collection",
-                              "schema": {
-                                "type": "string"
-                              }
-                            }
-                          ],
-                          "requestBody": {
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockRequest"
-                                }
-                              }
-                            }
-                          },
-                          "responses": {
-                            "200": {
-                              "description": "response when mock successfully call",
-                              "content": {
-                                "application/json": {
-                                  "schema": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "components": {
-                      "schemas": {
-                        "mockRequest": {
-                          "type": "object",
-                          "properties": {
-                            "title": {
-                              "type": "string",
-                              "description": "you mock title"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "your mock description"
-                            },
-                            "spec": {
-                              "type": "object",
-                              "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                            }
-                          }
-                        },
-                        "mockResponse": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "description": "id from mongodb"
-                            },
-                            "title": {
-                              "type": "string",
-                              "description": "you mock title"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "your mock description"
-                            },
-                            "spec": {
-                              "type": "object",
-                              "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      }
-    },
-    "/mocks/{id}": {
-      "get": {
-        "tags": [
-          "Mocks"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "id from mongodb collection",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "spec",
-            "required": false,
-            "description": "id from mongodb collection",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "summary": "get mock detail",
-        "operationId": "MockControllers.mockById",
-        "responses": {
-          "200": {
-            "description": "response when mock successfully call",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/mockResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-examples": {
-          "x-query-including": [
-            {
-              "property": {
-                "name": "spec",
-                "value": "true"
-              },
-              "response": {
-                "httpCode": 200,
-                "response": {
-                  "openapi": "3.0.2",
-                  "info": {
-                    "description": "Mockup server base on openAPI vers 3.xx",
-                    "version": "1",
-                    "title": "Mockup Server | MockyUp",
-                    "termsOfService": "",
-                    "contact": {
-                      "email": "sulaimanfahmi@gmail.com"
-                    }
-                  },
-                  "servers": [
-                    {
-                      "url": "{scheme}://192.10.180{port}",
-                      "variables": {
-                        "scheme": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "https"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        }
-                      }
-                    },
-                    {
-                      "url": "{http}://localhost:{port}{testing_path}",
-                      "description": "Testing locally",
-                      "variables": {
-                        "http": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "http"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        },
-                        "testing_path": {
-                          "description": "testing path",
-                          "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                        }
-                      }
-                    }
-                  ],
-                  "tags": [
-                    {
-                      "name": "Mocks",
-                      "description": "Modification mocks example data "
-                    },
-                    {
-                      "name": "Mocks Mocking",
-                      "description": "Request for mocking response",
-                      "externalDocs": {
-                        "description": "follow this guide for mocking the example",
-                        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                      }
-                    },
-                    {
-                      "name": "Docs",
-                      "description": "show swagger docs"
-                    }
-                  ],
-                  "paths": {
-                    "/": {
-                      "get": {
-                        "tags": [
-                          "Docs"
-                        ],
-                        "summary": "Get swagger documentation",
-                        "operationId": "MockControllers.greeting",
-                        "responses": {
-                          "200": {
-                            "description": "response when successfully get swagger docs",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "x-examples": {
-                          "x-default": {
-                            "property": {},
-                            "response": {
-                              "httpCode": 200,
-                              "response": {
-                                "statusCode": 4004,
-                                "message": "data not found",
-                                "data": {
-                                  "default": "x-response default"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks": {
-                      "post": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "summary": "Storing mocks",
-                        "operationId": "MockControllers.storeMocksEntity",
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully registered",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [],
-                        "summary": "get all mocks",
-                        "operationId": "MockControllers.mocks",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks/{id}": {
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "in": "query",
-                            "name": "spec",
-                            "required": false,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "boolean"
-                            }
-                          }
-                        ],
-                        "summary": "get mock detail",
-                        "operationId": "MockControllers.mockById",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "delete": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "summary": "delete by mock id",
-                        "operationId": "MockControllers.deleteByMockId",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "put": {
-                        "summary": "update mock by id",
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "components": {
-                    "schemas": {
-                      "mockRequest": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      },
-                      "mockResponse": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "id from mongodb"
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/RESPONSE_MOCK"
                 }
               }
             },
-            {
-              "property": {
-                "name": "from",
-                "value": "1"
-              },
-              "response": {
-                "httpCode": 200,
-                "response": {
-                  "statusCode": 4300,
-                  "message": "qValue success"
+            "description": ""
+          },
+          "422": {
+            "description": "when the request is not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
                 }
               }
             }
-          ],
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": {
-                "id": "5e3aa62f11b5dc7e1bfaa1d6",
-                "title": "Test",
-                "description": "yooo",
-                "spec": {
-                  "openapi": "3.0.2",
-                  "info": {
-                    "description": "Mockup server base on openAPI vers 3.xx",
-                    "version": "1",
-                    "title": "Mockup Server | MockyUp",
-                    "termsOfService": "",
-                    "contact": {
-                      "email": "sulaimanfahmi@gmail.com"
-                    }
-                  },
-                  "servers": [
-                    {
-                      "url": "{scheme}://192.10.180{port}",
-                      "variables": {
-                        "scheme": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "https"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        }
-                      }
-                    },
-                    {
-                      "url": "{http}://localhost:{port}{testing_path}",
-                      "description": "Testing locally",
-                      "variables": {
-                        "http": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "http"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        },
-                        "testing_path": {
-                          "description": "testing path",
-                          "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                        }
-                      }
-                    }
-                  ],
-                  "tags": [
-                    {
-                      "name": "Mocks",
-                      "description": "Modification mocks example data "
-                    },
-                    {
-                      "name": "Mocks Mocking",
-                      "description": "Request for mocking response",
-                      "externalDocs": {
-                        "description": "follow this guide for mocking the example",
-                        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                      }
-                    },
-                    {
-                      "name": "Docs",
-                      "description": "show swagger docs"
-                    }
-                  ],
-                  "paths": {
-                    "/": {
-                      "get": {
-                        "tags": [
-                          "Docs"
-                        ],
-                        "summary": "Get swagger documentation",
-                        "operationId": "MockControllers.greeting",
-                        "responses": {
-                          "200": {
-                            "description": "response when successfully get swagger docs",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "x-examples": {
-                          "x-default": {
-                            "property": {},
-                            "response": {
-                              "httpCode": 200,
-                              "response": {
-                                "statusCode": 4004,
-                                "message": "data not found",
-                                "data": {
-                                  "default": "x-response default"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks": {
-                      "post": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "summary": "Storing mocks",
-                        "operationId": "MockControllers.storeMocksEntity",
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully registered",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [],
-                        "summary": "get all mocks",
-                        "operationId": "MockControllers.mocks",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks/{id}": {
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "in": "query",
-                            "name": "spec",
-                            "required": false,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "boolean"
-                            }
-                          }
-                        ],
-                        "summary": "get mock detail",
-                        "operationId": "MockControllers.mockById",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "delete": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "summary": "delete by mock id",
-                        "operationId": "MockControllers.deleteByMockId",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "put": {
-                        "summary": "update mock by id",
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "components": {
-                    "schemas": {
-                      "mockRequest": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      },
-                      "mockResponse": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "id from mongodb"
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      }
-                    }
-                  }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/detailWithAccess": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "summary": "get detail mockId with access permissions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_MOCK"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "when user has no access for viewing data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/users/list": {
+      "get": {
+        "summary": "",
+        "tags": [
+          "mocks"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SEARCH_NAME_USER"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_MOCK_SEARCH_LIST_USERS"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "when the request is not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/histories": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "mocks"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_MOCK_HISTORY"
+                }
+              }
+            },
+            "description": ""
+          },
+          "422": {
+            "description": "when the request is not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/{dataId}/users": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "mocks"
+        ],
+        "summary": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_MOCK_LIST_USERS"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "when user has expired token or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "when user has no access for viewing data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mocks/users/page": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "for paging the users",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SIZE"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PAGE"
+          },
+          {
+            "$ref": "#/components/parameters/SORT"
+          },
+          {
+            "$ref": "#/components/parameters/SEARCH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAGING_USERS_RESPONSE"
+                }
+              }
+            },
+            "description": "when user success fully request page"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has no access or using invalid token"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/users/{dataId}/detail": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "for view user detail",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          },
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when user has no access or using invalid token"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_ERROR"
+                }
+              }
+            },
+            "description": "when something bad happen in our backend"
+          }
+        }
+      }
+    },
+    "/mocks/addUser": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/mocks/users/{dataId}/update": {
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/CLIENT_ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/REQUEST_ADD_UPDATE_USER"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/mocks/mocking/{dataId}": {
+      "post": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this your`e mocking entry point",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this your`e mocking entry point",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -1520,855 +747,155 @@
       },
       "delete": {
         "tags": [
-          "Mocks"
+          "mocking"
         ],
+        "summary": "this your`e mocking entry point",
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "id from mongodb collection",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
           }
         ],
-        "summary": "delete by mock id",
-        "operationId": "MockControllers.deleteByMockId",
         "responses": {
           "200": {
-            "description": "response when mock successfully call",
+            "description": "",
             "content": {
               "application/json": {
+                "schema": {
+                  "type": "object"
+                }
               }
-            }
-          }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": "OK"
             }
           }
         }
       },
       "put": {
-        "summary": "update mock by id",
         "tags": [
-          "Mocks"
+          "mocking"
         ],
+        "summary": "this your`e mocking entry point",
         "parameters": [
           {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "description": "id from mongodb collection",
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/mockRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "response when mock successfully call",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/mockResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": "200",
-              "response": {
-                "id": "5e3aa62f11b5dc7e1bfaa1d6",
-                "title": "Test",
-                "description": "yooo",
-                "spec": {
-                  "openapi": "3.0.2",
-                  "info": {
-                    "description": "Mockup server base on openAPI vers 3.xx",
-                    "version": "1",
-                    "title": "Mockup Server | MockyUp",
-                    "termsOfService": "",
-                    "contact": {
-                      "email": "sulaimanfahmi@gmail.com"
-                    }
-                  },
-                  "servers": [
-                    {
-                      "url": "{scheme}://192.10.180{port}",
-                      "variables": {
-                        "scheme": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "https"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        }
-                      }
-                    },
-                    {
-                      "url": "{http}://localhost:{port}{testing_path}",
-                      "description": "Testing locally",
-                      "variables": {
-                        "http": {
-                          "description": "entry point The Data Set API is accessible via https and http",
-                          "enum": [
-                            "http",
-                            "https"
-                          ],
-                          "default": "http"
-                        },
-                        "port": {
-                          "description": "port",
-                          "default": "8080"
-                        },
-                        "testing_path": {
-                          "description": "testing path",
-                          "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                        }
-                      }
-                    }
-                  ],
-                  "tags": [
-                    {
-                      "name": "Mocks",
-                      "description": "Modification mocks example data "
-                    },
-                    {
-                      "name": "Mocks Mocking",
-                      "description": "Request for mocking response",
-                      "externalDocs": {
-                        "description": "follow this guide for mocking the example",
-                        "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                      }
-                    },
-                    {
-                      "name": "Docs",
-                      "description": "show swagger docs"
-                    }
-                  ],
-                  "paths": {
-                    "/": {
-                      "get": {
-                        "tags": [
-                          "Docs"
-                        ],
-                        "summary": "Get swagger documentation",
-                        "operationId": "MockControllers.greeting",
-                        "responses": {
-                          "200": {
-                            "description": "response when successfully get swagger docs",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "x-examples": {
-                          "x-default": {
-                            "property": {},
-                            "response": {
-                              "httpCode": 200,
-                              "response": {
-                                "statusCode": 4004,
-                                "message": "data not found",
-                                "data": {
-                                  "default": "x-response default"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks": {
-                      "post": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "summary": "Storing mocks",
-                        "operationId": "MockControllers.storeMocksEntity",
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully registered",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [],
-                        "summary": "get all mocks",
-                        "operationId": "MockControllers.mocks",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/mockResponse"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "/mocks/{id}": {
-                      "get": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "in": "query",
-                            "name": "spec",
-                            "required": false,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "boolean"
-                            }
-                          }
-                        ],
-                        "summary": "get mock detail",
-                        "operationId": "MockControllers.mockById",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "delete": {
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "summary": "delete by mock id",
-                        "operationId": "MockControllers.deleteByMockId",
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "put": {
-                        "summary": "update mock by id",
-                        "tags": [
-                          "Mocks"
-                        ],
-                        "parameters": [
-                          {
-                            "in": "path",
-                            "name": "id",
-                            "required": true,
-                            "description": "id from mongodb collection",
-                            "schema": {
-                              "type": "string"
-                            }
-                          }
-                        ],
-                        "requestBody": {
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockRequest"
-                              }
-                            }
-                          }
-                        },
-                        "responses": {
-                          "200": {
-                            "description": "response when mock successfully call",
-                            "content": {
-                              "application/json": {
-                                "schema": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "components": {
-                    "schemas": {
-                      "mockRequest": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      },
-                      "mockResponse": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "id from mongodb"
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "you mock title"
-                          },
-                          "description": {
-                            "type": "string",
-                            "description": "your mock description"
-                          },
-                          "spec": {
-                            "type": "object",
-                            "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "type": "object"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/mocks/{id}/spec": {
-      "get": {
+      },
+      "patch": {
         "tags": [
-          "Mocks"
+          "mocking"
         ],
-        "summary": "get spec swagger by mongodbId",
-        "operationId": "getMockSpecById",
+        "summary": "this your`e mocking entry point",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "mongodb ID"
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
           }
         ],
         "responses": {
           "200": {
-            "description": "response when mock successfully call",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/mockResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": {
-                "openapi": "3.0.2",
-                "info": {
-                  "description": "Mockup server base on openAPI vers 3.xx",
-                  "version": "1",
-                  "title": "Mockup Server | MockyUp",
-                  "termsOfService": "",
-                  "contact": {
-                    "email": "sulaimanfahmi@gmail.com"
-                  }
-                },
-                "servers": [
-                  {
-                    "url": "{scheme}://192.10.180{port}",
-                    "variables": {
-                      "scheme": {
-                        "description": "entry point The Data Set API is accessible via https and http",
-                        "enum": [
-                          "http",
-                          "https"
-                        ],
-                        "default": "https"
-                      },
-                      "port": {
-                        "description": "port",
-                        "default": "8080"
-                      }
-                    }
-                  },
-                  {
-                    "url": "{http}://localhost:{port}{testing_path}",
-                    "description": "Testing locally",
-                    "variables": {
-                      "http": {
-                        "description": "entry point The Data Set API is accessible via https and http",
-                        "enum": [
-                          "http",
-                          "https"
-                        ],
-                        "default": "http"
-                      },
-                      "port": {
-                        "description": "port",
-                        "default": "8080"
-                      },
-                      "testing_path": {
-                        "description": "testing path",
-                        "default": "/mocks/mocking/5e29c336121ffb68d3abd7f6?path="
-                      }
-                    }
-                  }
-                ],
-                "tags": [
-                  {
-                    "name": "Mocks",
-                    "description": "Modification mocks example data "
-                  },
-                  {
-                    "name": "Mocks Mocking",
-                    "description": "Request for mocking response",
-                    "externalDocs": {
-                      "description": "follow this guide for mocking the example",
-                      "url": "https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md"
-                    }
-                  },
-                  {
-                    "name": "Docs",
-                    "description": "show swagger docs"
-                  }
-                ],
-                "paths": {
-                  "/": {
-                    "get": {
-                      "tags": [
-                        "Docs"
-                      ],
-                      "summary": "Get swagger documentation",
-                      "operationId": "MockControllers.greeting",
-                      "responses": {
-                        "200": {
-                          "description": "response when successfully get swagger docs",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "x-examples": {
-                        "x-default": {
-                          "property": {},
-                          "response": {
-                            "httpCode": 200,
-                            "response": {
-                              "statusCode": 4004,
-                              "message": "data not found",
-                              "data": {
-                                "default": "x-response default"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "/mocks": {
-                    "post": {
-                      "tags": [
-                        "Mocks"
-                      ],
-                      "summary": "Storing mocks",
-                      "operationId": "MockControllers.storeMocksEntity",
-                      "requestBody": {
-                        "content": {
-                          "application/json": {
-                            "schema": {
-                              "$ref": "#/components/schemas/mockRequest"
-                            }
-                          }
-                        }
-                      },
-                      "responses": {
-                        "200": {
-                          "description": "response when mock successfully registered",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockResponse"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "get": {
-                      "tags": [
-                        "Mocks"
-                      ],
-                      "parameters": [],
-                      "summary": "get all mocks",
-                      "operationId": "MockControllers.mocks",
-                      "responses": {
-                        "200": {
-                          "description": "response when mock successfully call",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/mockResponse"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "/mocks/{id}": {
-                    "get": {
-                      "tags": [
-                        "Mocks"
-                      ],
-                      "parameters": [
-                        {
-                          "in": "path",
-                          "name": "id",
-                          "required": true,
-                          "description": "id from mongodb collection",
-                          "schema": {
-                            "type": "string"
-                          }
-                        },
-                        {
-                          "in": "query",
-                          "name": "spec",
-                          "required": false,
-                          "description": "id from mongodb collection",
-                          "schema": {
-                            "type": "boolean"
-                          }
-                        }
-                      ],
-                      "summary": "get mock detail",
-                      "operationId": "MockControllers.mockById",
-                      "responses": {
-                        "200": {
-                          "description": "response when mock successfully call",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockResponse"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "delete": {
-                      "tags": [
-                        "Mocks"
-                      ],
-                      "parameters": [
-                        {
-                          "in": "path",
-                          "name": "id",
-                          "required": true,
-                          "description": "id from mongodb collection",
-                          "schema": {
-                            "type": "string"
-                          }
-                        }
-                      ],
-                      "summary": "delete by mock id",
-                      "operationId": "MockControllers.deleteByMockId",
-                      "responses": {
-                        "200": {
-                          "description": "response when mock successfully call",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockResponse"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "put": {
-                      "summary": "update mock by id",
-                      "tags": [
-                        "Mocks"
-                      ],
-                      "parameters": [
-                        {
-                          "in": "path",
-                          "name": "id",
-                          "required": true,
-                          "description": "id from mongodb collection",
-                          "schema": {
-                            "type": "string"
-                          }
-                        }
-                      ],
-                      "requestBody": {
-                        "content": {
-                          "application/json": {
-                            "schema": {
-                              "$ref": "#/components/schemas/mockRequest"
-                            }
-                          }
-                        }
-                      },
-                      "responses": {
-                        "200": {
-                          "description": "response when mock successfully call",
-                          "content": {
-                            "application/json": {
-                              "schema": {
-                                "$ref": "#/components/schemas/mockResponse"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "components": {
-                  "schemas": {
-                    "mockRequest": {
-                      "type": "object",
-                      "properties": {
-                        "title": {
-                          "type": "string",
-                          "description": "you mock title"
-                        },
-                        "description": {
-                          "type": "string",
-                          "description": "your mock description"
-                        },
-                        "spec": {
-                          "type": "object",
-                          "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                        }
-                      }
-                    },
-                    "mockResponse": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "description": "id from mongodb"
-                        },
-                        "title": {
-                          "type": "string",
-                          "description": "you mock title"
-                        },
-                        "description": {
-                          "type": "string",
-                          "description": "your mock description"
-                        },
-                        "spec": {
-                          "type": "object",
-                          "description": "you swagger spec here as json must be on openapi version 3.x.x"
-                        }
-                      }
-                    }
-                  }
+                  "type": "object"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/mocks/page": {
-      "get": {
+      },
+      "options": {
         "tags": [
-          "Mocks"
+          "mocking"
         ],
-        "summary": "get paging",
-        "operationId": "MockControllers.getMocksPagination",
+        "summary": "this your`e mocking entry point",
         "parameters": [
           {
-            "name": "q",
-            "in": "query",
-            "required": false,
-            "description": "searching data with value title format (q=title:yourvalue)"
+            "$ref": "#/components/parameters/DATA_ID"
           },
           {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "description": "how much data that want to set"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "description": "your page number"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "required": false,
-            "description": "sorting by value(q=value,yourvalue) available sort (id,desc) and (id,asc)"
+            "$ref": "#/components/parameters/PATH"
           }
         ],
         "responses": {
           "200": {
-            "description": "success response",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "criteria": {
-                      "type": "object"
-                    },
-                    "rows": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/mockResponse"
-                      }
-                    },
-                    "page": {
-                      "type": "integer"
-                    },
-                    "pageCount": {
-                      "type": "integer"
-                    },
-                    "size": {
-                      "type": "integer"
-                    },
-                    "rowCount": {
-                      "type": "integer"
-                    }
-                  }
+                  "type": "object"
                 }
               }
             }
           }
-        },
-        "x-examples": {
-          "x-default": {
-            "property": {},
-            "response": {
-              "httpCode": 200,
-              "response": {
-                "criteria": {
-                  "key": "title",
-                  "criteriaObject": {
-                    "title": ".*fa.*"
-                  }
-                },
-                "rows": [
-                  {
-                    "id": "5e3bd0a1ec3fb37b707453bd",
-                    "title": "Fahmi suasdasdasasdasdasddasdasdlaiman aja",
-                    "description": "yoasdasdoo",
-                    "version": null,
-                    "spec": "{\"openapi\":\"3.0.2\",\"info\":{\"title\":\"Mockup Server | MockyUp\",\"description\":\"Mockup server base on openAPI vers 3.xx\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"},\"version\":\"1\"},\"servers\":[{\"url\":\"http://localhost:{port}\",\"variables\":{\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}/mocks/mocking/{testing_path}?path=\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"default\":\"http\",\"enum\":[\"http\",\"https\"]},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing id path\",\"default\":\"5e3aa62f11b5dc7e1bfaa1d6\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{}}}}}}},\"/mocks\":{\"get\":{\"tags\":[\"Mocks\"],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"parameters\":[],\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":[{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}]}}}}},\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":\"200\",\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}}},\"/mocks/*{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"description\":\"id from mongodb collection\",\"required\":true,\"style\":\"SIMPLE\",\"explode\":false,\"schema\":{\"type\":\"string\"}},{\"name\":\"spec\",\"in\":\"query\",\"description\":\"id from mongodb collection\",\"required\":false,\"style\":\"FORM\",\"explode\":true,\"schema\":{\"type\":\"boolean\"}}],\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"extensions\":{\"x-examples\":{\"x-query-including\":[{\"property\":{\"name\":\"spec\",\"value\":\"true\"},\"response\":{\"httpCode\":200,\"response\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}},{\"property\":{\"name\":\"from\",\"value\":\"1\"},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4300,\"message\":\"qValue success\"}}}],\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}},\"put\":{\"tags\":[\"Mocks\"],\"summary\":\"update mock by id\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"description\":\"id from mongodb collection\",\"required\":true,\"style\":\"SIMPLE\",\"explode\":false,\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":\"200\",\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"description\":\"id from mongodb collection\",\"required\":true,\"style\":\"SIMPLE\",\"explode\":false,\"schema\":{\"type\":\"string\"}}],\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":\"OK\"}}}}}},\"/mocks/*{id}/spec\":{\"get\":{\"summary\":\"get spec swagger by mongodbId\",\"operationId\":\"getMockSpecById\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"description\":\"mongodb ID\",\"required\":true,\"style\":\"SIMPLE\",\"explode\":false}],\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"extensions\":{\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}},\"extensions\":{}}}",
-                    "swagger": "{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"http://localhost:{port}\",\"variables\":{\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}/mocks/mocking/{testing_path}?path=\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing id path\",\"default\":\"5e3aa62f11b5dc7e1bfaa1d6\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":\"200\",\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":[{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}]}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"x-examples\":{\"x-query-including\":[{\"property\":{\"name\":\"spec\",\"value\":\"true\"},\"response\":{\"httpCode\":200,\"response\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}},{\"property\":{\"name\":\"from\",\"value\":\"1\"},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4300,\"message\":\"qValue success\"}}}],\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":\"OK\"}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":\"200\",\"response\":{\"id\":\"5e3aa62f11b5dc7e1bfaa1d6\",\"title\":\"Test\",\"description\":\"yooo\",\"spec\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}},\"/mocks/{id}/spec\":{\"get\":{\"summary\":\"get spec swagger by mongodbId\",\"operationId\":\"getMockSpecById\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"required\":true,\"description\":\"mongodb ID\"}],\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"openapi\":\"3.0.2\",\"info\":{\"description\":\"Mockup server base on openAPI vers 3.xx\",\"version\":\"1\",\"title\":\"Mockup Server | MockyUp\",\"termsOfService\":\"\",\"contact\":{\"email\":\"sulaimanfahmi@gmail.com\"}},\"servers\":[{\"url\":\"{scheme}://192.10.180{port}\",\"variables\":{\"scheme\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"https\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"}}},{\"url\":\"{http}://localhost:{port}{testing_path}\",\"description\":\"Testing locally\",\"variables\":{\"http\":{\"description\":\"entry point The Data Set API is accessible via https and http\",\"enum\":[\"http\",\"https\"],\"default\":\"http\"},\"port\":{\"description\":\"port\",\"default\":\"8080\"},\"testing_path\":{\"description\":\"testing path\",\"default\":\"/mocks/mocking/5e29c336121ffb68d3abd7f6?path=\"}}}],\"tags\":[{\"name\":\"Mocks\",\"description\":\"Modification mocks example data \"},{\"name\":\"Mocks Mocking\",\"description\":\"Request for mocking response\",\"externalDocs\":{\"description\":\"follow this guide for mocking the example\",\"url\":\"https://github.com/dekaulitz/MockyUp/blob/v2.JavaVersion/README.md\"}},{\"name\":\"Docs\",\"description\":\"show swagger docs\"}],\"paths\":{\"/\":{\"get\":{\"tags\":[\"Docs\"],\"summary\":\"Get swagger documentation\",\"operationId\":\"MockControllers.greeting\",\"responses\":{\"200\":{\"description\":\"response when successfully get swagger docs\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"x-examples\":{\"x-default\":{\"property\":{},\"response\":{\"httpCode\":200,\"response\":{\"statusCode\":4004,\"message\":\"data not found\",\"data\":{\"default\":\"x-response default\"}}}}}}},\"/mocks\":{\"post\":{\"tags\":[\"Mocks\"],\"summary\":\"Storing mocks\",\"operationId\":\"MockControllers.storeMocksEntity\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully registered\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[],\"summary\":\"get all mocks\",\"operationId\":\"MockControllers.mocks\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"/mocks/{id}\":{\"get\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}},{\"in\":\"query\",\"name\":\"spec\",\"required\":false,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"boolean\"}}],\"summary\":\"get mock detail\",\"operationId\":\"MockControllers.mockById\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"delete\":{\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"summary\":\"delete by mock id\",\"operationId\":\"MockControllers.deleteByMockId\",\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}},\"put\":{\"summary\":\"update mock by id\",\"tags\":[\"Mocks\"],\"parameters\":[{\"in\":\"path\",\"name\":\"id\",\"required\":true,\"description\":\"id from mongodb collection\",\"schema\":{\"type\":\"string\"}}],\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockRequest\"}}}},\"responses\":{\"200\":{\"description\":\"response when mock successfully call\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/mockResponse\"}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}}}}}}},\"components\":{\"schemas\":{\"mockRequest\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}},\"mockResponse\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"description\":\"id from mongodb\"},\"title\":{\"type\":\"string\",\"description\":\"you mock title\"},\"description\":{\"type\":\"string\",\"description\":\"your mock description\"},\"spec\":{\"type\":\"object\",\"description\":\"you swagger spec here as json must be on openapi version 3.x.x\"}}}}}}"
-                  }
-                ],
-                "page": 1,
-                "pageCount": 6,
-                "size": 1,
-                "rowCount": 6
+        }
+      },
+      "head": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this your`e mocking entry point",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "trace": {
+        "tags": [
+          "mocking"
+        ],
+        "summary": "this your`e mocking entry point",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DATA_ID"
+          },
+          {
+            "$ref": "#/components/parameters/PATH"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
               }
             }
           }
@@ -2378,43 +905,487 @@
   },
   "components": {
     "schemas": {
-      "mockRequest": {
+      "RESPONSE_ERROR": {
         "type": "object",
         "properties": {
-          "title": {
-            "type": "string",
-            "description": "you mock title"
+          "data": {
+            "type": "object"
           },
-          "description": {
-            "type": "string",
-            "description": "your mock description"
+          "extraMessages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
-          "spec": {
-            "type": "object",
-            "description": "you swagger spec here as json must be on openapi version 3.x.x"
+          "requestId": {
+            "type": "string",
+            "description": "this is the unique id for the request"
+          },
+          "response_code": {
+            "type": "string",
+            "enum": [
+              "MOCK010",
+              "MOCK011",
+              "MOCK012",
+              "MOCK014",
+              "MOCK015",
+              "MOCK020",
+              "MOCK021",
+              "MOCK022",
+              "MOCK023",
+              "MOCK024",
+              "MOCK025",
+              "MOCK026",
+              "MOCK027",
+              "MOCK028",
+              "MOCK001",
+              "MOCK002"
+            ]
+          },
+          "response_message": {
+            "type": "string",
+            "description": "this the information of failure"
           }
         }
       },
-      "mockResponse": {
+      "REQUEST_AUTH_LOGIN": {
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "RESPONSE_AUTH_LOGIN": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "description": "id from mongodb"
+            "description": "user id from database"
           },
+          "token": {
+            "type": "string",
+            "description": "this is the token from backend for authorization access and put on header as Authorization = Bearer {token}"
+          },
+          "username": {
+            "type": "string",
+            "description": "username of user"
+          },
+          "accessMenus": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MOCKS_READ",
+                "MOCKS_READ_WRITE",
+                "USERS_READ",
+                "USERS_READ_WRITE"
+              ]
+            },
+            "description": "this the scope of the user"
+          }
+        }
+      },
+      "PAGING_MOCKS_RESPONSE": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "format": "int32",
+            "description": "current page"
+          },
+          "pageCount": {
+            "type": "number",
+            "format": "int32",
+            "description": "total page"
+          },
+          "rowCount": {
+            "type": "number",
+            "format": "int32",
+            "description": "how much data that we got"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "spec": {
+                  "type": "object"
+                },
+                "swagger": {
+                  "type": "object"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "updatedBy": {
+                  "type": "string"
+                },
+                "updatedDate": {
+                  "type": "number",
+                  "format": "int64"
+                },
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {},
+                      "access": {
+                        "type": "string",
+                        "enum": [
+                          "MOCKS_READ",
+                          "MOCKS_READ_WRITE",
+                          "USERS_READ",
+                          "USERS_READ_WRITE"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "size": {
+            "type": "number",
+            "format": "int32",
+            "description": "its how much data that we want to display"
+          }
+        }
+      },
+      "PAGING_USERS_RESPONSE": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "format": "int32",
+            "description": "current page"
+          },
+          "pageCount": {
+            "type": "number",
+            "format": "int32",
+            "description": "total page"
+          },
+          "rowCount": {
+            "type": "number",
+            "format": "int32",
+            "description": "how much data that we got"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "accessList": {
+                  "type": "object"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "user id from database"
+                },
+                "updatedDate": {
+                  "type": "number",
+                  "format": "int64"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "username of user"
+                }
+              }
+            }
+          },
+          "size": {
+            "type": "number",
+            "format": "int32",
+            "description": "its how much data that we want to display"
+          }
+        }
+      },
+      "REQUEST_STORE_NEW_MOCK": {
+        "type": "object",
+        "required": [
+          "title",
+          "description"
+        ],
+        "properties": {
           "title": {
             "type": "string",
-            "description": "you mock title"
+            "description": "youre mocktitle"
           },
           "description": {
             "type": "string",
-            "description": "your mock description"
+            "description": "description for your`e mock"
           },
           "spec": {
             "type": "object",
-            "description": "you swagger spec here as json must be on openapi version 3.x.x"
+            "description": "this you api contract please using openapi v3.x"
           }
         }
+      },
+      "RESPONSE_MOCK": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "dateUpdated": {
+            "type": "number",
+            "format": "int64"
+          },
+          "spec": {
+            "type": "object",
+            "description": "this is your openapi contract"
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            }
+          },
+          "currentAccessUser": {
+            "type": "object",
+            "description": "current access of users",
+            "properties": {
+              "access": {
+                "type": "string",
+                "enum": [
+                  "MOCKS_READ",
+                  "MOCKS_READ_WRITE"
+                ]
+              },
+              "username": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "RESPONSE_MOCK_LIST_USERS": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "mock id"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+            }
+          }
+        }
+      },
+      "RESPONSE_MOCK_SEARCH_LIST_USERS": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/RESPONSE_USER_DETAIL"
+        }
+      },
+      "RESPONSE_MOCK_HISTORY": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "mockId": {
+              "type": "string",
+              "description": "mockId"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "users": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "access": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "swagger": {
+              "type": "string",
+              "description": "this your`e openApi in string raw"
+            },
+            "spec": {
+              "type": "string",
+              "description": "this is your`e openApi object class in string"
+            },
+            "updatedBy": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "userName": {
+                  "type": "string"
+                }
+              }
+            },
+            "updatedDate": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "RESPONSE_USER_DETAIL": {
+        "type": "object",
+        "properties": {
+          "accessList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MOCKS_READ",
+                "MOCKS_READ_WRITE",
+                "USERS_READ",
+                "USERS_READ_WRITE"
+              ]
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "user id from database"
+          },
+          "username": {
+            "type": "string",
+            "description": "username of user"
+          },
+          "updatedDate": {
+            "type": "number",
+            "format": "int64"
+          }
+        }
+      },
+      "REQUEST_ADD_UPDATE_USER": {
+        "type": "object",
+        "properties": {
+          "accessList": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MOCKS_READ",
+                "MOCKS_READ_WRITE",
+                "USERS_READ",
+                "USERS_READ_WRITE"
+              ]
+            }
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "SEARCH_NAME_USER": {
+        "name": "username",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "DATA_ID": {
+        "name": "dataId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "it can be your`e mockId, mockHistoryId, and userId"
+      },
+      "PAGE": {
+        "name": "page",
+        "in": "query",
+        "schema": {
+          "type": "number",
+          "format": "int32"
+        }
+      },
+      "SIZE": {
+        "name": "size",
+        "in": "query",
+        "schema": {
+          "type": "number",
+          "format": "int32"
+        }
+      },
+      "SORT": {
+        "name": "sort",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "for sorting attribute example to use it [field_data]:[desc/asc]",
+        "example": "sort=id:desc"
+      },
+      "SEARCH": {
+        "name": "q",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "for searching data example [field_data]:[your`e_query]",
+        "example": "q=username:root"
+      },
+      "CLIENT_ID": {
+        "name": "client-id",
+        "in": "header",
+        "schema": {
+          "type": "string"
+        },
+        "description": "youre client ",
+        "example": "mockup-frontend"
+      },
+      "PATH": {
+        "name": "path",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "this your mocking endpoint"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

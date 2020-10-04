@@ -1,5 +1,8 @@
 package com.github.dekaulitz.mockyup.db.repositories.paging;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +11,17 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  * for paging the collection
  *
  * @param <T>
  */
 public abstract class AbstractPage<T> implements BasePage<T>, Serializable {
+
     @Getter
+    @JsonIgnore
     private final Query query = new Query();
+    @JsonIgnore
     private final Query count = new Query();
     @Setter
     @Getter
@@ -37,6 +40,7 @@ public abstract class AbstractPage<T> implements BasePage<T>, Serializable {
     protected long rowCount;
     @Setter
     @Getter
+    @JsonIgnore
     private Criteria criteria;
     private MongoTemplate mongoTemplate;
     private Pageable pageable;

@@ -10,15 +10,15 @@ import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ResponseVmodel
 import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
+import java.util.ArrayList;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * this is the base controller for handling response mock and error response
@@ -88,7 +88,8 @@ public class BaseController {
      */
     public ResponseEntity<Object> responseHandling(ErrorVmodel errorVmodel, HttpServletRequest request) {
         return ResponseEntity.status(errorVmodel.getHttpCode()).body(
-                ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
+            ResponseVmodel.builder().responseMessage(errorVmodel.getErrorMessage())
+                .extraMessages(new ArrayList<>())
                         .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
                         .responseCode(errorVmodel.getErrorCode()).build());
     }

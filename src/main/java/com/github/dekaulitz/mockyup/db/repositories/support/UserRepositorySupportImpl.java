@@ -2,14 +2,13 @@ package com.github.dekaulitz.mockyup.db.repositories.support;
 
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import java.util.List;
 
 public class UserRepositorySupportImpl implements UserRepositorySupport {
     @Autowired
@@ -49,8 +48,8 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
     public List<UserEntities> getUserListByUserName(String username, String excludeUserId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").regex(".*" + username + ".*", "i"))
-                .addCriteria(Criteria.where("id").ne(new ObjectId(excludeUserId))).limit(25);
-        query.fields().include("id").include("username");
+            .addCriteria(Criteria.where("id").ne(new ObjectId(excludeUserId))).limit(25);
+        query.fields().include("id").include("username").include("accessList");
         return this.mongoTemplate.find(query, UserEntities.class);
     }
 }
