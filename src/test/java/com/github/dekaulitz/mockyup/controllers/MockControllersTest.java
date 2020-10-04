@@ -545,14 +545,13 @@ class MockControllersTest extends BaseTest {
 
   }
 
-
   void getMocksMockingIdPathBooksQuery() throws IOException {
     MockEntities mockEntities = Helper.getMockEntities();
     when(this.mockRepository.findById(any()))
         .thenReturn(java.util.Optional.ofNullable(mockEntities));
     HttpHeaders headers = new HttpHeaders();
     headers.set("client-id", "");
-    headers.set("accept", "");
+    headers.set("accept", "application/json");
     HttpEntity<HttpHeaders> headersHttpEntity2 = new HttpEntity<>(headers);
 
     //test mock response from query but some header was missing
@@ -570,7 +569,7 @@ class MockControllersTest extends BaseTest {
         .thenReturn(java.util.Optional.ofNullable(mockEntities));
     headers = new HttpHeaders();
     headers.set("client-id", "asd");
-    headers.set("accept", "");
+    headers.set("accept", "application/json");
     HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
 
     //test mock response from query=
@@ -609,7 +608,7 @@ class MockControllersTest extends BaseTest {
             HttpMethod.GET, headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 200, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -619,7 +618,7 @@ class MockControllersTest extends BaseTest {
             HttpMethod.GET, headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 200, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -629,7 +628,7 @@ class MockControllersTest extends BaseTest {
             headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 200, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -655,7 +654,7 @@ class MockControllersTest extends BaseTest {
             headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 200, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -680,7 +679,7 @@ class MockControllersTest extends BaseTest {
     MockEntities mockEntities = Helper.getMockEntities();
     when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.of(mockEntities));
     HttpHeaders headers = new HttpHeaders();
-    headers.set("accept", "");
+    headers.set("accept", "application/json");
     HttpEntity<String> headersHttpEntity = new HttpEntity<>(payload, headers);
     //test mock response default
     ResponseEntity<String> responseEntity = this.restTemplate
@@ -717,7 +716,7 @@ class MockControllersTest extends BaseTest {
             String.class);
     isTrue(responseEntity.getStatusCodeValue() == 500, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
   }
@@ -728,7 +727,7 @@ class MockControllersTest extends BaseTest {
     when(this.mockRepository.findById(any())).thenReturn(java.util.Optional.of(mockEntities));
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("accept", "");
+    headers.set("accept", "application/json");
     HttpEntity<HttpHeaders> headersHttpEntity = new HttpEntity<>(headers);
     //test mock response from BOOK_ID=10
     ResponseEntity<String> responseEntity = this.restTemplate
@@ -746,7 +745,7 @@ class MockControllersTest extends BaseTest {
             String.class);
     isTrue(responseEntity.getStatusCodeValue() == 500, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -756,7 +755,7 @@ class MockControllersTest extends BaseTest {
             String.class);
     isTrue(responseEntity.getStatusCodeValue() == 500, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -782,7 +781,7 @@ class MockControllersTest extends BaseTest {
             String.class);
     isTrue(responseEntity.getStatusCodeValue() == 403, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
     isTrue(responseEntity.getHeaders().get(Helper.DEFAULT_HEADER_NAME).get(0)
@@ -796,7 +795,7 @@ class MockControllersTest extends BaseTest {
             String.class);
     isTrue(responseEntity.getStatusCodeValue() == 401, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
     isTrue(responseEntity.getHeaders().get(Helper.DEFAULT_HEADER_NAME).get(0)
@@ -811,7 +810,7 @@ class MockControllersTest extends BaseTest {
 
     String payload3 = "{}";
     HttpHeaders headers = new HttpHeaders();
-    headers.set("accept", "");
+    headers.set("accept", "application/json");
     HttpEntity<String> headersHttpEntity2 = new HttpEntity<>(payload3, headers);
     //test mock response from BOOK_ID=10
     ResponseEntity<String> responseEntity2 = this.restTemplate
@@ -854,7 +853,7 @@ class MockControllersTest extends BaseTest {
             HttpMethod.PUT, headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 200, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -884,7 +883,7 @@ class MockControllersTest extends BaseTest {
             headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 403, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -894,7 +893,7 @@ class MockControllersTest extends BaseTest {
             headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 403, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
 
@@ -922,7 +921,7 @@ class MockControllersTest extends BaseTest {
             headersHttpEntity, String.class);
     isTrue(responseEntity.getStatusCodeValue() == 201, "http code is not expected");
     if (responseEntity.getBody() != null) {
-      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_RESPONSE_MOCK),
+      isTrue(responseEntity.getBody().equals(Helper.DEFAULT_COMPONENT_EXAMPLE),
           "response is not expected");
     }
   }

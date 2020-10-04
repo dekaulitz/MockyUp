@@ -44,6 +44,8 @@ We adding new extension for set mock configuration. They are:
 * x-path-including, it will matching the path parameter request
 * x-default, if you defined the x-default if above criterias does'nt matched it will rendering the response by default response.
 
+Since we are supporting multiple media type please make sure **you are using the correct accept header**. If you are not using the correct value for media type negotiation it can be causing some conflict from response. 
+
 ### x-query-including,x-header-including,x-body-including and x-path-including configurations
 ```
          [{
