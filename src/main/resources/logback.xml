@@ -12,6 +12,8 @@
       </Pattern>
     </layout>
   </appender>
+  <!--    log file -->
+  <property name="LOGS" value="./logs"/>
   <!-- Stop output INFO at start -->
   <appender class="ch.qos.logback.core.rolling.RollingFileAppender"
     name="RollingFile">
@@ -38,8 +40,6 @@
     <appender-ref ref="RollingFile"/>
     <appender-ref ref="Console"/>
   </logger>
-  <!--    log file -->
-  <property name="LOGS" value="./logs"/>
 
   <!-- LOG everything at INFO level -->
   <root level="info">
