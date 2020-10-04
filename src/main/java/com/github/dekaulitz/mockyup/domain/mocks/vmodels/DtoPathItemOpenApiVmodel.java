@@ -13,8 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class DtoPathItemOpenApiVmodel {
-    private PathItem pathItem;
-    private String[] openAPIPaths;
-    private String[] paths;
-    private Components components;
+
+  private PathItem pathItem;
+  private String[] openAPIPaths;
+  private String[] paths;
+  private Components components;
 }

@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 class JsonMapperTest {
 
-    @Test
-    void mapper() {
-    }
+  @Test
+  void mapper() {
+  }
 
-    @Test
-    void pretty() {
-    }
+  @Test
+  void pretty() {
+  }
 }

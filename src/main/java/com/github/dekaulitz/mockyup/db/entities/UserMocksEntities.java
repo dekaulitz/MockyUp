@@ -1,9 +1,12 @@
 package com.github.dekaulitz.mockyup.db.entities;
 
-import lombok.*;
-import org.springframework.data.mongodb.core.index.Indexed;
-
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 @Builder
 @AllArgsConstructor
@@ -11,7 +14,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class UserMocksEntities implements Serializable {
-    @Indexed
-    private String userId;
-    private String access;
+
+  @Indexed
+  private String userId;
+  private String access;
 }

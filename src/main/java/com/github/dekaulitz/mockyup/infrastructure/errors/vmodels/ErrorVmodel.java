@@ -11,7 +11,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 public class ErrorVmodel {
-    private HttpStatus httpCode;
-    private String errorCode;
-    private String errorMessage;
+
+  private HttpStatus httpCode;
+  private String errorCode;
+  private String errorMessage;
 }
