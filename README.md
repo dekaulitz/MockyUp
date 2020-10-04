@@ -140,6 +140,10 @@ Before that you should add new server env on youre spec.
      ]
 ```
 You can check the example configuration spec from <a href="https://raw.githubusercontent.com/dekaulitz/MockyUp/master/src/main/resources/public/example_mocking_books.json">here</a> 
+
+### Troubleshoot 
+1. If you are facing unexpected response result please make sure **you are using expected accept header**
+
 ## Supported
 <a href="https://www.jetbrains.com/?from=MockyUp"><img src="https://github.com/dekaulitz/MockyUp/blob/master/src/main/resources/public/jetbrains-variant-2.png" height="100"/></a>
 

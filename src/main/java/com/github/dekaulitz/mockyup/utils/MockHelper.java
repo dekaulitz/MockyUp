@@ -318,30 +318,34 @@ public class MockHelper {
    */
   private static void getComponentExample(MockHelper mockHelper, Components components)
       throws InvalidMockException {
+    //get content from response property
     Map<String, Map<String, Object>> content = mockHelper.getResponseProperty().getContent();
-    if (content != null && mockHelper.getResponseProperty().getMediaType() != null) {
+    if (content != null) {
       Map<String, Object> contentMap = content.get(mockHelper.getResponseProperty().getMediaType());
       if (contentMap != null) {
-        if (!mockHelper.getResponseProperty().getMediaType().isEmpty()) {
-          if (contentMap.get(COMPONENT_REFERENCE) != null) {
-            renderingResponse(mockHelper,
-                (String) content.get(mockHelper.getResponseProperty().getMediaType())
-                    .get(COMPONENT_REFERENCE), components);
-          } else if (
-              contentMap.get("response") != null) {
-            mockHelper.getResponseProperty().setResponse(
-                content.get(mockHelper.getResponseProperty().getMediaType())
-                    .get("response"));
-          }
+        if (contentMap.get(COMPONENT_REFERENCE) != null) {
+          renderingResponse(mockHelper,
+              (String) content.get(mockHelper.getResponseProperty().getMediaType())
+                  .get(COMPONENT_REFERENCE), components);
+        } else if (
+            contentMap.get(RESPONSE) != null) {
+          mockHelper.getResponseProperty().setResponse(
+              content.get(mockHelper.getResponseProperty().getMediaType())
+                  .get(RESPONSE));
         }
+      } else {
+        throw new InvalidMockException(ResponseCode.INVALID_MOCK_REF);
       }
-    } else
+    } else {
       //check if reff is defined
       if (mockHelper.getResponseProperty().get$ref() != null) {
         //get the name component
         renderingResponse(mockHelper, (String) mockHelper.getResponseProperty().get$ref(),
             components);
+      } else if (mockHelper.getResponseProperty().getResponse() == null) {
+        throw new InvalidMockException(ResponseCode.INVALID_MOCK_REF);
       }
+    }
   }
 
   public static void renderingResponse(MockHelper mockHelper, String reff, Components components)
