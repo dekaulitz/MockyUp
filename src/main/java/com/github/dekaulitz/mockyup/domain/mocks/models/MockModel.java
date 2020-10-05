@@ -16,10 +16,10 @@ import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupHistoryVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
@@ -75,7 +75,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
     //check access permission base on users with auth profile
     AtomicReference<Boolean> hasAccessToSee = new AtomicReference<>(false);
     mockEntities.get().getUsers().forEach(userMocksEntities -> {
-      if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())) {
+      if (userMocksEntities.getUserId().equals(authenticationProfileModel.getId())) {
         hasAccessToSee.set(true);
       }
     });
@@ -99,7 +99,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
       //parsing view and authenticationProfileModel into mockentities
       this.setSaveMockEntity(view, mockEntities, authenticationProfileModel);
       mockEntities
-          .setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id())
+          .setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.getId())
               .username(authenticationProfileModel.getUsername()).build());
       mockEntities.setUpdatedDate(new Date());
       return this.mockRepository.save(mockEntities);
@@ -132,7 +132,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
     this.saveMockToHistory(mockEntities.get());
     this.setUpdateMockEntity(view, mockEntities.get());
     mockEntities.get()
-        .setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.get_id())
+        .setUpdatedBy(MockCreatorEntities.builder().userId(authenticationProfileModel.getId())
             .username(authenticationProfileModel.getUsername()).build());
     mockEntities.get().setUpdatedDate(new Date());
     mockRepository.save(mockEntities.get());
@@ -313,7 +313,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
       AuthenticationProfileModel authenticationProfileModel) throws NotFoundException {
     //check access permission user on mock
     MockEntities mockEntitiesList = this.mockRepository
-        .checkMockUserAccessPermission(id, authenticationProfileModel.get_id());
+        .checkMockUserAccessPermission(id, authenticationProfileModel.getId());
     if (mockEntitiesList == null) {
       throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
     }
@@ -354,7 +354,7 @@ public class MockModel extends BaseMockModel implements MockInterface {
   private void checkAccessModification(MockEntities mockEntities,
       AuthenticationProfileModel authenticationProfileModel) {
     mockEntities.getUsers().forEach(userMocksEntities -> {
-      if (userMocksEntities.getUserId().equals(authenticationProfileModel.get_id())
+      if (userMocksEntities.getUserId().equals(authenticationProfileModel.getId())
           && !userMocksEntities.getAccess().equals(Role.MOCKS_READ_WRITE.name())) {
         throw new UnathorizedAccess(ResponseCode.INVALID_ACCESS_PERMISSION);
       }

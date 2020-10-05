@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration.security;
+package com.github.dekaulitz.mockyup.infrastructure.security;
 
 import java.util.Collection;
 import lombok.Getter;

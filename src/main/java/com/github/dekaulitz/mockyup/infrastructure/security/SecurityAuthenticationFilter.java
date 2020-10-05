@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration.security;
+package com.github.dekaulitz.mockyup.infrastructure.security;
 
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;

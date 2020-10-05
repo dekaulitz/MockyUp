@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration.log;
+package com.github.dekaulitz.mockyup.infrastructure.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;

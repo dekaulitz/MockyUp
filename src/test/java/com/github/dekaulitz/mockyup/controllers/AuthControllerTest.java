@@ -10,7 +10,6 @@ import com.github.dekaulitz.mockyup.domain.auth.vmodels.DtoAuthProfileVmodel;
 import com.github.dekaulitz.mockyup.helperTest.Helper;
 import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ResponseVmodel;
 import com.github.dekaulitz.mockyup.utils.Hash;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
 import java.io.UnsupportedEncodingException;
@@ -92,7 +91,7 @@ class AuthControllerTest extends BaseTest {
             .password(Hash.hashing(givenPassword))
             .accessList(givenAccesses)
             .build()));
-    String token = JwtManager.generateToken(givenId);
+    String token = Helper.generateToken(givenId, 1000, 1000);
 
     //when user do refresh with valid token
     HttpHeaders headers = new HttpHeaders();

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.db.entities.MockEntities;
 import com.github.dekaulitz.mockyup.db.entities.UserMocksEntities;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.MockVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
@@ -41,7 +41,7 @@ public class BaseMockModel {
       parsingSpecToOpenApi(body, mockEntities);
       List<UserMocksEntities> users = new ArrayList<>();
       UserMocksEntities creator = new UserMocksEntities();
-      creator.setUserId(authenticationProfileModel.get_id());
+      creator.setUserId(authenticationProfileModel.getId());
       creator.setAccess(Role.MOCKS_READ_WRITE.name());
       users.add(creator);
       if (body.getUsers() != null) {

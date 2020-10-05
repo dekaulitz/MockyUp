@@ -6,9 +6,9 @@ import com.github.dekaulitz.mockyup.db.repositories.paging.UserEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.users.base.UserInterface;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import java.util.Date;
@@ -85,7 +85,7 @@ public class UserModel implements UserInterface {
   @Override
   public List<UserEntities> listUsers(String username,
       AuthenticationProfileModel authenticationProfileModel) {
-    return this.userRepository.getUserListByUserName(username, authenticationProfileModel.get_id());
+    return this.userRepository.getUserListByUserName(username, authenticationProfileModel.getId());
   }
 
   /**
