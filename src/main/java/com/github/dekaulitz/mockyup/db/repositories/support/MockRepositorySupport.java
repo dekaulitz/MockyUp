@@ -7,8 +7,8 @@ import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

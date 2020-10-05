@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration.filters;
+package com.github.dekaulitz.mockyup.infrastructure.filters;
 
-import com.github.dekaulitz.mockyup.infrastructure.configuration.log.LogsMapper;
+import com.github.dekaulitz.mockyup.infrastructure.log.LogsMapper;
 import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import java.util.Enumeration;
 import java.util.HashMap;

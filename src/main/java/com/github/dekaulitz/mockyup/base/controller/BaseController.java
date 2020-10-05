@@ -1,12 +1,12 @@
 package com.github.dekaulitz.mockyup.base.controller;
 
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.InvalidMockException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ErrorVmodel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.vmodels.ResponseVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.utils.MockHelper;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;

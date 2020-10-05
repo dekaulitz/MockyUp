@@ -12,8 +12,8 @@ import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
 import com.github.dekaulitz.mockyup.helperTest.Helper;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.mongodb.client.result.UpdateResult;
@@ -65,7 +65,7 @@ class MockRepositorySupportImplTest {
     mockRepository.save(mockEntities);
 
     AuthenticationProfileModel authenticationProfileModel = new AuthenticationProfileModel();
-    authenticationProfileModel.set_id(userEntities.getId());
+    authenticationProfileModel.setId(userEntities.getId());
     authenticationProfileModel.setUsername(userEntities.getUsername());
     List<DtoMockupDetailVmodel> detailMockUserAccess = mockRepository
         .getMockDetailWithCurrentAccess(mockEntities.getId(),
@@ -141,7 +141,7 @@ class MockRepositorySupportImplTest {
     mockRepository.save(thirdData);
 
     AuthenticationProfileModel authenticationProfileModel = new AuthenticationProfileModel();
-    authenticationProfileModel.set_id(userhasAccess.getId());
+    authenticationProfileModel.setId(userhasAccess.getId());
     PageRequest pageRequest = PageRequest.of(0, 10);
     MockEntitiesPage mockEntitiesPage = mockRepository
         .paging(pageRequest, "title:a", authenticationProfileModel);

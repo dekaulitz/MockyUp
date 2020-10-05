@@ -3,7 +3,6 @@ package com.github.dekaulitz.mockyup.controllers;
 import com.github.dekaulitz.mockyup.base.controller.BaseController;
 import com.github.dekaulitz.mockyup.domain.auth.base.AuthInterface;
 import com.github.dekaulitz.mockyup.domain.auth.vmodels.DoAuthVmodel;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +49,7 @@ public class AuthController extends BaseController {
   public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
     try {
       String headerAuth = request.getHeader("Authorization");
-      String authorization = JwtManager.getAuthorizationHeader(headerAuth);
-      return ResponseEntity.ok(this.authInterfaceModel.refreshingToken(authorization));
+      return ResponseEntity.ok(this.authInterfaceModel.refreshingToken(headerAuth));
     } catch (Exception e) {
       return this.handlingErrorResponse(e, request);
     }

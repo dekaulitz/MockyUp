@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration;
+package com.github.dekaulitz.mockyup.infrastructure;
 
 import java.time.Duration;
 import org.springframework.context.annotation.Configuration;

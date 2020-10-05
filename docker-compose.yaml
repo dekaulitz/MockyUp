@@ -11,6 +11,9 @@ services:
       - SERVER_PORT=8080
       - WEB_LOG_LEVEL=debug
       - LOG_LEVEL=info
+      - SECRET=RDTF67TY98U091PIO2KLEWDS.ASDY7891023SDhvbjnoijopk123.123213ctyfguiojmsad
+      - REFRESH_TIME=7000
+      - EXPIRED_TIME=8000
     ports:
       - "8080:8080"
     depends_on:

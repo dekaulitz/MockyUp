@@ -9,8 +9,8 @@ import com.github.dekaulitz.mockyup.db.repositories.paging.MockEntitiesPage;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockUserLookupVmodel;
 import com.github.dekaulitz.mockyup.domain.mocks.vmodels.DtoMockupDetailVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.AddUserAccessVmodel;
-import com.github.dekaulitz.mockyup.infrastructure.configuration.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.NotFoundException;
+import com.github.dekaulitz.mockyup.infrastructure.security.AuthenticationProfileModel;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.mongodb.client.result.UpdateResult;
@@ -74,7 +74,7 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         Aggregation.unwind("currentAccessUser"),
         //finding currentAccessUser base on  user login
         Aggregation.match(Criteria.where("currentAccessUser._id")
-            .is(new ObjectId(authenticationProfileModel.get_id()))),
+            .is(new ObjectId(authenticationProfileModel.getId()))),
         //set up project property
         aggregationOperationContext -> new Document("$project",
             new Document("users._id", "$userDetails._id")
@@ -161,7 +161,7 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
         .include("users").include("updatedDate");
     //add additional criteria or custom criteria
     basePage.addAdditionalCriteria(Criteria.where("users")
-        .elemMatch(Criteria.where("userId").is(authenticationProfileModel.get_id())));
+        .elemMatch(Criteria.where("userId").is(authenticationProfileModel.getId())));
     basePage.setPageable(pageable).build(MockEntities.class);
     return basePage;
   }

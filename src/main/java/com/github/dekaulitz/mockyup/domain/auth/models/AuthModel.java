@@ -4,9 +4,9 @@ import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.domain.auth.base.AuthInterface;
 import com.github.dekaulitz.mockyup.domain.auth.vmodels.DtoAuthProfileVmodel;
+import com.github.dekaulitz.mockyup.infrastructure.auth.JwtManager;
 import com.github.dekaulitz.mockyup.infrastructure.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.utils.Hash;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.ResponseCode;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
@@ -18,9 +18,13 @@ public class AuthModel implements AuthInterface {
 
   @Autowired
   private final UserRepository userRepository;
+  @Autowired
+  private final JwtManager jwtManager;
 
-  public AuthModel(UserRepository userRepository) {
+  public AuthModel(UserRepository userRepository,
+      JwtManager jwtManager) {
     this.userRepository = userRepository;
+    this.jwtManager = jwtManager;
   }
 
   /**
@@ -45,15 +49,16 @@ public class AuthModel implements AuthInterface {
   }
 
   /**
-   * @param token current access token that expired
+   * @param authHeader current access token that expired
    * @return DtoAuthProfileVmodel  auth profile data
    * @throws UnathorizedAccess            when user id or not found or token not valid
    * @throws UnsupportedEncodingException when something bad happen when generate token
    */
   @Override
-  public DtoAuthProfileVmodel refreshingToken(String token)
+  public DtoAuthProfileVmodel refreshingToken(String authHeader)
       throws UnathorizedAccess, UnsupportedEncodingException {
-    Optional<String> userId = JwtManager.getUserIdFromToken(token);
+    String token = jwtManager.getAuthorizationHeader(authHeader);
+    Optional<String> userId = jwtManager.getUserIdFromToken(token);
     if (!userId.isPresent()) {
       throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
     }
@@ -70,7 +75,7 @@ public class AuthModel implements AuthInterface {
     auth.setId(userEntities.getId());
     auth.setAccessMenus(userEntities.getAccessList());
     auth.setUsername(userEntities.getUsername());
-    auth.setToken(JwtManager.generateToken(userEntities.getId()));
+    auth.setToken(jwtManager.generateToken(userEntities.getId()).getAccessToken());
     return auth;
   }
 
