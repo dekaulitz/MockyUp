@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.dekaulitz.mockyup.db.entities.UserEntities;
 import com.github.dekaulitz.mockyup.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.infrastructure.auth.JwtManager;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.Role;
 import java.util.ArrayList;
@@ -16,11 +17,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc()
+@ActiveProfiles("test")
 public abstract class BaseTest {
 
   protected final String MEDIA_TYPE_ACCEPT = "accept";
@@ -37,6 +40,9 @@ public abstract class BaseTest {
   protected String baseUrl;
   @Autowired
   protected TestRestTemplate restTemplate;
+
+  @Autowired
+  protected JwtManager jwtManager;
 
   @Autowired
   protected MockMvc mockMvc;

@@ -250,7 +250,7 @@ public class MockControllers extends BaseController {
       body.setSpec(Json.mapper().readTree(mock.getSwagger()));
       body.setDateUpdated(mock.getUpdatedDate());
       body.setUpdatedBy(
-          CreatorMockVmodel.builder().userId(this.getAuthenticationProfileModel().get_id())
+          CreatorMockVmodel.builder().userId(this.getAuthenticationProfileModel().getId())
               .username(this.getAuthenticationProfileModel().getUsername()).build());
 
       return ResponseEntity.ok(body);

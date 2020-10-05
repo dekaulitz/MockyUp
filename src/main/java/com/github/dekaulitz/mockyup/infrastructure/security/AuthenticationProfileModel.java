@@ -1,8 +1,9 @@
-package com.github.dekaulitz.mockyup.infrastructure.configuration.security;
+package com.github.dekaulitz.mockyup.infrastructure.security;
 
 
 import java.util.Collection;
 import java.util.List;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,11 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 public class AuthenticationProfileModel implements UserDetails {
 
-  private String _id;
+  private String id;
   @Setter
   private String username;
   @Setter
   private List<GrantedAuthority> grantedAuthorities;
+  @Setter
+  @Getter
+  private String accessToken;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -52,11 +56,11 @@ public class AuthenticationProfileModel implements UserDetails {
     return true;
   }
 
-  public String get_id() {
-    return _id;
+  public String getId() {
+    return id;
   }
 
-  public void set_id(String _id) {
-    this._id = _id;
+  public void setId(String id) {
+    this.id = id;
   }
 }

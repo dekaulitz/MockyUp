@@ -23,7 +23,6 @@ import com.github.dekaulitz.mockyup.domain.users.vmodels.RegistrationVmodel;
 import com.github.dekaulitz.mockyup.domain.users.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.utils.Hash;
 import com.github.dekaulitz.mockyup.utils.JsonMapper;
-import com.github.dekaulitz.mockyup.utils.JwtManager;
 import com.github.dekaulitz.mockyup.utils.Role;
 import com.github.dekaulitz.mockyup.utils.XmlMapper;
 import io.swagger.parser.OpenAPIParser;
@@ -52,20 +51,24 @@ public class Helper {
   public static final String DEFAULT_COMPONENT_EXAMPLE = "DEFAULT_COMPONENT_EXAMPLE";
   public static final String DEFAULT_HEADER_VALUE = "this is from mocks";
   public static final String DEFAULT_HEADER_NAME = "x-request-id";
+  public static final String CAN_DO_REFRESH = "canRefresh";
+  public static final String EXPIRED_AT = "expiredAt";
+  public static final long ONE_MINUTE_IN_MILLIS = 600000;//millisecs
+  public static final String SECRET = "something";
   private static final String DEFAULT_USER_ID = "x";
   public static OpenAPI openAPI;
 
   public static String generateToken(String userId, int refreshExp, int expiredAt)
       throws UnsupportedEncodingException {
-    Algorithm algorithm = Algorithm.HMAC256(JwtManager.SECCRET);
+    Algorithm algorithm = Algorithm.HMAC256(SECRET);
     Calendar date = Calendar.getInstance();
     long t = date.getTimeInMillis();
     return JWT.create()
         .withClaim("id", userId)
-        .withClaim(JwtManager.CAN_DO_REFRESH,
-            new Date(t + (refreshExp * JwtManager.ONE_MINUTE_IN_MILLIS)))
-        .withClaim(JwtManager.EXPIRED_AT,
-            new Date(t + (expiredAt + JwtManager.ONE_MINUTE_IN_MILLIS)))
+        .withClaim(CAN_DO_REFRESH,
+            new Date(t + (refreshExp * ONE_MINUTE_IN_MILLIS)))
+        .withClaim(EXPIRED_AT,
+            new Date(t + (expiredAt + ONE_MINUTE_IN_MILLIS)))
         .withIssuedAt(new Date()).sign(algorithm);
   }
 
@@ -75,21 +78,21 @@ public class Helper {
     Calendar date = Calendar.getInstance();
     long t = date.getTimeInMillis();
     return JWT.create()
-        .withClaim(JwtManager.CAN_DO_REFRESH,
-            new Date(t + (refreshExp * JwtManager.ONE_MINUTE_IN_MILLIS)))
-        .withClaim(JwtManager.EXPIRED_AT,
-            new Date(t + (expiredAt + JwtManager.ONE_MINUTE_IN_MILLIS)))
+        .withClaim(CAN_DO_REFRESH,
+            new Date(t + (refreshExp * ONE_MINUTE_IN_MILLIS)))
+        .withClaim(EXPIRED_AT,
+            new Date(t + (expiredAt + ONE_MINUTE_IN_MILLIS)))
         .withIssuedAt(new Date()).sign(algorithm);
   }
 
   public static String generateExpiredToken(String givenId) throws UnsupportedEncodingException {
-    Algorithm algorithm = Algorithm.HMAC256(JwtManager.SECCRET);
+    Algorithm algorithm = Algorithm.HMAC256(SECRET);
     Calendar date = Calendar.getInstance();
     long t = date.getTimeInMillis();
     return JWT.create()
         .withClaim("id", givenId)
-        .withClaim(JwtManager.CAN_DO_REFRESH, new Date())
-        .withClaim(JwtManager.EXPIRED_AT, new Date())
+        .withClaim(CAN_DO_REFRESH, new Date())
+        .withClaim(EXPIRED_AT, new Date())
         .withIssuedAt(new Date()).sign(algorithm);
   }
 
