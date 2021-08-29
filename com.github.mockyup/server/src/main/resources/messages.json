@@ -1,0 +1,14 @@
+{
+  "INVALID_USERLOGIN": [
+    {
+      "lang": "ID",
+      "message": "Invalid username and password",
+      "description": "Invalid username and password"
+    },
+    {
+      "lang": "EN",
+      "message": "Invalid username and password",
+      "description": "Invalid username and password"
+    }
+  ]
+}
