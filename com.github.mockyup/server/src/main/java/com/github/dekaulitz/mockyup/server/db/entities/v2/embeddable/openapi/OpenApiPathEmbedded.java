@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathResponse;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathResponseEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class OpenApiPathEmbedded implements Serializable {
 
   private String path;
   private OpenApiPathHttpMethod httpMethod;
-  private List<OpenApiPathResponse> responses = new ArrayList<>();
+  private List<OpenApiPathResponseEmbedded> responses = new ArrayList<>();
   private List<String> tags = new ArrayList<>();
   private String summary;
   private String description;
@@ -31,13 +31,5 @@ public class OpenApiPathEmbedded implements Serializable {
   private Map<String, Object> extensions = new HashMap<>();
   private String operationId;
 
-//  private List<Parameter> parameters ;
-//  private RequestBody requestBody ;
-//  private ApiResponses responses ;
-//  private Map<String, Callback> callbacks ;
-//  private Boolean deprecated ;
-//  private List<SecurityRequirement> security ;
-//  private List<Server> servers ;
 
-//  private OpenApiPathOperationEmbedded operation;
 }

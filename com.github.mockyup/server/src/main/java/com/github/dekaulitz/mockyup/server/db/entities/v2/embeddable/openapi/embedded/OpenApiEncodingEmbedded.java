@@ -18,7 +18,7 @@ import lombok.Setter;
 public class OpenApiEncodingEmbedded implements Serializable {
 
   private String contentType;
-  private Map<String, OpenApiHeaderEmbedded> headers;
+  private Map<String, OpenApiHeaderEmbedded> headers = new HashMap<>();
   private OpenApiEncodingType style;
   private Boolean explode;
   private Boolean allowReserved;

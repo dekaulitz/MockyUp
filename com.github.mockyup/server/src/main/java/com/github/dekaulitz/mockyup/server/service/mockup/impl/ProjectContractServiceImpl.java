@@ -119,10 +119,11 @@ public class ProjectContractServiceImpl implements ProjectContractService {
       projectContractEntities
           .setComponents(OpenApiTransformerHelper.getOpenApiComponents(openApi.getComponents()));
       projectContractEntities
-          .setPaths(OpenApiTransformerHelper.getOpenApiPaths(openApi.getPaths()));
+          .setPaths(OpenApiTransformerHelper.initOpenApiPath(openApi.getPaths()));
       return mongoTemplate
           .insert(projectContractEntities);
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("invalid mock structure ex:{} request:{}", e, createProjectContractRequest);
       throw new ServiceException(MessageHelper.getMessage(MessageType.INVALID_MOCK_CONTRACT),
           e.getMessage());

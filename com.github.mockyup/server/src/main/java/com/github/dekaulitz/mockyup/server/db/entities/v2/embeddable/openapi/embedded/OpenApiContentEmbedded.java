@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
-import io.swagger.v3.oas.models.media.Schema;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas.BaseSchema;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import lombok.Setter;
 public class OpenApiContentEmbedded implements Serializable {
 
   private OpenApiContentType contentType;
-  private Schema schema;
+  private BaseSchema schema;
   private Map<String, OpenApiExampleEmbedded> examples = new HashMap<>();
   private Object example;
   private Map<String, OpenApiEncodingEmbedded> encoding = new HashMap<>();

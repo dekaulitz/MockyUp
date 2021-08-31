@@ -21,10 +21,10 @@ public class OpenApiCommonHelper {
    */
   protected static Map<String, OpenApiHeaderEmbedded> initOpenApiComponentHeaders(
       Map<String, Header> headers) {
-    Map<String, OpenApiHeaderEmbedded> openApiHeaderEmbeddedMap = new HashMap<>();
     if (MapUtils.isEmpty(headers)) {
-      return openApiHeaderEmbeddedMap;
+      return null;
     }
+    Map<String, OpenApiHeaderEmbedded> openApiHeaderEmbeddedMap = new HashMap<>();
     headers.forEach((s, header) -> {
       if (StringUtils.isEmpty(s) || header == null) {
         return;
@@ -66,10 +66,10 @@ public class OpenApiCommonHelper {
    */
   protected static Map<String, OpenApiExampleEmbedded> initOpenApiComponentExamples(
       Map<String, Example> examples) {
-    Map<String, OpenApiExampleEmbedded> openApiExample = new HashMap<>();
     if (MapUtils.isEmpty(examples)) {
-      return openApiExample;
+      return null;
     }
+    Map<String, OpenApiExampleEmbedded> openApiExample = new HashMap<>();
     examples.forEach((s, example) -> {
       if (StringUtils.isEmpty(s) || example == null) {
         return;

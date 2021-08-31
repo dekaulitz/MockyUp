@@ -29,6 +29,7 @@ public class ErrorHandlerController extends BaseController {
       exception = (Exception) request
           .getAttribute("org.springframework.boot.web.servlet.error.DefaultErrorAttributes.ERROR");
     }
+    exception.printStackTrace();
     return this.handlingErrorResponse(exception, request);
 
   }

@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OpenApiPathResponse implements Serializable {
+public class OpenApiPathResponseEmbedded implements Serializable {
 
   private int statusCode;
   private String description;
