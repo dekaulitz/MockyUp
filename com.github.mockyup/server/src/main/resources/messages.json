@@ -1,14 +1,39 @@
 {
-  "INVALID_USERLOGIN": [
-    {
-      "lang": "ID",
-      "message": "Invalid username and password",
-      "description": "Invalid username and password"
-    },
-    {
-      "lang": "EN",
-      "message": "Invalid username and password",
-      "description": "Invalid username and password"
-    }
-  ]
+  "INVALID_USER_LOGIN": {
+    "httpCode": 401,
+    "statusCode": 4011,
+    "description": "Invalid username and password",
+    "messages": [
+      {
+        "lang": "ID",
+        "message": "Invalid username and password"
+      },
+      {
+        "lang": "EN",
+        "message": "Invalid username and password"
+      }
+    ]
+  },
+  "DATA_NOT_FOUND": {
+    "httpCode": 200,
+    "statusCode": 2001,
+    "description": "Data not found",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Data not found"
+      }
+    ]
+  },
+  "INVALID_MOCK_CONTRACT": {
+    "httpCode": 400,
+    "statusCode": 4001,
+    "description": "INVALID_MOCK_CONTRACT",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "INVALID_MOCK_CONTRACT"
+      }
+    ]
+  }
 }

@@ -15,4 +15,9 @@ import lombok.Setter;
 public class GetUserParam extends PageableParam implements Serializable {
 
   private String email;
+  private String username;
+
+  public String toStringSkipNulls() {
+    return removeToStringNullValues(toString());
+  }
 }

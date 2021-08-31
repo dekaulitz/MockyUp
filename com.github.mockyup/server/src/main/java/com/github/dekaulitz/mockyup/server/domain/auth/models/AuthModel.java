@@ -6,7 +6,7 @@ import com.github.dekaulitz.mockyup.server.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.server.domain.auth.base.AuthInterface;
 import com.github.dekaulitz.mockyup.server.domain.auth.vmodels.DtoAuthProfileVmodel;
 import com.github.dekaulitz.mockyup.server.errors.handlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.server.service.mockup.helper.HashingHelper;
+import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;

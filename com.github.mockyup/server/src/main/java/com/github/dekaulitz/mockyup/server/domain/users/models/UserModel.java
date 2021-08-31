@@ -9,7 +9,7 @@ import com.github.dekaulitz.mockyup.server.domain.users.vmodels.RegistrationVmod
 import com.github.dekaulitz.mockyup.server.domain.users.vmodels.UpdateUserVmodel;
 import com.github.dekaulitz.mockyup.server.errors.handlers.DuplicateDataEntry;
 import com.github.dekaulitz.mockyup.server.errors.handlers.NotFoundException;
-import com.github.dekaulitz.mockyup.server.service.mockup.helper.HashingHelper;
+import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.util.Date;
 import java.util.List;
@@ -130,8 +130,9 @@ public class UserModel implements UserInterface {
       vmodel.setPassword(HashingHelper.hashing(vmodel.getPassword()));
     }
     UserEntities userEntitiesUpdate = UserEntities.builder()
+
         .username(vmodel.getUsername()).id(id)
-        .password(vmodel.getPassword()).updatedDate(new Date())
+        .password(vmodel.getPassword())
         .accessList(vmodel.getAccessList()).build();
     return this.userRepository.save(userEntitiesUpdate);
   }

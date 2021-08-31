@@ -122,7 +122,4 @@ public class PageableParam implements Pageable {
     return this.getPageNumber() > 0;
   }
 
-  public String toStringSkipNulls() {
-    return removeToStringNullValues(toString());
-  }
 }

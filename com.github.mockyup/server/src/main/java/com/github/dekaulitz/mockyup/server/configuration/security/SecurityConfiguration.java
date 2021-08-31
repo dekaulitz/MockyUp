@@ -54,8 +54,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         new AntPathRequestMatcher("/mocks/user/**/detail"),
         new AntPathRequestMatcher("/mocks/user/**/delete")
     )));
-    filter.setAuthenticationSuccessHandler(new SecurityAuthenticationSuccess());
-    filter.setAuthenticationFailureHandler(new SecurityAuthenticationFail());
     return filter;
   }
 

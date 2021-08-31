@@ -9,15 +9,23 @@ import org.springframework.data.mongodb.core.query.Criteria;
 @NoArgsConstructor
 public class UserQuery extends BaseQuery<GetUserParam> {
 
-
+  @Override
   public void buildQuery(GetUserParam getUserParam) {
     this.email(getUserParam.getEmail());
+    this.username(getUserParam.getUsername());
     this.setPageable(getUserParam);
   }
 
   private UserQuery email(String email) {
     if (StringUtils.isNotBlank(email)) {
       this.criterias.add(Criteria.where("email").is(new ObjectId(email)));
+    }
+    return this;
+  }
+
+  private UserQuery username(String username) {
+    if (StringUtils.isNotBlank(username)) {
+      this.criterias.add(Criteria.where("username").is(new ObjectId(username)));
     }
     return this;
   }

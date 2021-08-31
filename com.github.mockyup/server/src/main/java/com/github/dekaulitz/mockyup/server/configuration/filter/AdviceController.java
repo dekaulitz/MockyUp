@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.configuration.filter;
 
+import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.errors.vmodels.ResponseVmodel;
 import com.github.dekaulitz.mockyup.server.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
@@ -32,6 +33,14 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         ResponseVmodel.builder()
             .responseMessage(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorMessage())
             .responseCode(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode()).build());
+  }
+
+  //handling if security configuration throw some error
+  @ExceptionHandler(ServiceException.class)
+  public final ResponseEntity<Object> handleInvalidMockException(ServiceException ex,
+      HttpServletRequest request) {
+    return ResponseEntity.status(ex.getServiceMessageError().getHttpCode())
+        .body(ex.getServiceMessageError());
   }
 
   //centralize the exception when exception throwing without catch in service dispatcher

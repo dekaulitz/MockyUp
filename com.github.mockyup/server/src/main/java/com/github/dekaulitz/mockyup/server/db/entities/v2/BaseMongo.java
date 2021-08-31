@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,14 +20,13 @@ public class BaseMongo {
   private static final long serialVersionUID = 1L;
 
   @Id
-  private String id;
+  protected String id;
 
   @JsonIgnore
   @Version
   private Long version;
 
-  @LastModifiedDate
   @DateTimeFormat(pattern = DateTimeConstants.DATE_TIME_FORMAT)
   @JsonDeserialize(using = DateDeserializer.class)
-  private Date updatedDate;
+  private Date updatedDate = new Date();
 }

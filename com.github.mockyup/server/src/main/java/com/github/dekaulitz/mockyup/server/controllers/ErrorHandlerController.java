@@ -4,7 +4,6 @@ import com.github.dekaulitz.mockyup.server.errors.vmodels.ResponseVmodel;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class ErrorHandlerController extends BaseController implements ErrorController {
+public class ErrorHandlerController extends BaseController {
 
-  /**
-   * centralized error on that not catched with Advisor controller
-   *
-   * @param request HttpServletRequest for getting attribute from request
-   * @return
-   */
   @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<Object> handleError(HttpServletRequest request) {
@@ -40,13 +33,4 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
 
   }
 
-//  /**
-//   * entrypoint for error handling when the error is not catched with Advisor controller
-//   *
-//   * @return String
-//   */
-//  @Override
-//  public String getErrorPath() {
-//    return "/error";
-//  }
 }

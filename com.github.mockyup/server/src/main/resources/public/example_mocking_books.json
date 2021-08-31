@@ -2394,6 +2394,16 @@
       "ERROR_500_XML": {
         "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<error>\n\t<response_code>error_500</response_code>\n\t<response_message>something bad happen</response_message>\n\t<data>\n\t</data>\n</error>"
       }
+    },
+    "responses": {
+      "200": {
+        "headers": {
+          "something": {
+            "deprecated": false
+          }
+        },
+        "description": "something"
+      }
     }
   }
 }

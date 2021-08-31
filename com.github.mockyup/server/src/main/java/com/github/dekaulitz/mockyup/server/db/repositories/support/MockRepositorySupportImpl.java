@@ -15,7 +15,6 @@ import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.bson.Document;
@@ -272,12 +271,12 @@ public class MockRepositorySupportImpl implements MockRepositorySupport {
             .access(Role.MOCKS_READ_WRITE.toString())
             .build());
         MockEntities updateMockenties = MockEntities.builder()
-            .id(mockEntities.getId())
+
             .description(mockEntities.getDescription())
             .title(mockEntities.getTitle())
             .spec(mockEntities.getSpec())
             .swagger(mockEntities.getSwagger())
-            .updatedDate(new Date())
+
             .users(userMocksEntitiesList)
             .updatedBy(
                 MockCreatorEntities.builder().userId(user.getId())

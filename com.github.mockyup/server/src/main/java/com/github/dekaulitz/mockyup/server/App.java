@@ -4,7 +4,8 @@ import com.github.dekaulitz.mockyup.server.db.entities.v1.UserEntities;
 import com.github.dekaulitz.mockyup.server.db.repositories.MockRepository;
 import com.github.dekaulitz.mockyup.server.db.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
-import com.github.dekaulitz.mockyup.server.service.mockup.helper.HashingHelper;
+import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
+import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,11 +17,18 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
+@EnableMongoRepositories
+@EnableMongoAuditing
 @Slf4j
+@EnableAutoConfiguration(exclude = {MongoDataAutoConfiguration.class})
 public class App implements CommandLineRunner {
 
   @Autowired
@@ -60,7 +68,9 @@ public class App implements CommandLineRunner {
     log.info("user root already created will pass the process");
 
     // load user mesages
+    MessageHelper.loadInstance();
   }
+
 
   @Bean
   public ModelMapper modelMapper() {

@@ -1,9 +1,14 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2;
 
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiComponents;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiProjectInfoEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiTagEmbedded;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,14 +32,19 @@ public class ProjectContractEntities extends BaseMongo implements Serializable {
   @NotNull
   private String projectId;
 
+  private boolean isPrivate;
+
   private String openApiVersion;
   @Valid
   private OpenApiProjectInfoEmbedded info;
   @Valid
-  private Set<OpenApiServerEmbedded> servers;
+  private List<OpenApiServerEmbedded> servers = new ArrayList<>();
   @Valid
-  private Set<OpenApiTagEmbedded> tags;
-
+  private Set<OpenApiTagEmbedded> tags = new HashSet<>();
+  @Valid
+  private List<OpenApiPathEmbedded> paths = new ArrayList<>();
+  @Valid
+  private OpenApiComponents components;
 
   private String rawSpecs;
 }

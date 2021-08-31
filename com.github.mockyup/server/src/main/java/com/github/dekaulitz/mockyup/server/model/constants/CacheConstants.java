@@ -4,6 +4,8 @@ public class CacheConstants {
 
   public static final String STAR_PREFIX = "*";
   public static final String MOCKUP_PREFIX = "mockup:";
+  public static final String PROJECT_PREFIX = "project:";
+  public static final String PROJECT_CONTRACT_PREFIX = "project-contract:";
   public static final String AUTH_PREFIX = "auth:";
 
 
