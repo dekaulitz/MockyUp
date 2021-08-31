@@ -11,25 +11,25 @@ import org.springframework.util.CollectionUtils;
 
 public abstract class BaseQuery<P extends Pageable> {
 
-  protected Set<Criteria> criterias = new HashSet<>();
+  protected Set<Criteria> criteriaSet = new HashSet<>();
   @Setter
   protected Pageable pageable;
 
   public abstract void buildQuery(P p);
 
   public Query getQuery() {
-    if (CollectionUtils.isEmpty(criterias)) {
+    if (CollectionUtils.isEmpty(criteriaSet)) {
       return new Query();
     }
-    Criteria[] criteriaArray = criterias.toArray(new Criteria[0]);
+    Criteria[] criteriaArray = criteriaSet.toArray(new Criteria[0]);
     return new Query().addCriteria(new Criteria().andOperator(criteriaArray));
   }
 
   public Query getQueryWithPaging() {
-    if (CollectionUtils.isEmpty(criterias)) {
+    if (CollectionUtils.isEmpty(criteriaSet)) {
       return new Query().with(pageable);
     }
-    Criteria[] criteriaArray = criterias.toArray(new Criteria[0]);
+    Criteria[] criteriaArray = criteriaSet.toArray(new Criteria[0]);
     return new Query().addCriteria(new Criteria().andOperator(criteriaArray)).with(pageable);
   }
 }

@@ -23,21 +23,21 @@ public class ProjectContractQuery extends BaseQuery<GetProjectContractParam> {
     if (ArrayUtils.isNotEmpty(idArray)) {
       ObjectId[] ids = Arrays.stream(idArray).map(ObjectId::new)
           .toArray(ObjectId[]::new);
-      criterias.add(Criteria.where("_id").in(ids));
+      criteriaSet.add(Criteria.where("_id").in(ids));
     }
     return this;
   }
 
   public ProjectContractQuery id(String id) {
     if (StringUtils.isNotBlank(id)) {
-      this.criterias.add(Criteria.where("id").is(new ObjectId(id)));
+      this.criteriaSet.add(Criteria.where("id").is(new ObjectId(id)));
     }
     return this;
   }
 
   public ProjectContractQuery projectId(String projectId) {
     if (StringUtils.isNotBlank(projectId)) {
-      this.criterias.add(Criteria.where("projectId").is(projectId));
+      this.criteriaSet.add(Criteria.where("projectId").is(projectId));
     }
     return this;
   }

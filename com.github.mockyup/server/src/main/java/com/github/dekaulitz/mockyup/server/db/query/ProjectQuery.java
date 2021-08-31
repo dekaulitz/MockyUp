@@ -23,28 +23,28 @@ public class ProjectQuery extends BaseQuery<GetProjectParam> {
     if (ArrayUtils.isNotEmpty(idArray)) {
       ObjectId[] ids = Arrays.stream(idArray).map(ObjectId::new)
           .toArray(ObjectId[]::new);
-      criterias.add(Criteria.where("_id").in(ids));
+      criteriaSet.add(Criteria.where("_id").in(ids));
     }
     return this;
   }
 
   private ProjectQuery id(String id) {
     if (StringUtils.isNotBlank(id)) {
-      this.criterias.add(Criteria.where("_id").is(new ObjectId(id)));
+      this.criteriaSet.add(Criteria.where("_id").is(new ObjectId(id)));
     }
     return this;
   }
 
   private ProjectQuery projectName(String projectName) {
     if (StringUtils.isNotBlank(projectName)) {
-      this.criterias.add(Criteria.where("projectName").regex(".*" + projectName + ".*", "i"));
+      this.criteriaSet.add(Criteria.where("projectName").regex(".*" + projectName + ".*", "i"));
     }
     return this;
   }
 
   private ProjectQuery tag(String tag) {
     if (StringUtils.isNotBlank(tag)) {
-      this.criterias.add(Criteria.where("projectTags").is(tag));
+      this.criteriaSet.add(Criteria.where("projectTags").is(tag));
     }
     return this;
   }
