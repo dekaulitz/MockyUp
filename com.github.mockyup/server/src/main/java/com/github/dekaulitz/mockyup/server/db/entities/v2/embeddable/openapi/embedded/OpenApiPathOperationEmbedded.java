@@ -1,12 +1,8 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.callbacks.Callback;
-import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.parameters.RequestBody;
-import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.servers.Server;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,17 +21,17 @@ import lombok.Setter;
 @Builder
 public class OpenApiPathOperationEmbedded implements Serializable {
 
-  private List<String> tags = new ArrayList<>();
+  private List<String> tags;
   private String summary;
   private String description;
   private ExternalDocumentation externalDocs;
   private String operationId;
-  private List<Parameter> parameters = new ArrayList<>();
-  private RequestBody requestBody;
-  private ApiResponses responses;
-  private Map<String, Callback> callbacks = new HashMap<>();
+  private List<OpenApiParameterEmbedded> parameters = new ArrayList<>();
+  private OpenApiRequestBodyEmbedded requestBody;
+  private List<OpenApiPathResponseEmbedded> responses = new ArrayList<>();
+  private Map<String, OpenApiCallbackEmbedded> callbacks = new HashMap<>();
   private Boolean deprecated;
   private List<SecurityRequirement> security = new ArrayList<>();
-  private List<Server> servers = new ArrayList<>();
+  private List<OpenApiServerEmbedded> servers = new ArrayList<>();
   private Map<String, Object> extensions = new HashMap<>();
 }

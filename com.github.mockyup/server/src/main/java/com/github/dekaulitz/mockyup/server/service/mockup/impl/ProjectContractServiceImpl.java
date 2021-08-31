@@ -112,7 +112,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
           .setRawSpecs(
               JsonMapper.mapper().writeValueAsString(createProjectContractRequest.getSpec()));
       projectContractEntities.setInfo(
-          OpenApiTransformerHelper.getOpenApiInfo(openApi.getInfo(), modelMapper));
+          OpenApiTransformerHelper.initOpenApiInfo(openApi.getInfo(), modelMapper));
       projectContractEntities.setServers(
           OpenApiTransformerHelper.getOpenApiServers(openApi.getServers()));
       projectContractEntities.setTags(OpenApiTransformerHelper.getOpenApiTags(openApi.getTags()));

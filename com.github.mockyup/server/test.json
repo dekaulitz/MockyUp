@@ -155,6 +155,29 @@
               }
             }
           },
+          "callbacks": {
+            "myEvent": {
+              "{$request.query.callbackUrl}?event={$request.query.event}": {
+                "post": {
+                  "x-something": "123",
+                  "requestBody": {
+                    "content": {
+                      "application/json": {
+                        "example": {
+                          "message": "Some event"
+                        }
+                      }
+                    }
+                  },
+                  "responses": {
+                    "200": {
+                      "description": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "x-examples": {
             "x-path-including": [],
             "x-body-including": [],

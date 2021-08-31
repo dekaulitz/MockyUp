@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OpenApiCallbackEmbedded implements Serializable {
 
-  private List<OpenApiPathItemEmbedded> paths = new ArrayList<>();
+  private List<OpenApiPathEmbedded> paths = new ArrayList<>();
   private Map<String, Object> extensions = new HashMap<>();
   private String $ref = null;
 

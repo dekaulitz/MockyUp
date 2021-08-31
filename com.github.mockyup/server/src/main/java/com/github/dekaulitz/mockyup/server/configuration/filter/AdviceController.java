@@ -30,9 +30,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
   public final ResponseEntity<Object> handleInvalidMockException(AccessDeniedException ex,
       HttpServletRequest request) {
     return ResponseEntity.status(ResponseCode.INVALID_ACCESS_PERMISSION.getHttpCode()).body(
-        ResponseVmodel.builder()
-            .responseMessage(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorMessage())
-            .responseCode(ResponseCode.INVALID_ACCESS_PERMISSION.getErrorCode()).build());
+        ResponseVmodel.builder().build());
   }
 
   //handling if security configuration throw some error
@@ -52,7 +50,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
         ResponseVmodel.builder().responseMessage(ex.getMessage())
             .requestId((String) request.getAttribute(ConstantsRepository.REQUEST_ID))
-            .responseCode(ResponseCode.GLOBAL_ERROR_MESSAGE.getErrorCode()).build());
+            .build());
   }
 
   //handling when user do request with invalid method

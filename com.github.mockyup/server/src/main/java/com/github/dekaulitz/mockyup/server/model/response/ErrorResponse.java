@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.server.model.embeddable;
+package com.github.dekaulitz.mockyup.server.model.response;
 
-import java.io.Serializable;
+import com.github.dekaulitz.mockyup.server.model.embeddable.TranslationsMessage;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,17 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Setter
-@Getter
-
-public class Message implements Serializable {
+public class ErrorResponse {
 
   private Integer httpCode;
   private Integer statusCode;
   private String description;
   private Set<TranslationsMessage> messages;
-
 }

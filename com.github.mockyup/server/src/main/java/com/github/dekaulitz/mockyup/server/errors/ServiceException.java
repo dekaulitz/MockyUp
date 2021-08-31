@@ -1,27 +1,32 @@
 package com.github.dekaulitz.mockyup.server.errors;
 
 import com.github.dekaulitz.mockyup.server.model.embeddable.Message;
+import com.github.dekaulitz.mockyup.server.model.response.ErrorResponse;
 import lombok.Getter;
 
 public class ServiceException extends Exception {
 
   @Getter
-  private Message serviceMessageError;
+  private ErrorResponse serviceMessageError = new ErrorResponse();
 
   public ServiceException() {
   }
 
   public ServiceException(Message message) {
     super(message.getDescription());
-    this.serviceMessageError = message;
   }
 
   public ServiceException(Message message, String detailMessage) {
     super(message.getDescription());
-    message.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage() + " : " + detailMessage);
+    ErrorResponse errorModel = new ErrorResponse();
+    errorModel.setDescription(message.getDescription() + " : " + detailMessage);
+    errorModel.setHttpCode(message.getHttpCode());
+    errorModel.setStatusCode(message.getStatusCode());
+    errorModel.setMessages(message.getMessages());
+    errorModel.getMessages().forEach(translationsMessage -> {
+      translationsMessage.setMessage(translationsMessage.getMessage());
     });
-    this.serviceMessageError = message;
+    this.serviceMessageError = errorModel;
   }
 
   public ServiceException(String message) {

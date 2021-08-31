@@ -34,6 +34,7 @@ public class CacheServiceImpl implements CacheService {
     try {
       return objectMapper.readValue(value, clazz);
     } catch (JsonProcessingException e) {
+      e.printStackTrace();
       log.error("findCacheByKey: Exception: ", e);
       return null;
     }
@@ -75,6 +76,7 @@ public class CacheServiceImpl implements CacheService {
     try {
       redisTemplate.delete(key);
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("deleteCache failed ex:{} key:{}", e, key);
     }
   }
@@ -87,6 +89,7 @@ public class CacheServiceImpl implements CacheService {
         try {
           redisTemplate.delete(key);
         } catch (Exception e) {
+          e.printStackTrace();
           log.error("deleteCacheByPrefixKey failed ex:{} key:{}", e, key);
         }
       });
