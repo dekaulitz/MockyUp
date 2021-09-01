@@ -42,8 +42,6 @@ public class ProjectContractServiceImpl implements ProjectContractService {
   @Autowired
   private ModelMapper modelMapper;
 
-  private ObjectMapper objectMapper = new ObjectMapper();
-
 
   @Override
   public ProjectContractEntities getById(String id) throws ServiceException {

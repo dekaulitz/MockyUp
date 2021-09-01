@@ -37,9 +37,6 @@ public class OpenApiPayloadHelper {
     return openApiRequestBodyEmbedded;
   }
 
-  /**
-   * @TODO definitions is not finished yet
-   */
   protected static List<OpenApiContentEmbedded> initOpenApiComponentContent(Content content) {
     if (MapUtils.isEmpty(content)) {
       return null;

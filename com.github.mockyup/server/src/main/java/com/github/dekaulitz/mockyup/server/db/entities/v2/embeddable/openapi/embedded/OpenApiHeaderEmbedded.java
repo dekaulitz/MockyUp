@@ -1,9 +1,10 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.Schema;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas.BaseSchema;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +25,10 @@ public class OpenApiHeaderEmbedded implements Serializable {
   private Boolean deprecated;
   private OpenApiHeaderEmbedded.StyleEnum style;
   private Boolean explode;
-  private Schema schema;
+  private BaseSchema schema;
   private Map<String, OpenApiExampleEmbedded> examples = new HashMap<>();
   private Object example;
-  private Content content;
+  private List<OpenApiContentEmbedded> content = new ArrayList<>();
   private Map<String, Object> extensions = new HashMap<>();
 
   public String get$ref() {

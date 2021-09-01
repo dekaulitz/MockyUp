@@ -6,9 +6,11 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.con
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiCallbackEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.callbacks.Callback;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class OpenApiPathHelper {
 
-  /**
-   * @TODO its not defined yet should fixing the pathItem first
-   */
   protected static Map<String, OpenApiCallbackEmbedded> getOpenApiComponentCallBacks(
       Map<String, Callback> callbacks) {
     if (MapUtils.isEmpty(callbacks)) {
@@ -153,6 +152,13 @@ public class OpenApiPathHelper {
     openApiPathOperationEmbedded.setExternalDocs(operation.getExternalDocs());
     openApiPathOperationEmbedded.setExtensions(operation.getExtensions());
     openApiPathOperationEmbedded.setOperationId(operation.getOperationId());
+    if (CollectionUtils.isNotEmpty(operation.getSecurity())) {
+      List<OpenApiSecurityEmbedded> securityList = new ArrayList<>();
+      operation.getSecurity().forEach(securityRequirement -> {
+        initSecurityRequirement(securityRequirement, securityList);
+      });
+      openApiPathOperationEmbedded.setSecurity(securityList);
+    }
     openApiPathOperationEmbedded
         .setRequestBody(OpenApiPayloadHelper.getOpenApiRequestBody(operation.getRequestBody()));
     openApiPathOperationEmbedded.setDeprecated(operation.getDeprecated());
@@ -160,8 +166,22 @@ public class OpenApiPathHelper {
         .setResponses(OpenApiPayloadHelper.getOpenApiComponentResponse(operation.getResponses()));
     openApiPathOperationEmbedded
         .setCallbacks(getOpenApiComponentCallBacks(operation.getCallbacks()));
-
-//    private List<SecurityRequirement> security = null;
     return openApiPathOperationEmbedded;
+  }
+
+  private static void initSecurityRequirement(SecurityRequirement securityRequirement,
+      List<OpenApiSecurityEmbedded> securityList) {
+    if (MapUtils.isNotEmpty(securityRequirement)) {
+      securityRequirement.forEach((s, strings) -> {
+        OpenApiSecurityEmbedded openApiSecurityEmbedded = new OpenApiSecurityEmbedded();
+        if (CollectionUtils.isNotEmpty(strings)) {
+          openApiSecurityEmbedded.addList(s, strings);
+        } else {
+          openApiSecurityEmbedded.addList(s);
+        }
+        securityList.add(openApiSecurityEmbedded);
+      });
+
+    }
   }
 }

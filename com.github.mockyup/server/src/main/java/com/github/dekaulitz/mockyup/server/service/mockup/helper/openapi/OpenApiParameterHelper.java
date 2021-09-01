@@ -32,19 +32,10 @@ public class OpenApiParameterHelper {
     openApiParameterEmbedded.setExtensions(parameter.getExtensions());
     openApiParameterEmbedded
         .setExamples(OpenApiCommonHelper.initOpenApiComponentExamples(parameter.getExamples()));
-
-    /**
-     * @TODO its not defined yet
-     */
-    openApiParameterEmbedded.setSchema(null);
-    /**
-     * @TODO its not defined yet
-     */
-    openApiParameterEmbedded.setExample(null);
-    /**
-     * @TODO its not defined yet
-     */
-    openApiParameterEmbedded.setContent(null);
+    openApiParameterEmbedded.setSchema(OpenApiSchemaHelper.convertSchema(parameter.getSchema()));
+    openApiParameterEmbedded.setExample(parameter.getExample());
+    openApiParameterEmbedded
+        .setContent(OpenApiPayloadHelper.initOpenApiComponentContent(parameter.getContent()));
     return openApiParameterEmbedded;
   }
 }

@@ -108,14 +108,8 @@ public class OpenApiTransformerHelper {
         .setRequestBodies(initOpenApiComponentRequesBody(components.getRequestBodies()));
     openApiComponents
         .setSecuritySchemes(initOpenApiComponentSecuritySchemas(components.getSecuritySchemes()));
-    /**
-     * @TODO reference schema is not defined yet need to rerun for injecting ref schema
-     */
     openApiComponents
         .setSchemas(OpenApiSchemaHelper.initOpenApiComponentSchema(components.getSchemas()));
-    /**
-     * @TODO its not defined yet
-     */
     openApiComponents
         .setCallbacks(OpenApiPathHelper.getOpenApiComponentCallBacks(components.getCallbacks()));
     return openApiComponents;

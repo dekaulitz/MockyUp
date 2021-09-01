@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class OpenApiCommonHelper {
 
-  /*
+  /**
    * @TODO definitions is not finished yet
    */
   protected static Map<String, OpenApiHeaderEmbedded> initOpenApiComponentHeaders(
@@ -44,18 +44,10 @@ public class OpenApiCommonHelper {
       }
       openApiHeaderEmbedded.setExplode(header.getExplode());
       openApiHeaderEmbedded.setExtensions(header.getExtensions());
-      /**
-       * @TODO its not defined yet
-       */
-      openApiHeaderEmbedded.setSchema(null);
-      /**
-       * @TODO its not defined yet
-       */
-      openApiHeaderEmbedded.setContent(null);
-      /**
-       * @TODO its not defined yet
-       */
-      openApiHeaderEmbedded.setExample(null);
+      openApiHeaderEmbedded.setSchema(OpenApiSchemaHelper.convertSchema(header.getSchema()));
+      openApiHeaderEmbedded
+          .setContent(OpenApiPayloadHelper.initOpenApiComponentContent(header.getContent()));
+      openApiHeaderEmbedded.setExample(header.getExample());
       openApiHeaderEmbeddedMap.put(s, openApiHeaderEmbedded);
     });
     return openApiHeaderEmbeddedMap;
