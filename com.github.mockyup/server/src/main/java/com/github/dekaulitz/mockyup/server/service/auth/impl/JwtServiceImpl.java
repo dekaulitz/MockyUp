@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.configuration.jwt;
+package com.github.dekaulitz.mockyup.server.service.auth.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -7,6 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.dekaulitz.mockyup.server.errors.handlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.server.model.JwtProfileModel;
+import com.github.dekaulitz.mockyup.server.service.auth.api.JwtService;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
@@ -19,10 +21,7 @@ import org.springframework.stereotype.Service;
  * <pre>this is jwt manager for generate token and validate token</pre>
  */
 @Service
-public class JwtManager {
-
-  public static final String CAN_DO_REFRESH = "canRefresh";
-  public static final String EXPIRED_AT = "expiredAt";
+public class JwtServiceImpl implements JwtService {
 
   @Value("${com.github.dekaulitz.mockup.auth.secret}")
   private String secret;
@@ -32,6 +31,7 @@ public class JwtManager {
   private Long expiredTime;
 
 
+  @Override
   public String getAuthorizationHeader(String AuthHeader) {
     if (AuthHeader == null || !AuthHeader.startsWith("Bearer")) {
       throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
@@ -39,6 +39,7 @@ public class JwtManager {
     return AuthHeader.substring(7);
   }
 
+  @Override
   public JwtProfileModel generateToken(String userId)
       throws UnsupportedEncodingException {
     JwtProfileModel jwtProfileModel = new JwtProfileModel();
@@ -47,6 +48,7 @@ public class JwtManager {
     return jwtProfileModel;
   }
 
+  @Override
   public JwtProfileModel validateToken(String token) {
     try {
       DecodedJWT jwt = decodeToken(token, secret);
@@ -68,6 +70,7 @@ public class JwtManager {
     }
   }
 
+  @Override
   public Optional<String> getUserIdFromToken(String token)
       throws UnsupportedEncodingException {
     DecodedJWT jwt = decodeToken(token, secret);
@@ -80,6 +83,7 @@ public class JwtManager {
     return Optional.ofNullable(jwt.getClaim("id").asString());
   }
 
+  @Override
   public String buildToken(String id)
       throws UnsupportedEncodingException {
     Algorithm algorithm = Algorithm.HMAC256(secret);
