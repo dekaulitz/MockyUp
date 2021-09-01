@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiEncodingType;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Builder
 public class OpenApiEncodingEmbedded implements Serializable {
 
-  private String contentType;
+  private OpenApiContentType contentType;
   private Map<String, OpenApiHeaderEmbedded> headers = new HashMap<>();
   private OpenApiEncodingType style;
   private Boolean explode;

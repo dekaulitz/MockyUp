@@ -11,6 +11,7 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.emb
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiOauthFlowsEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiRequestBodyEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecuritySchemaEmbedded;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Paths;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
@@ -31,7 +33,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 
@@ -86,8 +87,11 @@ public class OpenApiTransformerHelper {
     return openApiPathEmbeddedList;
   }
 
-  /*
-   * @TODO definitions is not finished yet
+  /**
+   * @param components {@link Components}
+   * @return OpenApiComponents
+   * @implNote it will transforming Component {@link Components} into OpenApiComponents {@link
+   * OpenApiComponents}
    */
   public static OpenApiComponents getOpenApiComponents(Components components) {
     OpenApiComponents openApiComponents = new OpenApiComponents();
@@ -96,16 +100,16 @@ public class OpenApiTransformerHelper {
      */
     openApiComponents.setExtensions(components.getExtensions());
     openApiComponents
-        .setExamples(OpenApiCommonHelper.initOpenApiComponentExamples(components.getExamples()));
+        .setExamples(OpenApiCommonHelper.getOpenApiComponentExample(components.getExamples()));
     openApiComponents
-        .setHeaders(OpenApiCommonHelper.initOpenApiComponentHeaders(components.getHeaders()));
+        .setHeaders(OpenApiCommonHelper.getOpenApiComponentHeader(components.getHeaders()));
     openApiComponents.setParameters(initOpenApiComponentParameters(components.getParameters()));
     openApiComponents
         .setLinks(OpenApiPayloadHelper.getOpenApiComponentLinks(components.getLinks()));
     openApiComponents
         .setResponses(OpenApiPayloadHelper.getOpenApiComponentResponse(components.getResponses()));
     openApiComponents
-        .setRequestBodies(initOpenApiComponentRequesBody(components.getRequestBodies()));
+        .setRequestBodies(initOpenApiComponentRequestBody(components.getRequestBodies()));
     openApiComponents
         .setSecuritySchemes(initOpenApiComponentSecuritySchemas(components.getSecuritySchemes()));
     openApiComponents
@@ -136,15 +140,15 @@ public class OpenApiTransformerHelper {
       openApiSecuritySchemaEmbedded
           .setFlows(initOpenApiComponentSecurityFlows(securityScheme.getFlows()));
       String securityIn = securityScheme.getIn() == null ? null : securityScheme.getIn().toString();
-      if (EnumUtils.isValidEnum(OpenApiSecurityInType.class, securityIn)) {
+      if (OpenApiSecurityInType.isValid(securityIn)) {
         openApiSecuritySchemaEmbedded
-            .setIn(EnumUtils.getEnum(OpenApiSecurityInType.class, securityIn));
+            .setIn(OpenApiSecurityInType.get(securityIn));
       }
       String securityType = securityScheme.getType() == null ? null
           : securityScheme.getType().toString();
-      if (EnumUtils.isValidEnum(OpenApiSecurityType.class, securityType)) {
+      if (OpenApiSecurityType.isValid(securityType)) {
         openApiSecuritySchemaEmbedded
-            .setType(EnumUtils.getEnum(OpenApiSecurityType.class, securityType));
+            .setType(OpenApiSecurityType.get(securityType));
       }
       /**
        * @TODO we can do adjustment for next development
@@ -186,7 +190,7 @@ public class OpenApiTransformerHelper {
     return openApiOauthFlowEmbedded;
   }
 
-  private static Map<String, OpenApiRequestBodyEmbedded> initOpenApiComponentRequesBody(
+  private static Map<String, OpenApiRequestBodyEmbedded> initOpenApiComponentRequestBody(
       Map<String, RequestBody> requestBodies) {
     if (MapUtils.isEmpty(requestBodies)) {
       return null;
@@ -203,9 +207,8 @@ public class OpenApiTransformerHelper {
     return openApiRequestBodyEmbeddedMap;
   }
 
-
   /**
-   * @TODO definitions is not finished yet
+   *
    */
   private static Map<String, OpenApiParameterEmbedded> initOpenApiComponentParameters(
       Map<String, Parameter> parameters) {
@@ -217,7 +220,7 @@ public class OpenApiTransformerHelper {
       if (StringUtils.isEmpty(s) || parameter == null) {
         return;
       }
-      OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiParameterHelper
+      OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiPathHelper
           .getOpenApiParameter(parameter);
       openApiParameterEmbeddedMap.put(s, openApiParameterEmbedded);
     });
@@ -225,4 +228,15 @@ public class OpenApiTransformerHelper {
   }
 
 
+  public static List<OpenApiSecurityEmbedded> iniOpenApiSecurity(
+      List<SecurityRequirement> security) {
+    if (CollectionUtils.isEmpty(security)) {
+      return null;
+    }
+    List<OpenApiSecurityEmbedded> openApiSecurityEmbeddedList = new ArrayList<>();
+    security.forEach(securityRequirement -> {
+      OpenApiCommonHelper.initSecurityRequirement(securityRequirement, openApiSecurityEmbeddedList);
+    });
+    return openApiSecurityEmbeddedList;
+  }
 }

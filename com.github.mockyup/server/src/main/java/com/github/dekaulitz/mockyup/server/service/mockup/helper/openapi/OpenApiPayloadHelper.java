@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class OpenApiPayloadHelper {
 
@@ -46,7 +47,7 @@ public class OpenApiPayloadHelper {
       OpenApiContentEmbedded openApiContentEmbedded = new OpenApiContentEmbedded();
       openApiContentEmbedded.setContentType(OpenApiCommonHelper.getContentType(s));
       openApiContentEmbedded
-          .setExamples(OpenApiCommonHelper.initOpenApiComponentExamples(mediaType.getExamples()));
+          .setExamples(OpenApiCommonHelper.getOpenApiComponentExample(mediaType.getExamples()));
       openApiContentEmbedded.setEncoding(initOpenApiComponentEncoding(mediaType.getEncoding()));
       openApiContentEmbedded.setExample(mediaType.getExample());
       openApiContentEmbedded.setSchema(OpenApiSchemaHelper.convertSchema(mediaType.getSchema()));
@@ -74,9 +75,14 @@ public class OpenApiPayloadHelper {
       }
       OpenApiPathResponseEmbedded openApiPathResponse = new OpenApiPathResponseEmbedded();
       openApiPathResponse.setDescription(apiResponse.getDescription());
-      openApiPathResponse.setStatusCode(Integer.parseInt(s));
+      if (NumberUtils.isCreatable(s)) {
+        openApiPathResponse.setStatusCode(Integer.parseInt(s));
+      } else {
+        openApiPathResponse.setName(s);
+      }
+
       openApiPathResponse
-          .setHeaders(OpenApiCommonHelper.initOpenApiComponentHeaders(apiResponse.getHeaders()));
+          .setHeaders(OpenApiCommonHelper.getOpenApiComponentHeader(apiResponse.getHeaders()));
       openApiPathResponse.set$ref(apiResponse.get$ref());
       openApiPathResponse.setLinks(getOpenApiComponentLinks(apiResponse.getLinks()));
       openApiPathResponse.setContent(initOpenApiComponentContent(apiResponse.getContent()));
@@ -108,7 +114,7 @@ public class OpenApiPayloadHelper {
       openApiLinkEmbedded.setParameters(link.getParameters());
       openApiLinkEmbedded.setRequestBody(link.getRequestBody());
       openApiLinkEmbedded
-          .setHeaders(OpenApiCommonHelper.initOpenApiComponentHeaders(link.getHeaders()));
+          .setHeaders(OpenApiCommonHelper.getOpenApiComponentHeader(link.getHeaders()));
       openApiLinkEmbedded.setDescription(link.getDescription());
       openApiLinkEmbedded.set$ref(link.get$ref());
       openApiLinkEmbedded.setExtensions(link.getExtensions());
@@ -126,10 +132,14 @@ public class OpenApiPayloadHelper {
     Map<String, OpenApiEncodingEmbedded> openApiEncodingEmbeddedMap = new HashMap<>();
     encodings.forEach((s, encoding) -> {
       OpenApiEncodingEmbedded openApiEncodingEmbedded = new OpenApiEncodingEmbedded();
-      // @TODO we can use constat for avoiding supporting content type
-      openApiEncodingEmbedded.setContentType(encoding.getContentType());
+      /**
+       * @see {@link com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType}
+       * using enum for limitating support
+       */
       openApiEncodingEmbedded
-          .setHeaders(OpenApiCommonHelper.initOpenApiComponentHeaders(encoding.getHeaders()));
+          .setContentType(OpenApiCommonHelper.getContentType(encoding.getContentType()));
+      openApiEncodingEmbedded
+          .setHeaders(OpenApiCommonHelper.getOpenApiComponentHeader(encoding.getHeaders()));
       String style = encoding.getStyle() == null ? null : encoding.getStyle().toString();
       if (EnumUtils.isValidEnum(OpenApiEncodingType.class, style)) {
         openApiEncodingEmbedded.setStyle(EnumUtils.getEnum(OpenApiEncodingType.class, style));

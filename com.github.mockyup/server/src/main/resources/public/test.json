@@ -1,0 +1,177 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "description": "Testing mockup server",
+    "version": "v1.0",
+    "title": "Testing Mockup Server",
+    "termsOfService": "",
+    "contact": {
+      "email": "sulaimanfahmi@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://{host}/mocks/mocking/{testing_path}?path=",
+      "description": "Testing locally",
+      "variables": {
+        "host": {
+          "default": "localhost:8080"
+        },
+        "testing_path": {
+          "description": "testing id path",
+          "default": "5e3aa62f11b5dc7e1bfaa1d6"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "BOOKS",
+      "description": "Testing mock server"
+    }
+  ],
+  "security": [
+    {
+      "Oauth2": [
+        "something",
+        "somethinsg"
+      ]
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "description": "user authenticating",
+      "post": {
+        "tags": [
+          "BOOKS"
+        ],
+        "summary": "",
+        "operationId": "",
+        "parameters": [
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LOGIN"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "user login",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "something": {
+                    "$ref": "#/components/examples/USER_LOGIN_SUCCESS"
+                  },
+                  "admin_login": {
+                    "$ref": "#/components/examples/USER_LOGIN_ADMIN"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LOGIN": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "enum": [
+              "username",
+              "password"
+            ],
+            "description": "it can be email or username",
+            "example": "sulaimanfahmi@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "awesome"
+          }
+        }
+      }
+    },
+    "headers": {
+    },
+    "parameters": {
+    },
+    "requestBodies": {
+    },
+    "responses": {
+      "SUCCESS_LOGIN": {
+        "description": "response user succeeded authenticated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "_id"
+                },
+                "token": {
+                  "type": "string",
+                  "example": "asd.123123123.123"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "description": "something shit happen",
+        "name": "x-auth-token",
+        "type": "apiKey",
+        "in": "header"
+      },
+      "Oauth2": {
+        "type": "oauth2",
+        "description": "login access via oauth 2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://api.example.com/oauth2/authorize",
+            "scopes": {
+              "read": "read access",
+              "write": "write access"
+            }
+          }
+        }
+      }
+    },
+    "callbacks": {
+    },
+    "links": {
+    },
+    "examples": {
+      "USER_LOGIN_SUCCESS": {
+        "description": "example response success",
+        "value": {
+          "SOMETHING": "something"
+        }
+      },
+      "USER_LOGIN_ADMIN": {
+        "description": "example response success",
+        "value": {
+          "ADMIN": "something",
+          "isTrue": true
+        }
+      }
+    },
+    "x-database-scehmas": {
+      "user_table": {
+        "type": "object"
+      }
+    }
+  }
+}

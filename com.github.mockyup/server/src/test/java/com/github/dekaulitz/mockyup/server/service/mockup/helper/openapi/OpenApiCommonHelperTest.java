@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiSecurityInType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,5 +17,11 @@ class OpenApiCommonHelperTest {
     contentTypeResult = OpenApiCommonHelper.getContentType(contentType);
     Assertions.assertThat(contentTypeResult)
         .isEqualByComparingTo(OpenApiContentType.APPLICATION_XML);
+  }
+
+  @Test
+  void checkEnum() {
+
+    Assertions.assertThat(OpenApiSecurityInType.isValid("header")).isEqualTo(true);
   }
 }

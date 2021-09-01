@@ -1,6 +1,5 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectContractEntities;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectEntities;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
@@ -11,9 +10,10 @@ import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.MessageType;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectService;
+import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiCommonHelper;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiTransformerHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import io.swagger.parser.OpenAPIParser;
@@ -111,6 +111,8 @@ public class ProjectContractServiceImpl implements ProjectContractService {
               JsonMapper.mapper().writeValueAsString(createProjectContractRequest.getSpec()));
       projectContractEntities.setInfo(
           OpenApiTransformerHelper.initOpenApiInfo(openApi.getInfo(), modelMapper));
+      projectContractEntities.setSecurity(
+          OpenApiTransformerHelper.iniOpenApiSecurity(openApi.getSecurity()));
       projectContractEntities.setServers(
           OpenApiTransformerHelper.getOpenApiServers(openApi.getServers()));
       projectContractEntities.setTags(OpenApiTransformerHelper.getOpenApiTags(openApi.getTags()));
@@ -118,6 +120,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
           .setComponents(OpenApiTransformerHelper.getOpenApiComponents(openApi.getComponents()));
       projectContractEntities
           .setPaths(OpenApiTransformerHelper.initOpenApiPath(openApi.getPaths()));
+//      OpenApiRefHelper.rendering$refInformation(projectContractEntities);
       return mongoTemplate
           .insert(projectContractEntities);
     } catch (Exception e) {

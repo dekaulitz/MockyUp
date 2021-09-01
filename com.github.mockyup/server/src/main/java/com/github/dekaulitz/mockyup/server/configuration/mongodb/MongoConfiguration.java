@@ -1,7 +1,5 @@
-package com.github.dekaulitz.mockyup.server.configuration;
+package com.github.dekaulitz.mockyup.server.configuration.mongodb;
 
-import com.github.dekaulitz.mockyup.server.configuration.helper.LocalTimeToStringConverter;
-import com.github.dekaulitz.mockyup.server.configuration.helper.StringToLocalTimeConverter;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -35,8 +33,9 @@ public class MongoConfiguration extends AbstractMongoClientConfiguration {
 
   public MongoCustomConversions customConversions() {
     List<Converter<?, ?>> converters = new ArrayList<>();
-    converters.add(new LocalTimeToStringConverter());
-    converters.add(new StringToLocalTimeConverter());
+//    converters.add(new LocalTimeToStringConverter());
+//    converters.add(new StringToLocalTimeConverter());
+    converters.add(new ObjectNodeToMapConverter());
     return new MongoCustomConversions(converters);
   }
 

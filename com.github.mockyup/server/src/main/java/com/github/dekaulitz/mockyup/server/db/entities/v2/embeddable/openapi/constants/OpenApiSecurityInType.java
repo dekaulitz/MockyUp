@@ -1,5 +1,7 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 
 public enum OpenApiSecurityInType {
@@ -9,6 +11,14 @@ public enum OpenApiSecurityInType {
 
   QUERY("query");
 
+  private static final Map<String, OpenApiSecurityInType> lookup = new HashMap<>();
+
+  static {
+    for (OpenApiSecurityInType d : OpenApiSecurityInType.values()) {
+      lookup.put(d.getAbbreviation(), d);
+    }
+  }
+
   @Getter
   private String value;
 
@@ -16,8 +26,17 @@ public enum OpenApiSecurityInType {
     this.value = value;
   }
 
-  @Override
-  public String toString() {
-    return String.valueOf(value);
+  public static OpenApiSecurityInType get(String abbreviation) {
+    return lookup.get(abbreviation);
   }
+
+  public static boolean isValid(String abbreviation) {
+    return lookup.containsKey(abbreviation);
+  }
+
+  public String getAbbreviation() {
+    return value;
+  }
+
+
 }

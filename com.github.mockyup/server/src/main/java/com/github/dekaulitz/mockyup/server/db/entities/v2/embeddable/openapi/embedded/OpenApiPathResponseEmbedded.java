@@ -20,6 +20,7 @@ import lombok.Setter;
 public class OpenApiPathResponseEmbedded implements Serializable {
 
   private int statusCode;
+  private String name;
   private String description;
   @Valid
   private Map<String, OpenApiHeaderEmbedded> headers;

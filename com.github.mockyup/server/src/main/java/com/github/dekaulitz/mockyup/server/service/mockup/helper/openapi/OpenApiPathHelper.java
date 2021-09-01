@@ -2,6 +2,8 @@ package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiParameterPosition;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiParameterStyle;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiCallbackEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
@@ -10,6 +12,7 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.emb
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.callbacks.Callback;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +20,19 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @see {@link PathItem} {@link Callback} {@link Operation}
+ */
 public class OpenApiPathHelper {
 
+  /**
+   * @see {@link Callback} transforming callbacks into OpenApiCallbackEmbedded
+   * <p>
+   * {@link OpenApiCallbackEmbedded}
+   */
   protected static Map<String, OpenApiCallbackEmbedded> getOpenApiComponentCallBacks(
       Map<String, Callback> callbacks) {
     if (MapUtils.isEmpty(callbacks)) {
@@ -48,13 +60,20 @@ public class OpenApiPathHelper {
     return callbackMapped;
   }
 
+  /**
+   * rendering request information base on the path and http method
+   */
   protected static void getOpenApiPathInformation(String path, Map<String, Object> extensions,
       PathItem pathItem, List<OpenApiPathEmbedded> openApiPathEmbeddedList) {
+    // common http request
     getCommonHttpRequestOpenApi(path, extensions, pathItem, openApiPathEmbeddedList);
+    // rare http request
     getRareHttpRequestOpenApi(path, extensions, pathItem, openApiPathEmbeddedList);
   }
 
-
+  /**
+   * transforming common http request like crud base on the path
+   */
   private static void getCommonHttpRequestOpenApi(String path,
       Map<String, Object> extensions, PathItem pathItem,
       List<OpenApiPathEmbedded> openApiPathEmbeddedList) {
@@ -108,10 +127,37 @@ public class OpenApiPathHelper {
     }
   }
 
-  /**
-   * @TODO need passing component {@link io.swagger.v3.oas.models.Components} object for injecting
-   * schemas or model
-   */
+  protected static OpenApiParameterEmbedded getOpenApiParameter(Parameter parameter) {
+    OpenApiParameterEmbedded openApiParameterEmbedded = new OpenApiParameterEmbedded();
+    String parameterPosition = parameter.getIn() == null ? null : parameter.getIn().toUpperCase();
+    if (EnumUtils.isValidEnum(OpenApiParameterPosition.class, parameterPosition)) {
+      openApiParameterEmbedded
+          .setIn(EnumUtils.getEnum(OpenApiParameterPosition.class, parameterPosition));
+    }
+    String parameterStyle = parameter.getStyle() == null ? null
+        : parameter.getStyle().toString();
+    if (EnumUtils.isValidEnum(OpenApiParameterStyle.class, parameterStyle)) {
+      openApiParameterEmbedded
+          .setStyle(EnumUtils.getEnum(OpenApiParameterStyle.class, parameterStyle));
+    }
+    openApiParameterEmbedded.setName(parameter.getName());
+    openApiParameterEmbedded.setDescription(parameter.getDescription());
+    openApiParameterEmbedded.setRequired(parameter.getRequired());
+    openApiParameterEmbedded.setDeprecated(parameter.getDeprecated());
+    openApiParameterEmbedded.setAllowEmptyValue(parameter.getAllowEmptyValue());
+    openApiParameterEmbedded.set$ref(parameter.get$ref());
+    openApiParameterEmbedded.setExplode(parameter.getExplode());
+    openApiParameterEmbedded.setAllowReserved(parameter.getAllowReserved());
+    openApiParameterEmbedded.setExtensions(parameter.getExtensions());
+    openApiParameterEmbedded
+        .setExamples(OpenApiCommonHelper.getOpenApiComponentExample(parameter.getExamples()));
+    openApiParameterEmbedded.setSchema(OpenApiSchemaHelper.convertSchema(parameter.getSchema()));
+    openApiParameterEmbedded.setExample(parameter.getExample());
+    openApiParameterEmbedded
+        .setContent(OpenApiPayloadHelper.initOpenApiComponentContent(parameter.getContent()));
+    return openApiParameterEmbedded;
+  }
+
   private static OpenApiPathEmbedded getOpenApiHttpRequest(String path, PathItem pathItem,
       Operation operation, OpenApiPathHttpMethod openApiPathHttpMethod,
       Map<String, Object> extensions) {
@@ -142,7 +188,7 @@ public class OpenApiPathHelper {
     if (CollectionUtils.isNotEmpty(pathItem.getParameters())) {
       List<OpenApiParameterEmbedded> parameterEmbeddedList = new ArrayList<>();
       pathItem.getParameters().forEach(parameter -> {
-        OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiParameterHelper
+        OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiPathHelper
             .getOpenApiParameter(parameter);
         parameterEmbeddedList.add(openApiParameterEmbedded);
       });
@@ -155,7 +201,7 @@ public class OpenApiPathHelper {
     if (CollectionUtils.isNotEmpty(operation.getSecurity())) {
       List<OpenApiSecurityEmbedded> securityList = new ArrayList<>();
       operation.getSecurity().forEach(securityRequirement -> {
-        initSecurityRequirement(securityRequirement, securityList);
+        OpenApiCommonHelper.initSecurityRequirement(securityRequirement, securityList);
       });
       openApiPathOperationEmbedded.setSecurity(securityList);
     }
@@ -169,19 +215,5 @@ public class OpenApiPathHelper {
     return openApiPathOperationEmbedded;
   }
 
-  private static void initSecurityRequirement(SecurityRequirement securityRequirement,
-      List<OpenApiSecurityEmbedded> securityList) {
-    if (MapUtils.isNotEmpty(securityRequirement)) {
-      securityRequirement.forEach((s, strings) -> {
-        OpenApiSecurityEmbedded openApiSecurityEmbedded = new OpenApiSecurityEmbedded();
-        if (CollectionUtils.isNotEmpty(strings)) {
-          openApiSecurityEmbedded.addList(s, strings);
-        } else {
-          openApiSecurityEmbedded.addList(s);
-        }
-        securityList.add(openApiSecurityEmbedded);
-      });
 
-    }
-  }
 }

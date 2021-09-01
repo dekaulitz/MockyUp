@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.server.service.common.helper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dekaulitz.mockyup.server.model.embeddable.Message;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

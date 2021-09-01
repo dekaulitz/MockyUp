@@ -183,10 +183,10 @@ public class OpenApiSchemaHelper {
 
   private static OpenApiDiscriminatorEmbedded initOpenApiDiscriminator(
       Discriminator discriminator) {
-    OpenApiDiscriminatorEmbedded openApiDiscriminatorEmbedded = new OpenApiDiscriminatorEmbedded();
     if (discriminator == null) {
-      return openApiDiscriminatorEmbedded;
+      return null;
     }
+    OpenApiDiscriminatorEmbedded openApiDiscriminatorEmbedded = new OpenApiDiscriminatorEmbedded();
     openApiDiscriminatorEmbedded.setMapping(discriminator.getMapping());
     openApiDiscriminatorEmbedded.setPropertyName(discriminator.getPropertyName());
     return openApiDiscriminatorEmbedded;

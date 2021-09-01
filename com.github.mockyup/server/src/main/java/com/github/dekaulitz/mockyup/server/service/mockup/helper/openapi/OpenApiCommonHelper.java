@@ -3,23 +3,32 @@ package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiExampleEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiHeaderEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.headers.Header;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 
-@Slf4j
+/**
+ * common function that help for transforming OpenApi model into our entities
+ *
+ * @see {@link io.swagger.v3.oas.models.OpenAPI}
+ */
 public class OpenApiCommonHelper {
 
   /**
-   * @TODO definitions is not finished yet
+   * transforming from {@link Header}
+   *
+   * @see {@link OpenApiHeaderEmbedded}
    */
-  protected static Map<String, OpenApiHeaderEmbedded> initOpenApiComponentHeaders(
+  protected static Map<String, OpenApiHeaderEmbedded> getOpenApiComponentHeader(
       Map<String, Header> headers) {
     if (MapUtils.isEmpty(headers)) {
       return null;
@@ -32,7 +41,7 @@ public class OpenApiCommonHelper {
       OpenApiHeaderEmbedded openApiHeaderEmbedded = new OpenApiHeaderEmbedded();
       openApiHeaderEmbedded.set$ref(header.get$ref());
       openApiHeaderEmbedded
-          .setExamples(initOpenApiComponentExamples(header.getExamples()));
+          .setExamples(getOpenApiComponentExample(header.getExamples()));
       openApiHeaderEmbedded.setDescription(header.getDescription());
       openApiHeaderEmbedded.setRequired(header.getRequired());
       openApiHeaderEmbedded.setDeprecated(header.getDeprecated());
@@ -53,10 +62,10 @@ public class OpenApiCommonHelper {
     return openApiHeaderEmbeddedMap;
   }
 
-  /*
-   * @TODO definitions is not finished yet
+  /**
+   * get component examples
    */
-  protected static Map<String, OpenApiExampleEmbedded> initOpenApiComponentExamples(
+  protected static Map<String, OpenApiExampleEmbedded> getOpenApiComponentExample(
       Map<String, Example> examples) {
     if (MapUtils.isEmpty(examples)) {
       return null;
@@ -72,18 +81,20 @@ public class OpenApiCommonHelper {
       openApiExampleEmbedded.setExternalValue(example.getExternalValue());
       openApiExampleEmbedded.setSummary(example.getSummary());
       /*
-       * @TODO we can adjust the example object as response  or request on parameter,header or path variable
+       * @TODO we use the example object as default response  or request on parameter,header or path variable
        */
       openApiExampleEmbedded.setValue(example.getValue());
-      /*
-       * @TODO need adjustment for get $ref to deep components
-       */
       openApiExampleEmbedded.set$ref(example.get$ref());
       openApiExample.put(s, openApiExampleEmbedded);
     });
     return openApiExample;
   }
 
+  /**
+   * parsing content type into supporting content type for limiting the supported content type
+   *
+   * @see {@link OpenApiContentType} for supporting content type
+   */
   public static OpenApiContentType getContentType(String content) {
     Map<String, OpenApiContentType> contentMap = EnumUtils
         .getEnumMap(OpenApiContentType.class);
@@ -96,8 +107,24 @@ public class OpenApiCommonHelper {
       }
     }
     if (contentType == null) {
-      throw new RuntimeException("invalid content format :" + content);
+      throw new RuntimeException("invalid content format or not supported yet : " + content);
     }
     return contentType;
+  }
+
+  protected static void initSecurityRequirement(SecurityRequirement securityRequirement,
+      List<OpenApiSecurityEmbedded> securityList) {
+    if (MapUtils.isNotEmpty(securityRequirement)) {
+      securityRequirement.forEach((s, strings) -> {
+        OpenApiSecurityEmbedded openApiSecurityEmbedded = new OpenApiSecurityEmbedded();
+        if (CollectionUtils.isNotEmpty(strings)) {
+          openApiSecurityEmbedded.addList(s, strings);
+        } else {
+          openApiSecurityEmbedded.addList(s);
+        }
+        securityList.add(openApiSecurityEmbedded);
+      });
+
+    }
   }
 }

@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.server.controllers;
 
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
@@ -49,5 +50,11 @@ public class SamplingController {
       @Valid @RequestBody CreateProjectContractRequest createProjectContractRequest)
       throws ServiceException {
     return ResponseEntity.ok(projectContractService.createContract(createProjectContractRequest));
+  }
+  @RequestMapping(value = "/sampling", method = {RequestMethod.GET})
+  public ResponseEntity<Object> createContract(
+      @Valid GetProjectContractParam getProjectContractParam)
+      throws ServiceException {
+    return ResponseEntity.ok(projectContractService.getAll(getProjectContractParam));
   }
 }
