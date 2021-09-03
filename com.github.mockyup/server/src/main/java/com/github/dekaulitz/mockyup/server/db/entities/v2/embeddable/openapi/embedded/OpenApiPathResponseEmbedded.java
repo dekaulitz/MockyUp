@@ -19,7 +19,7 @@ import lombok.Setter;
 @Builder
 public class OpenApiPathResponseEmbedded implements Serializable {
 
-  private int statusCode;
+  private Integer statusCode;
   private String name;
   private String description;
   @Valid

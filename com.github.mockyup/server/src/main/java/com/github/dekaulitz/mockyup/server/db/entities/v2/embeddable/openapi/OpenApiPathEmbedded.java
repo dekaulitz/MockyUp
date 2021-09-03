@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.features.DevStockConfig;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

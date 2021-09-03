@@ -9,11 +9,11 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.emb
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
+import com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup.DevStockHelper;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.callbacks.Callback;
 import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -166,9 +166,9 @@ public class OpenApiPathHelper {
     openApiPathEmbedded.setHttpMethod(openApiPathHttpMethod);
     openApiPathEmbedded.setExtensions(extensions);
     openApiPathEmbedded.set$ref(pathItem.get$ref());
-    OpenApiPathOperationEmbedded openApiPathOperationEmbedded = getOpenApiPathOperation(pathItem,
-        operation);
-    openApiPathEmbedded.setOperation(openApiPathOperationEmbedded);
+    openApiPathEmbedded.setOperation(getOpenApiPathOperation(pathItem,
+        operation));
+    DevStockHelper.setupOperationPathConfiguration(openApiPathEmbedded.getOperation());
     return openApiPathEmbedded;
   }
 

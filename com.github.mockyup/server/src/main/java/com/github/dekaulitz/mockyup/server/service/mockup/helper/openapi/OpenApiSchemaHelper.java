@@ -178,6 +178,7 @@ public class OpenApiSchemaHelper {
     baseSchema.setExtensions(schema.getExtensions());
     baseSchema.set_enum(schema.getEnum());
     baseSchema.setDiscriminator(initOpenApiDiscriminator(schema.getDiscriminator()));
+    baseSchema.setValue(initOpenApiDiscriminator(schema.getDiscriminator()));
     return baseSchema;
   }
 

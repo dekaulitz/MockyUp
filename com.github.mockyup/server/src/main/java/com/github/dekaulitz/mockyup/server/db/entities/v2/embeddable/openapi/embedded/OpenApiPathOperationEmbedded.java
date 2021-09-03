@@ -1,6 +1,8 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.features.DevStockConfig;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUpRequestEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,4 +35,6 @@ public class OpenApiPathOperationEmbedded implements Serializable {
   private List<OpenApiSecurityEmbedded> security = new ArrayList<>();
   private List<OpenApiServerEmbedded> servers = new ArrayList<>();
   private Map<String, Object> extensions = new HashMap<>();
+  // @TODO this is for mockup request extension
+  private MockUpRequestEmbedded mockup;
 }

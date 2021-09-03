@@ -74,6 +74,674 @@
               }
             }
           }
+        },
+        "x-mock-request": {
+          "mockingRequestPaths": [
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "asdasdasdasdad"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "123123"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestBodies": [
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "asdasdasdasdad"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestHeaders": [
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "asdasdasdasdad"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestQueries": [
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "asdasdasdasdad"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            }
+          ],
+          "mockingQueryRequest": [
+            {
+              "matchingProperty": {
+                "description": "",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "asdasdasdasdad"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-something-123": "asdasdasd"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "asdasdasd12313123",
+                      "access": [
+                        "READ",
+                        "WRITE"
+                      ]
+                    },
+                    "$ref": ""
+                  }
+                }
+              }
+            }
+          ],
+          "mockingDefaultRequest": {
+            "response": {
+              "statusCode": 200,
+              "headers": {
+                "x-something-123": "asdasdasd"
+              },
+              "content": {
+                "application/json": {
+                  "value": {
+                    "_id": "asdasdasd12313123",
+                    "access": [
+                      "READ",
+                      "WRITE"
+                    ]
+                  },
+                  "$ref": ""
+                }
+              }
+            }
+          }
+        },
+        "x-examples": {
+          "x-path-including": [
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": "1"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id-deleted": "this is from mock",
+                  "x-limiter-deleted": "this is from mocks"
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "BOOK_ID",
+                "value": "1"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id-deleted": "this is from mock",
+                  "x-limiter-deleted": "this is from mocks"
+                },
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": "0"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id-deleted": "this is from mock",
+                  "x-limiter-deleted": "this is from mocks"
+                },
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "CAT_ID",
+                "value": "null"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id-deleted": "this is from mock",
+                  "x-limiter-deleted": "this is from mocks"
+                },
+                "$ref": "#/components/examples/BOOKS_DETAIL",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_DETAIL_XML"
+                  }
+                }
+              }
+            }
+          ],
+          "x-body-including": [
+            {
+              "property": {
+                "name": "title",
+                "value": "noRef"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-store-noreff": "this is from mocks"
+                },
+                "$ref": "#/components/examples/BOOKS_FROM_STORE_REF",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/BOOKS_FROM_STORE_REF_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "title",
+                "value": "withRef"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-store-noreff": "this is from mocks"
+                },
+                "response": {
+                  "id": 2,
+                  "title": "BOOK_2_THIS IS FROM STORE with reff",
+                  "author": "string",
+                  "category": [
+                    "cat1",
+                    "cat2"
+                  ],
+                  "images": [
+                    {
+                      "url": "http://any.domain.com/any_image.jpg",
+                      "order": 1
+                    },
+                    {
+                      "url": "http://any.domain.com/any_image.jpg",
+                      "order": 2
+                    }
+                  ],
+                  "publisher": "string",
+                  "publishedDate": "2020-06-13T16:05:04.126Z"
+                },
+                "content": {
+                  "application/json": {
+                    "response": {
+                      "id": 2,
+                      "title": "BOOK_2_THIS IS FROM STORE with reff",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  },
+                  "application/xml": {
+                    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<book>\n\t<id>0</id>\n\t<title>string</title>\n\t<author>string</author>\n\t<category>\n\t\t<category>string</category>\n\t</category>\n\t<images>\n\t\t<image>\n\t\t\t<url>string</url>\n\t\t\t<order>0</order>\n\t\t</image>\n\t</images>\n\t<publisher>string</publisher>\n\t<publishedDate>2020-08-12T16:14:03.009Z</publishedDate>\n</book>"
+                  }
+                }
+              }
+            }
+          ],
+          "x-header-including": [
+            {
+              "property": {
+                "name": "client-id",
+                "value": "empty"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+              }
+            },
+            {
+              "property": {
+                "name": "client-id",
+                "value": "error_400"
+              },
+              "response": {
+                "httpCode": 400,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/ERROR_400"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/ERROR_400_XML"
+                  }
+                },
+                "$ref": "#/components/examples/ERROR_400"
+              }
+            }
+          ],
+          "x-query-including": [
+            {
+              "property": {
+                "name": "query",
+                "value": "title:empty"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_EMPTY_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "sort",
+                "value": "published:asc"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "query",
+                "value": "title:one"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE",
+                "content": {
+                  "application/json": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE"
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                }
+              }
+            },
+            {
+              "property": {
+                "name": "query",
+                "value": "title:one_no_ref"
+              },
+              "response": {
+                "httpCode": 200,
+                "headers": {
+                  "x-request-id": "this is from mock",
+                  "x-limiter": "this is from mocks"
+                },
+                "content": {
+                  "application/json": {
+                    "response": [
+                      {
+                        "id": 1,
+                        "title": "BOOK_1_query response without reff",
+                        "author": "string",
+                        "category": [
+                          "string"
+                        ],
+                        "images": [
+                          {
+                            "url": "string",
+                            "order": 0
+                          }
+                        ],
+                        "publisher": "string",
+                        "publishedDate": "2020-06-13T16:05:04.126Z"
+                      }
+                    ]
+                  },
+                  "application/xml": {
+                    "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                  }
+                },
+                "response": [
+                  {
+                    "id": 1,
+                    "title": "BOOK_1_query response without reff",
+                    "author": "string",
+                    "category": [
+                      "string"
+                    ],
+                    "images": [
+                      {
+                        "url": "string",
+                        "order": 0
+                      }
+                    ],
+                    "publisher": "string",
+                    "publishedDate": "2020-06-13T16:05:04.126Z"
+                  }
+                ]
+              }
+            }
+          ],
+          "x-default": {
+            "response": {
+              "httpCode": 200,
+              "headers": {
+                "x-request-id": "this is from mock",
+                "x-limiter": "this is from mocks"
+              },
+              "response": [
+                {
+                  "id": 1,
+                  "title": "BOOK_1",
+                  "author": "string",
+                  "category": [
+                    "string"
+                  ],
+                  "images": [
+                    {
+                      "url": "string",
+                      "order": 0
+                    }
+                  ],
+                  "publisher": "string",
+                  "publishedDate": "2020-06-13T16:05:04.126Z"
+                },
+                {
+                  "id": 2,
+                  "title": "BOOK_2",
+                  "author": "string",
+                  "category": [
+                    "cat1",
+                    "cat2"
+                  ],
+                  "images": [
+                    {
+                      "url": "http://any.domain.com/any_image.jpg",
+                      "order": 1
+                    },
+                    {
+                      "url": "http://any.domain.com/any_image.jpg",
+                      "order": 2
+                    }
+                  ],
+                  "publisher": "string",
+                  "publishedDate": "2020-06-13T16:05:04.126Z"
+                }
+              ],
+              "content": {
+                "application/json": {
+                  "response": [
+                    {
+                      "id": 1,
+                      "title": "BOOK_1",
+                      "author": "string",
+                      "category": [
+                        "string"
+                      ],
+                      "images": [
+                        {
+                          "url": "string",
+                          "order": 0
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    },
+                    {
+                      "id": 2,
+                      "title": "BOOK_2",
+                      "author": "string",
+                      "category": [
+                        "cat1",
+                        "cat2"
+                      ],
+                      "images": [
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 1
+                        },
+                        {
+                          "url": "http://any.domain.com/any_image.jpg",
+                          "order": 2
+                        }
+                      ],
+                      "publisher": "string",
+                      "publishedDate": "2020-06-13T16:05:04.126Z"
+                    }
+                  ]
+                },
+                "application/xml": {
+                  "$ref": "#/components/examples/LIST_OF_BOOKS_ONLY_ONE_XML"
+                }
+              }
+            }
+          }
         }
       }
     }

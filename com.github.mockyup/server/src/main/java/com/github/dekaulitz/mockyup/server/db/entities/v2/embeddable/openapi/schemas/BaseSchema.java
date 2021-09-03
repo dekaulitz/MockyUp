@@ -54,6 +54,7 @@ public class BaseSchema<T> implements Serializable {
   private Map<String, Object> extensions = new HashMap<>();
   private OpenApiDiscriminatorEmbedded discriminator;
   private BaseSchema reference$ref;
+  private Object value;
 
   public String get$ref() {
     return $ref;
