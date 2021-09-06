@@ -40,10 +40,14 @@ public class DevStockHelper {
       throw new RuntimeException("invalid x-mock-request  " + extension.toString());
     }
     MockUpRequestEmbedded mockUpRequestEmbedded = new MockUpRequestEmbedded();
-    mockUpRequestEmbedded.setMockingRequestBodies(MockupHelper.getMatchingAttributes(mockupNode,"mockingRequestBodies"));
-    mockUpRequestEmbedded.setMockingRequestHeaders(MockupHelper.getMatchingAttributes(mockupNode,"mockingRequestHeaders"));
-    mockUpRequestEmbedded.setMockingRequestPaths(MockupHelper.getMatchingAttributes(mockupNode,"mockingRequestPaths"));
-    mockUpRequestEmbedded.setMockingRequestQueries(MockupHelper.getMatchingAttributes(mockupNode,"mockingRequestQueries"));
+    mockUpRequestEmbedded.setMockingRequestBodies(
+        MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestBodies"));
+    mockUpRequestEmbedded.setMockingRequestHeaders(
+        MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestHeaders"));
+    mockUpRequestEmbedded.setMockingRequestPaths(
+        MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestPaths"));
+    mockUpRequestEmbedded.setMockingRequestQueries(
+        MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestQueries"));
     mockUpRequestEmbedded.setResponseDefault(MockupHelper.getResponseDefault(mockupNode));
     openApiPathEmbedded.setMockup(mockUpRequestEmbedded);
   }

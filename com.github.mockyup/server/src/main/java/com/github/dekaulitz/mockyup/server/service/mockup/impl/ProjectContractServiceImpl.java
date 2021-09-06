@@ -59,6 +59,8 @@ public class ProjectContractServiceImpl implements ProjectContractService {
         cacheService.createCache(CacheConstants.PROJECT_PREFIX + id, entity,
             CacheConstants.ONE_HOUR_IN_SECONDS);
       }
+    } else {
+      throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND));
     }
     return entity;
   }
