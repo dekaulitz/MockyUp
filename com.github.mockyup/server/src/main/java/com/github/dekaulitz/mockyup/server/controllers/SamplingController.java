@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.server.controllers;
 
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.MockRequest;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
@@ -8,20 +9,17 @@ import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.MockingService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectService;
-import com.github.dekaulitz.mockyup.server.utils.MockHelper;
+import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -71,8 +69,6 @@ public class SamplingController {
   }
 
   /**
-   * @param path path on mock swagger pathitem that want to get mocking the response
-   * @param id   mock id from  mock collection
    * @param body optional depend on the contract that registered
    * @return ResponseEntity
    */
@@ -86,9 +82,17 @@ public class SamplingController {
       @RequestBody(required = false) String body,
       HttpServletRequest request) throws ServiceException {
     String path = request.getRequestURI()
-        .split(request.getContextPath() + "/test-mocking/mocking/")[1];
-    String[] id = path.split("/path");
-    this.mockingService.getMockMocking(request, null, null, body);
-    return ResponseEntity.ok().build();
+        .split(request.getContextPath() + MockRequest.MOCK_REQUEST_PREFIX)[1];
+    String[] paths = path.split(MockRequest.MOCK_REQUEST_ID_PREFIX);
+    Map<String, String> headers = Collections.list(request.getHeaderNames())
+        .stream()
+        .collect(Collectors.toMap(
+            name -> name,
+            request::getHeader));
+
+    Map<String, String[]> parameters = request.getParameterMap();
+    return ResponseEntity
+        .ok(this.mockingService
+            .mockingRequest(paths[0], paths[1], body, request.getMethod(), headers, parameters));
   }
 }

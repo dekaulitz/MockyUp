@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.auth.api;
 
-import com.github.dekaulitz.mockyup.server.model.JwtProfileModel;
+import com.github.dekaulitz.mockyup.server.model.dto.JwtProfileModel;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 

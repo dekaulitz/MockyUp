@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.model;
+package com.github.dekaulitz.mockyup.server.model.dto;
 
 
 import java.util.Collection;

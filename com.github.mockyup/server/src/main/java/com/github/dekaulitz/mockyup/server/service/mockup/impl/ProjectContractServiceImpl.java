@@ -2,6 +2,8 @@ package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectContractEntities;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
@@ -13,13 +15,13 @@ import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectService;
-import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiCommonHelper;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiTransformerHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
@@ -58,9 +60,9 @@ public class ProjectContractServiceImpl implements ProjectContractService {
       if (entity != null) {
         cacheService.createCache(CacheConstants.PROJECT_PREFIX + id, entity,
             CacheConstants.ONE_HOUR_IN_SECONDS);
+      }else {
+        throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND));
       }
-    } else {
-      throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND));
     }
     return entity;
   }

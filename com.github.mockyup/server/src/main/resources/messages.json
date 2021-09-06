@@ -35,5 +35,16 @@
         "message": "INVALID_MOCK_CONTRACT"
       }
     ]
+  },
+  "MOCK_NOT_FOUND": {
+    "httpCode": 400,
+    "statusCode": 4002,
+    "description": "Mock not found",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "MOCK_NOT_FOUND"
+      }
+    ]
   }
 }

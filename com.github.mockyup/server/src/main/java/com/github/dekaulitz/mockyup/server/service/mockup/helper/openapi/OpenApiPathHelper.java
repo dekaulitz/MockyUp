@@ -14,6 +14,7 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.callbacks.Callback;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.servers.Server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -166,32 +167,33 @@ public class OpenApiPathHelper {
     openApiPathEmbedded.setHttpMethod(openApiPathHttpMethod);
     openApiPathEmbedded.setExtensions(extensions);
     openApiPathEmbedded.set$ref(pathItem.get$ref());
-    openApiPathEmbedded.setOperation(getOpenApiPathOperation(pathItem,
-        operation));
+    openApiPathEmbedded.setOperation(getOpenApiPathOperation(operation));
+    if (CollectionUtils.isNotEmpty(pathItem.getServers())) {
+      List<OpenApiServerEmbedded> openApiServerEmbeddedList = getPathServers(
+          operation.getServers());
+      openApiPathEmbedded.setServers(openApiServerEmbeddedList);
+    }
+    if (CollectionUtils.isNotEmpty(pathItem.getParameters())) {
+      List<OpenApiParameterEmbedded> parameterEmbeddedList = getPathItemParameters(
+          operation.getParameters());
+      openApiPathEmbedded.setParameters(parameterEmbeddedList);
+    }
     DevStockHelper.setupOperationPathConfiguration(openApiPathEmbedded.getOperation());
     return openApiPathEmbedded;
   }
 
-  private static OpenApiPathOperationEmbedded getOpenApiPathOperation(
-      PathItem pathItem, Operation operation) {
+  private static OpenApiPathOperationEmbedded getOpenApiPathOperation(Operation operation) {
     OpenApiPathOperationEmbedded openApiPathOperationEmbedded = new OpenApiPathOperationEmbedded();
-    openApiPathOperationEmbedded.setSummary(pathItem.getSummary());
-    openApiPathOperationEmbedded.setDescription(pathItem.getDescription());
-    if (CollectionUtils.isNotEmpty(pathItem.getServers())) {
-      List<OpenApiServerEmbedded> openApiServerEmbeddedList = new ArrayList<>();
-      pathItem.getServers().forEach(server -> {
-        OpenApiServerEmbedded openApiServerEmbedded = OpenApiServerHelper.getOpenApiServers(server);
-        openApiServerEmbeddedList.add(openApiServerEmbedded);
-      });
+    openApiPathOperationEmbedded.setSummary(operation.getSummary());
+    openApiPathOperationEmbedded.setDescription(operation.getDescription());
+    if (CollectionUtils.isNotEmpty(operation.getServers())) {
+      List<OpenApiServerEmbedded> openApiServerEmbeddedList = getPathServers(
+          operation.getServers());
       openApiPathOperationEmbedded.setServers(openApiServerEmbeddedList);
     }
-    if (CollectionUtils.isNotEmpty(pathItem.getParameters())) {
-      List<OpenApiParameterEmbedded> parameterEmbeddedList = new ArrayList<>();
-      pathItem.getParameters().forEach(parameter -> {
-        OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiPathHelper
-            .getOpenApiParameter(parameter);
-        parameterEmbeddedList.add(openApiParameterEmbedded);
-      });
+    if (CollectionUtils.isNotEmpty(operation.getParameters())) {
+      List<OpenApiParameterEmbedded> parameterEmbeddedList = getPathItemParameters(
+          operation.getParameters());
       openApiPathOperationEmbedded.setParameters(parameterEmbeddedList);
     }
     openApiPathOperationEmbedded.setTags(operation.getTags());
@@ -215,5 +217,23 @@ public class OpenApiPathHelper {
     return openApiPathOperationEmbedded;
   }
 
+  private static List<OpenApiParameterEmbedded> getPathItemParameters(List<Parameter> parameters) {
+    List<OpenApiParameterEmbedded> parameterEmbeddedList = new ArrayList<>();
+    parameters.forEach(parameter -> {
+      OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiPathHelper
+          .getOpenApiParameter(parameter);
+      parameterEmbeddedList.add(openApiParameterEmbedded);
+    });
+    return parameterEmbeddedList;
+  }
+
+  private static List<OpenApiServerEmbedded> getPathServers(List<Server> servers) {
+    List<OpenApiServerEmbedded> openApiServerEmbeddedList = new ArrayList<>();
+    servers.forEach(server -> {
+      OpenApiServerEmbedded openApiServerEmbedded = OpenApiServerHelper.getOpenApiServers(server);
+      openApiServerEmbeddedList.add(openApiServerEmbedded);
+    });
+    return openApiServerEmbeddedList;
+  }
 
 }

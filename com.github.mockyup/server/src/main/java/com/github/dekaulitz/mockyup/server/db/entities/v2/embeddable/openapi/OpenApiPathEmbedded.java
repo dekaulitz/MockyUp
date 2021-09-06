@@ -1,10 +1,12 @@
 package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
 
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
+import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.DevStockConfig;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,9 @@ public class OpenApiPathEmbedded implements Serializable {
   private OpenApiPathHttpMethod httpMethod;
   // Paths.extensions
   private Map<String, Object> extensions = new HashMap<>();
+
+  private List<OpenApiServerEmbedded> servers = new ArrayList<>();
+  private List<OpenApiParameterEmbedded> parameters = new ArrayList<>();
   /**
    * PathItem.get or PathItem.post or .. defined base on httpMethod operation
    */
