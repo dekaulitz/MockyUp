@@ -1,17 +1,13 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "description": "Testing mockup server",
-    "version": "v1.0",
-    "title": "Testing Mockup Server",
-    "termsOfService": "",
-    "contact": {
-      "email": "sulaimanfahmi@gmail.com"
-    }
+    "title": "Open Api Collection",
+    "description": "Open api collection for test",
+    "version": "v1"
   },
   "servers": [
     {
-      "url": "http://{host}/mocks/mocking/{testing_path}?path=",
+      "url": "http://localhost:7070/test-mocking/mocking/{testing_path}/path",
       "description": "Testing locally",
       "variables": {
         "host": {
@@ -26,26 +22,22 @@
   ],
   "tags": [
     {
-      "name": "BOOKS",
-      "description": "Testing mock server"
-    }
-  ],
-  "security": [
+      "name": "users",
+      "description": "users apis"
+    },
     {
-      "Oauth2": [
-        "something",
-        "somethinsg"
-      ]
+      "name": "login",
+      "description": "users login"
     }
   ],
   "paths": {
-    "/user/login": {
-      "description": "user authenticating",
+    "/login": {
       "post": {
+        "description": "user do login for authentication",
         "tags": [
-          "BOOKS"
+          "login"
         ],
-        "summary": "",
+        "summary": "user login",
         "operationId": "",
         "parameters": [
         ],
@@ -53,22 +45,40 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LOGIN"
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "user login",
+            "description": "success login",
             "content": {
               "application/json": {
-                "examples": {
-                  "something": {
-                    "$ref": "#/components/examples/USER_LOGIN_SUCCESS"
-                  },
-                  "admin_login": {
-                    "$ref": "#/components/examples/USER_LOGIN_ADMIN"
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "access": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               }
@@ -76,61 +86,138 @@
           }
         },
         "x-mock-request": {
-          "mockingRequestPaths": [
+          "mockingRequestHeaders": [
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "asdasdasdasdad"
+                    "value": "sulaimanfahmi@gmail.com"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
+                      "userId": "response dari username sulaimanfahmi@gmail.com header",
+                      "token": "string",
                       "access": [
-                        "READ",
-                        "WRITE"
+                        "string",
+                        "string2",
+                        "string3"
                       ]
-                    },
-                    "$ref": null
+                    }
                   }
                 }
               }
             },
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "123123"
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": "something"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
+                      "userId": "response dari username sulaimanfahmi@gmail.com  header password something",
+                      "token": "string",
                       "access": [
-                        "READ",
-                        "WRITE"
+                        "string",
+                        "string2",
+                        "string3"
                       ]
-                    },
-                    "$ref": null
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestPaths": [],
+          "mockingRequestQueries": [
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "userId": "response dari username sulaimanfahmi@gmail.com query parameter",
+                      "token": "string",
+                      "access": [
+                        "string",
+                        "string2",
+                        "string3"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": "something"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "userId": "response dari username sulaimanfahmi@gmail.com query parameter with password something",
+                      "token": "string",
+                      "access": [
+                        "string",
+                        "string2",
+                        "string3"
+                      ]
+                    }
                   }
                 }
               }
@@ -139,60 +226,244 @@
           "mockingRequestBodies": [
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "asdasdasdasdad"
+                    "value": "sulaimanfahmi@gmail.com"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
+                      "userId": "response dari username sulaimanfahmi@gmail.com",
+                      "token": "string",
                       "access": [
-                        "READ",
-                        "WRITE"
+                        "string",
+                        "string2",
+                        "string3"
                       ]
-                    },
-                    "$ref": null
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": null
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "userId": "response dari username sulaimanfahmi@gmail.com with password null",
+                      "token": "string",
+                      "access": [
+                        "string",
+                        "string2",
+                        "string3"
+                      ]
+                    }
                   }
                 }
               }
             }
           ],
+          "mockingDefaultResponse": {
+            "statusCode": 200,
+            "headers": {
+              "x-authorization-token": "ini header token",
+              "x-path": "/login"
+            },
+            "content": {
+              "application/json": {
+                "value": {
+                  "userId": "response_default",
+                  "token": "string",
+                  "access": [
+                    "string",
+                    "string2",
+                    "string3"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "description": "get user detail",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "",
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-mock-request": {
           "mockingRequestHeaders": [
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "asdasdasdasdad"
+                    "value": "sulaimanfahmi@gmail.com"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
-                      "access": [
-                        "READ",
-                        "WRITE"
-                      ]
-                    },
-                    "$ref": null
+                      "_id": "string",
+                      "username": "this from header with username sulaimanfahmi@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": "something"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "string",
+                      "username": "this from header with username sulaimanfahmi1@gmail.com and parameter something",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestPaths": [
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "sulaimanfahmi@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "string",
+                      "username": "this from path with username sulaimanfahmi@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "string",
+                      "username": "this from path with username sulaimanfahmi1@gmail.com",
+                      "email": "string"
+                    }
                   }
                 }
               }
@@ -201,202 +472,383 @@
           "mockingRequestQueries": [
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "asdasdasdasdad"
+                    "value": "sulaimanfahmi@gmail.com"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
-                      "access": [
-                        "READ",
-                        "WRITE"
-                      ]
-                    },
-                    "$ref": null
+                      "_id": "string",
+                      "username": "this from query with username sulaimanfahmi@gmail.com",
+                      "email": "string"
+                    }
                   }
                 }
               }
-            }
-          ],
-          "mockingQueryRequest": [
+            },
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "asdasdasdasdad"
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": "something"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/login"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
-                      "access": [
-                        "READ",
-                        "WRITE"
-                      ]
-                    },
-                    "$ref": null
+                      "_id": "string",
+                      "username": "this from query with username sulaimanfahmi1@gmail.com and password something",
+                      "email": "string"
+                    }
                   }
                 }
               }
             }
           ],
-          "mockingDefaultRequest": {
-            "response": {
-              "statusCode": 200,
-              "headers": {
-                "x-something-123": "asdasdasd"
-              },
-              "content": {
-                "application/json": {
-                  "value": {
-                    "_id": "asdasdasd12313123",
-                    "access": [
-                      "READ",
-                      "WRITE"
-                    ]
-                  },
-                  "$ref": null
+          "mockingDefaultResponse": {
+            "statusCode": 200,
+            "headers": {
+              "x-authorization-token": "ini header token",
+              "x-path": "/login"
+            },
+            "content": {
+              "application/json": {
+                "value": {
+                  "_id": "string",
+                  "username": "default response",
+                  "email": "string"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/user/{id}/access/{access}": {
-      "description": "something",
-      "get": {
-        "summary": "",
+      },
+      "put": {
+        "description": "user do login for authentication",
+        "tags": [
+          "login"
+        ],
+        "summary": "user login",
         "operationId": "",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
-        "responses": {
-          "default": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "something": {
-                    "value": "ok"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
                   }
                 }
               }
-            },
-            "description": "something"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "access": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-mock-request": {
-          "mockingRequestPaths": [
+          "mockingRequestHeaders": [
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "1234"
-                  },
-                  "access": {
-                    "type": "string",
-                    "value": "jancok"
+                    "value": "sulaimanfahmi@gmail.com"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "asdasdasd"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
-                      "access": [
-                        "READ",
-                        "WRITE"
-                      ]
-                    },
-                    "$ref": null
+                      "_id": "put",
+                      "username": "this is from header with username sulaimanfahmi@gmail.com",
+                      "email": "string"
+                    }
                   }
                 }
               }
             },
             {
               "matchingProperty": {
-                "description": "",
+                "description": "when user login success",
                 "properties": {
-                  "id": {
+                  "username": {
                     "type": "string",
-                    "value": "123123"
+                    "value": "sulaimanfahmi1@gmail.com"
                   },
-                  "access": {
+                  "password": {
                     "type": "string",
-                    "value": "berak"
+                    "value": "something"
                   }
                 }
               },
               "response": {
                 "statusCode": 200,
                 "headers": {
-                  "x-something-123": "berak"
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
                 },
                 "content": {
                   "application/json": {
                     "value": {
-                      "_id": "asdasdasd12313123",
-                      "access": [
-                        "READ",
-                        "WRITE"
-                      ]
-                    },
-                    "$ref": null
+                      "_id": "put",
+                      "username": "this is from header with username sulaimanfahmi1@gmail.com and password something",
+                      "email": "string"
+                    }
                   }
                 }
               }
             }
           ],
-          "mockingDefaultRequest": {
-            "response": {
-              "statusCode": 200,
-              "headers": {
-                "x-something-123": "asdasdasd"
+          "mockingRequestPaths": [
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "sulaimanfahmi@gmail.com"
+                  }
+                }
               },
-              "content": {
-                "application/json": {
-                  "value": {
-                    "_id": "asdasdasd12313123",
-                    "access": [
-                      "READ",
-                      "WRITE"
-                    ]
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from path with id sulaimanfahmi@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from path with id sulaimanfahmi1@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestQueries": [
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from query parameter with username sulaimanfahmi1@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
                   },
-                  "$ref": null
+                  "password": {
+                    "type": "string",
+                    "value": "something"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from query parameter with username sulaimanfahmi1@gmail.com and password something",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "mockingRequestBodies": [
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi@gmail.com"
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from body with username sulaimanfahmi1@gmail.com",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "matchingProperty": {
+                "description": "when user login success",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "value": "sulaimanfahmi1@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "value": null
+                  }
+                }
+              },
+              "response": {
+                "statusCode": 200,
+                "headers": {
+                  "x-authorization-token": "ini header token",
+                  "x-path": "/users/{id}"
+                },
+                "content": {
+                  "application/json": {
+                    "value": {
+                      "_id": "put",
+                      "username": "this from body with username sulaimanfahmi1@gmail.com and password null",
+                      "email": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "mockingDefaultResponse": {
+            "statusCode": 200,
+            "headers": {
+              "x-authorization-token": "ini header token",
+              "x-path": "/login"
+            },
+            "content": {
+              "application/json": {
+                "value": {
+                  "_id": "put",
+                  "username": "response default",
+                  "email": "string"
                 }
               }
             }
@@ -406,98 +858,17 @@
     }
   },
   "components": {
-    "schemas": {
-      "LOGIN": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "enum": [
-              "username",
-              "password"
-            ],
-            "description": "it can be email or username",
-            "example": "sulaimanfahmi@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "example": "awesome"
+    "x-schema-database": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid",
+          "x-database-config": {
+            "isPrimary": true,
+            "isUnique": true
           }
         }
-      }
-    },
-    "headers": {
-    },
-    "parameters": {
-    },
-    "requestBodies": {
-    },
-    "responses": {
-      "SUCCESS_LOGIN": {
-        "description": "response user succeeded authenticated",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "string",
-                  "example": "_id"
-                },
-                "token": {
-                  "type": "string",
-                  "example": "asd.123123123.123"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "description": "something shit happen",
-        "name": "x-auth-token",
-        "type": "apiKey",
-        "in": "header"
-      },
-      "Oauth2": {
-        "type": "oauth2",
-        "description": "login access via oauth 2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://api.example.com/oauth2/authorize",
-            "scopes": {
-              "read": "read access",
-              "write": "write access"
-            }
-          }
-        }
-      }
-    },
-    "callbacks": {
-    },
-    "links": {
-    },
-    "examples": {
-      "USER_LOGIN_SUCCESS": {
-        "description": "example response success",
-        "value": {
-          "SOMETHING": "something"
-        }
-      },
-      "USER_LOGIN_ADMIN": {
-        "description": "example response success",
-        "value": {
-          "ADMIN": "something",
-          "isTrue": true
-        }
-      }
-    },
-    "x-database-scehmas": {
-      "user_table": {
-        "type": "object"
       }
     }
   }

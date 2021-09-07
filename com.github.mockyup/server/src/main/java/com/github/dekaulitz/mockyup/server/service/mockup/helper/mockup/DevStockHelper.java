@@ -1,13 +1,10 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingRequestEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingResponseEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.features.constants.DevStockEnum;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUpRequestEmbedded;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 
@@ -48,7 +45,7 @@ public class DevStockHelper {
         MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestPaths"));
     mockUpRequestEmbedded.setMockingRequestQueries(
         MockupHelper.getMatchingAttributes(mockupNode, "mockingRequestQueries"));
-    mockUpRequestEmbedded.setResponseDefault(MockupHelper.getResponseDefault(mockupNode));
+    mockUpRequestEmbedded.setMockingDefaultResponse(MockupHelper.getResponseDefault(mockupNode));
     openApiPathEmbedded.setMockup(mockUpRequestEmbedded);
   }
 

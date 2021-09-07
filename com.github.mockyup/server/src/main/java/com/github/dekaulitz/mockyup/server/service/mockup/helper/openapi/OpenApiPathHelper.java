@@ -218,6 +218,9 @@ public class OpenApiPathHelper {
   }
 
   private static List<OpenApiParameterEmbedded> getPathItemParameters(List<Parameter> parameters) {
+    if(CollectionUtils.isEmpty(parameters)){
+      return null;
+    }
     List<OpenApiParameterEmbedded> parameterEmbeddedList = new ArrayList<>();
     parameters.forEach(parameter -> {
       OpenApiParameterEmbedded openApiParameterEmbedded = OpenApiPathHelper
@@ -228,6 +231,9 @@ public class OpenApiPathHelper {
   }
 
   private static List<OpenApiServerEmbedded> getPathServers(List<Server> servers) {
+    if(CollectionUtils.isEmpty(servers)){
+      return null;
+    }
     List<OpenApiServerEmbedded> openApiServerEmbeddedList = new ArrayList<>();
     servers.forEach(server -> {
       OpenApiServerEmbedded openApiServerEmbedded = OpenApiServerHelper.getOpenApiServers(server);

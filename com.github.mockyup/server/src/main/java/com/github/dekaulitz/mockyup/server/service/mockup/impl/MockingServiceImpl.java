@@ -26,7 +26,7 @@ public class MockingServiceImpl implements MockingService {
   private ProjectContractService projectContractService;
 
   @Override
-  public Object mockingRequest(String id, String path, String body, String httpMethod,
+  public MockRequestModel mockingRequest(String id, String path, String body, String httpMethod,
       Map<String, String> headers, Map<String, String[]> parameters, String contentType)
       throws ServiceException {
     OpenApiPathHttpMethod openApiPathHttpMethod = null;
@@ -53,14 +53,14 @@ public class MockingServiceImpl implements MockingService {
         .collect(Collectors.toList());
     if (CollectionUtils.isEmpty(pathInfos)) {
       throw new ServiceException(MessageHelper.getMessage(MessageType.MOCK_NOT_FOUND),
-          "contractId: " + id + " with path" + path);
+          " contractId: " + id + " with path: " + path + " method: " + pathHttpMethod);
     }
     MockRequestModel mockRequestModel = new MockRequestModel();
     mockRequestModel.setPath(path);
     MockRequestHelper
         .initMockRequest(pathInfos, headers, parameters, path, body, mockRequestModel, id,
             openApiContentType);
-    return mockRequestModel.getResponse();
+    return mockRequestModel;
   }
 
 

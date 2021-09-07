@@ -15,8 +15,10 @@ import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.server.utils.XmlMapper;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class MockRequestHelper {
 
@@ -31,13 +33,13 @@ public class MockRequestHelper {
     for (OpenApiPathEmbedded pathInfo : pathInfos) {
       if (null == pathInfo.getOperation() || null == pathInfo.getOperation().getMockup()) {
         throw new ServiceException(MessageHelper.getMessage(MessageType.MOCK_NOT_FOUND),
-            "contractId: " + id + " with path" + path);
+            " contractId: " + id + " with path: " + path + " method: ");
       }
       MockUpRequestEmbedded mockingPath = pathInfo
           .getOperation().getMockup();
       if (null != mockingPath.getMockingRequestPaths()) {
         initMockingRequestPaths(mockingPath.getMockingRequestPaths(),
-            mockRequestModel, path);
+            mockRequestModel, pathInfo.getPath());
         if (mockRequestModel.getResponse() != null) {
           break;
         }
@@ -65,8 +67,8 @@ public class MockRequestHelper {
           break;
         }
       }
-      if (null != mockingPath.getResponseDefault()) {
-        mockRequestModel.setResponse(mockingPath.getResponseDefault());
+      if (null != mockingPath.getMockingDefaultResponse()) {
+        mockRequestModel.setResponse(mockingPath.getMockingDefaultResponse());
         if (mockRequestModel.getResponse() != null) {
           break;
         }
@@ -78,6 +80,9 @@ public class MockRequestHelper {
       List<MockingMatchingRequestEmbedded> mockingRequestBodies,
       OpenApiContentType openApiContentType, String body, MockRequestModel mockRequestModel)
       throws ServiceException {
+    if (StringUtils.isEmpty(body)) {
+      return;
+    }
     JsonNode requestBody;
     try {
       if (OpenApiContentType.APPLICATION_XML == openApiContentType) {
@@ -89,46 +94,60 @@ public class MockRequestHelper {
       throw new ServiceException(MessageHelper.getMessage(MessageType.UNSUPPORTED_MOCK_TYPE),
           ex);
     }
-    mockingRequestBodies.forEach(mockingMatchingRequestEmbedded -> {
+    for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestBodies) {
       if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
           .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
-        return;
+        continue;
       }
       AtomicInteger matchingSize = new AtomicInteger(
           mockingMatchingRequestEmbedded.getMatchingProperty()
               .getProperties().size());
-      mockingMatchingRequestEmbedded.getMatchingProperty().getProperties()
-          .forEach((s, baseSchema) -> {
-            if (requestBody.has(s)) {
-              checkMockingRequestBody(requestBody, s, baseSchema, matchingSize);
-            }
-          });
-      if (matchingSize.get() == 0) {
-        mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
+      for (Entry<String, BaseSchema> entry : mockingMatchingRequestEmbedded.getMatchingProperty()
+          .getProperties().entrySet()) {
+        String s = entry.getKey();
+        BaseSchema baseSchema = entry.getValue();
+        checkMockingRequestBody(requestBody, s, baseSchema, matchingSize);
+        if (matchingSize.get() == 0) {
+          mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
+          return;
+        }
       }
-    });
+      if (mockRequestModel.getResponse() != null) {
+        return;
+      }
+    }
   }
 
   private static void checkMockingRequestBody(JsonNode requestBody, String s,
       BaseSchema baseSchema,
       AtomicInteger matchingSize) {
+    if (!requestBody.has(s)) {
+      return;
+    }
     switch (baseSchema.getType()) {
       case OpenApiSchemaHelper.STRING_TYPE: {
+        // this is for handling when the properties value set to null
+        // and request from the apps is null also
         String expectedValue = (String) baseSchema.getValue();
-        if (expectedValue.equals(requestBody.get(s).textValue())) {
+        // comparing null to null
+        if (expectedValue == null) {
+          if (null == requestBody.get(s).textValue()) {
+            matchingSize.getAndDecrement();
+          }
+        } else if (expectedValue.equals(requestBody.get(s).textValue())) {
           matchingSize.getAndDecrement();
         }
         break;
       }
       case OpenApiSchemaHelper.INTEGER_TYPE: {
-        int expectedValue = Integer.parseInt((String) baseSchema.getValue());
+        Integer expectedValue = Integer.parseInt((String) baseSchema.getValue());
         if (expectedValue == requestBody.get(s).intValue()) {
           matchingSize.getAndDecrement();
         }
         break;
       }
       case OpenApiSchemaHelper.BOOLEAN_TYPE: {
-        boolean expectedValue = Boolean.parseBoolean((String) baseSchema.getValue());
+        Boolean expectedValue = Boolean.parseBoolean((String) baseSchema.getValue());
         if (expectedValue == requestBody.get(s).booleanValue()) {
           matchingSize.getAndDecrement();
         }
@@ -144,19 +163,18 @@ public class MockRequestHelper {
       String s,
       AtomicInteger matchingSize) {
     if (null == baseSchema.getFormat()) {
-      int expectedValue = Integer.parseInt((String) baseSchema.getValue());
+      Integer expectedValue = Integer.parseInt((String) baseSchema.getValue());
       if (expectedValue == requestBody.get(s).intValue()) {
         matchingSize.getAndDecrement();
       }
     } else {
       if (baseSchema.getFormat().equals(OpenApiSchemaHelper.FLOAT_FORMAT)) {
-        float expectedValue = Float.parseFloat((String) baseSchema.getValue());
+        Float expectedValue = Float.parseFloat((String) baseSchema.getValue());
         if (expectedValue == requestBody.get(s).floatValue()) {
           matchingSize.getAndDecrement();
         }
-      }
-      if (baseSchema.getFormat().equals(OpenApiSchemaHelper.DOUBLE_FORMAT)) {
-        double expectedValue = Double.parseDouble((String) baseSchema.getValue());
+      } else if (baseSchema.getFormat().equals(OpenApiSchemaHelper.DOUBLE_FORMAT)) {
+        Double expectedValue = Double.parseDouble((String) baseSchema.getValue());
         if (expectedValue == requestBody.get(s).doubleValue()) {
           matchingSize.getAndDecrement();
         }
@@ -166,73 +184,97 @@ public class MockRequestHelper {
 
   private static void initMockingRequestPaths(
       List<MockingMatchingRequestEmbedded> mockingRequestPaths,
-      MockRequestModel mockRequestModel, String path) {
-    mockingRequestPaths
-        .forEach(mockingMatchingRequestEmbedded -> {
-          if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
-              .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
-            return;
-          }
-          mockingMatchingRequestEmbedded.getMatchingProperty().getProperties()
-              .forEach((s, baseSchema) -> mockRequestModel
-                  .setPath(mockRequestModel.getPath().replace("\\{" + s + "\\}",
-                      (CharSequence) baseSchema.getValue())));
-          if (mockRequestModel.getPath().equalsIgnoreCase(path)) {
-            mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
-          }
-        });
+      MockRequestModel mockRequestModel, String openApiPath) {
+    for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestPaths) {
+      if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
+          .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
+        break;
+      }
+      String pathNeedToReplace = openApiPath;
+      for (Entry<String, BaseSchema> entry : mockingMatchingRequestEmbedded.getMatchingProperty()
+          .getProperties().entrySet()) {
+        String key = entry.getKey();
+        BaseSchema value = entry.getValue();
+        pathNeedToReplace = pathNeedToReplace.replaceAll("\\{" + key + "\\}",
+            (String) value.getValue());
+        if (pathNeedToReplace.equals(mockRequestModel.getPath())) {
+          mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
+        }
+        if (mockRequestModel.getResponse() != null) {
+          break;
+        }
+      }
+    }
   }
 
   private static void initMockingRequestHeaders(
       List<MockingMatchingRequestEmbedded> mockingRequestHeaders,
       MockRequestModel mockRequestModel, Map<String, String> headers) {
-    mockingRequestHeaders
-        .forEach(mockingMatchingRequestEmbedded -> {
-          if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
-              .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
-            return;
+    if (MapUtils.isEmpty(headers)) {
+      return;
+    }
+    for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestHeaders) {
+      if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
+          .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
+        break;
+      }
+      AtomicInteger matchingSize = new AtomicInteger(
+          mockingMatchingRequestEmbedded.getMatchingProperty()
+              .getProperties().size());
+      for (Entry<String, BaseSchema> entry : mockingMatchingRequestEmbedded
+          .getMatchingProperty().getProperties().entrySet()) {
+        String key = entry.getKey();
+        BaseSchema value = entry.getValue();
+        if (headers.containsKey(key)) {
+          if (headers.get(key).equalsIgnoreCase((String) value.getValue())) {
+            matchingSize.getAndDecrement();
           }
-          AtomicInteger matchingSize = new AtomicInteger(
-              mockingMatchingRequestEmbedded.getMatchingProperty()
-                  .getProperties().size());
-          mockingMatchingRequestEmbedded.getMatchingProperty().getProperties()
-              .forEach((s, baseSchema) -> {
-                if (headers.get(s).equalsIgnoreCase((String) baseSchema.getValue())) {
-                  matchingSize.getAndDecrement();
-                }
-              });
-          if (matchingSize.get() == 0) {
-            mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
-          }
-        });
+        }
+        if (matchingSize.get() == 0) {
+          mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
+          break;
+        }
+      }
+      if (mockRequestModel.getResponse() != null) {
+        break;
+      }
+    }
   }
 
   private static void initMockingRequestQueries(
       List<MockingMatchingRequestEmbedded> mockingRequestQueries,
       MockRequestModel mockRequestModel,
       Map<String, String[]> parameters) {
-    mockingRequestQueries
-        .forEach(mockingMatchingRequestEmbedded -> {
-          if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
-              .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
-            return;
+    if (MapUtils.isEmpty(parameters)) {
+      return;
+    }
+    for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestQueries) {
+      if (null == mockingMatchingRequestEmbedded.getMatchingProperty() || MapUtils
+          .isEmpty(mockingMatchingRequestEmbedded.getMatchingProperty().getProperties())) {
+        break;
+      }
+      AtomicInteger matchingSize = new AtomicInteger(
+          mockingMatchingRequestEmbedded.getMatchingProperty()
+              .getProperties().size());
+      for (Entry<String, BaseSchema> entry : mockingMatchingRequestEmbedded
+          .getMatchingProperty().getProperties().entrySet()) {
+        String key = entry.getKey();
+        BaseSchema value = entry.getValue();
+        if (parameters.containsKey(key)) {
+          String parameterValues = String.join(",", parameters.get(key));
+          if (parameterValues.equalsIgnoreCase((String) value.getValue())) {
+            matchingSize.getAndDecrement();
           }
-          AtomicInteger matchingSize = new AtomicInteger(
-              mockingMatchingRequestEmbedded.getMatchingProperty()
-                  .getProperties().size());
-          mockingMatchingRequestEmbedded.getMatchingProperty().getProperties()
-              .forEach((s, baseSchema) -> {
-                if (parameters.containsKey(s)) {
-                  String parameterValues = String.join(",", parameters.get(s));
-                  if (parameterValues.equalsIgnoreCase((String) baseSchema.getValue())) {
-                    matchingSize.getAndDecrement();
-                  }
-                }
-              });
-          if (matchingSize.get() == 0) {
-            mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
-          }
-        });
+        }
+        if (matchingSize.get() == 0) {
+          mockRequestModel.setResponse(mockingMatchingRequestEmbedded.getResponse());
+          break;
+        }
+      }
+      if (mockRequestModel.getResponse() != null) {
+        break;
+      }
+    }
 
   }
 }

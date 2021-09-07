@@ -16,6 +16,7 @@ import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import io.swagger.v3.oas.models.media.Schema;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ import org.springframework.beans.BeanUtils;
 @Slf4j
 public class MockupHelper {
 
-  public static List<MockingMatchingRequestEmbedded> getMatchingAttributes(JsonNode mockupNode,String mockingType) {
+  public static LinkedList<MockingMatchingRequestEmbedded> getMatchingAttributes(JsonNode mockupNode,String mockingType) {
     if (!mockupNode.has(mockingType)) {
       log.debug("getRequestQueries {} not found on node :{}",mockingType, mockupNode);
       return null;
@@ -35,7 +36,7 @@ public class MockupHelper {
     if (null == mockingQueryRequestNode || mockingQueryRequestNode.isEmpty()) {
       return null;
     }
-    List<MockingMatchingRequestEmbedded> mockingMatchingAttributeEmbeddedList = new ArrayList<>();
+    LinkedList<MockingMatchingRequestEmbedded> mockingMatchingAttributeEmbeddedList = new LinkedList<>();
     mockingQueryRequestNode.forEach(jsonNode -> {
       if (!jsonNode.has("matchingProperty")) {
         return;
@@ -79,16 +80,12 @@ public class MockupHelper {
 
   public static MockingMatchingResponseEmbedded getResponseDefault(JsonNode mockupNode) {
 
-    if (!mockupNode.has("mockingDefaultRequest")) {
+    if (!mockupNode.has("mockingDefaultResponse")) {
       log.debug("getResponseDefault mockingDefaultRequest not found on node :{}", mockupNode);
       return null;
     }
-    JsonNode mockingDefaultRequestNode = mockupNode.get("mockingDefaultRequest");
-    if (!mockingDefaultRequestNode.has("response")) {
-      log.debug("getResponseDefault  response not found on node :{}", mockingDefaultRequestNode);
-      return null;
-    }
-    return initResponse(mockingDefaultRequestNode.get("response"));
+    JsonNode mockingDefaultRequestNode = mockupNode.get("mockingDefaultResponse");
+    return initResponse(mockingDefaultRequestNode);
   }
 
   private static MockingMatchingResponseEmbedded initResponse(JsonNode mockingDefaultRequestNode) {
