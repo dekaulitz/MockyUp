@@ -26,7 +26,7 @@ public class MockingServiceImpl implements MockingService {
   private ProjectContractService projectContractService;
 
   @Override
-  public MockRequestModel mockingRequest(String id, String path, String body, String httpMethod,
+  public MockRequestModel mockingRequest(String contractId, String requestPath, String requestBody, String httpMethod,
       Map<String, String> headers, Map<String, String[]> parameters, String contentType)
       throws ServiceException {
     OpenApiPathHttpMethod openApiPathHttpMethod = null;
@@ -41,8 +41,8 @@ public class MockingServiceImpl implements MockingService {
       openApiContentType = OpenApiContentType.get(contentType);
     }
 
-    ProjectContractEntities contract = projectContractService.getById(id);
-    String[] paths = path.split("/");
+    ProjectContractEntities contract = projectContractService.getById(contractId);
+    String[] paths = requestPath.split("/");
 
     final OpenApiPathHttpMethod pathHttpMethod = openApiPathHttpMethod;
     List<OpenApiPathEmbedded> pathInfos = contract
@@ -53,12 +53,12 @@ public class MockingServiceImpl implements MockingService {
         .collect(Collectors.toList());
     if (CollectionUtils.isEmpty(pathInfos)) {
       throw new ServiceException(MessageHelper.getMessage(MessageType.MOCK_NOT_FOUND),
-          " contractId: " + id + " with path: " + path + " method: " + pathHttpMethod);
+          " contractId: " + contractId + " with path: " + requestPath + " method: " + pathHttpMethod);
     }
     MockRequestModel mockRequestModel = new MockRequestModel();
-    mockRequestModel.setPath(path);
+    mockRequestModel.setPath(requestPath);
     MockRequestHelper
-        .initMockRequest(pathInfos, headers, parameters, path, body, mockRequestModel, id,
+        .initMockRequest(pathInfos, headers, parameters, requestPath, requestBody, mockRequestModel, contractId,
             openApiContentType);
     return mockRequestModel;
   }

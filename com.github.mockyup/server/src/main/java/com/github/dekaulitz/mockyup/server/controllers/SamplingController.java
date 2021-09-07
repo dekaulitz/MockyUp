@@ -94,8 +94,10 @@ public class SamplingController {
         .stream()
         .collect(Collectors.toMap(name -> name, request::getHeader));
     Map<String, String[]> parameters = request.getParameterMap();
+    String contractId = paths[0];
+    String requestPath = paths[1];
     MockRequestModel mockRequestModel = this.mockingService
-        .mockingRequest(paths[0], paths[1], body, request.getMethod(), headers, parameters,
+        .mockingRequest(contractId, requestPath, body, request.getMethod(), headers, parameters,
             request.getContentType());
     return generateMockResponseEntity(mockRequestModel, request.getContentType());
   }
