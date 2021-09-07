@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectContractEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;

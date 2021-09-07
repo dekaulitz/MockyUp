@@ -2,8 +2,8 @@ package com.github.dekaulitz.mockyup.server.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.dekaulitz.mockyup.server.domain.mocks.vmodels.DtoMockResponseVmodel;
-import com.github.dekaulitz.mockyup.server.errors.handlers.InvalidMockException;
+import com.github.dekaulitz.mockyup.server.tmp.domain.mocks.vmodels.DtoMockResponseVmodel;
+import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.InvalidMockException;
 import io.swagger.v3.oas.models.Components;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

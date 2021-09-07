@@ -1,8 +1,8 @@
 package com.github.dekaulitz.mockyup.server;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v1.UserEntities;
-import com.github.dekaulitz.mockyup.server.db.repositories.MockRepository;
-import com.github.dekaulitz.mockyup.server.db.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserEntities;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.MockRepository;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.UserRepository;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;

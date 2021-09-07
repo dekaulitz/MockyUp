@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.model.response;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v1.MockCreatorEntities;
-import com.github.dekaulitz.mockyup.server.db.entities.v1.UserMocksEntities;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.MockCreatorEntities;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserMocksEntities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
-import com.github.dekaulitz.mockyup.server.errors.handlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.io.IOException;
 import javax.servlet.FilterChain;

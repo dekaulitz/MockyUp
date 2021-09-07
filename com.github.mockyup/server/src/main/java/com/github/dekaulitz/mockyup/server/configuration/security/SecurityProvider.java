@@ -2,9 +2,9 @@ package com.github.dekaulitz.mockyup.server.configuration.security;
 
 import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtManager;
 import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtProfileModel;
-import com.github.dekaulitz.mockyup.server.db.entities.v1.UserEntities;
-import com.github.dekaulitz.mockyup.server.db.repositories.UserRepository;
-import com.github.dekaulitz.mockyup.server.errors.handlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserEntities;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.UserRepository;
+import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.util.List;
 import java.util.Optional;

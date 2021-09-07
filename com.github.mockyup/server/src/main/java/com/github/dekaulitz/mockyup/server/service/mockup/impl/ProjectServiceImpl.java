@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntities;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectQuery;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
 import com.github.dekaulitz.mockyup.server.model.constants.DatabaseCollections;

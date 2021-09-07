@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.service.auth.impl;
 
 import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtManager;
-import com.github.dekaulitz.mockyup.server.db.entities.v1.UserEntities;
+import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserEntities;
 import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;

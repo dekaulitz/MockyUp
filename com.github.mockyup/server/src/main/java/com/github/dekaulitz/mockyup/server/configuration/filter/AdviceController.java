@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.configuration.filter;
 
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.errors.vmodels.ResponseVmodel;
+import com.github.dekaulitz.mockyup.server.tmp.errors.vmodel.vmodels.ResponseVmodel;
 import com.github.dekaulitz.mockyup.server.utils.ConstantsRepository;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
 import java.util.List;
@@ -45,7 +45,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<Object> handleInvalidMockException(Exception ex,
       HttpServletRequest request) {
-    log.error("error occured : ", ex);
+    log.error("error occurred : ", ex);
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
         ResponseVmodel.builder().responseMessage(ex.getMessage())

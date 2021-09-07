@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.api;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectContractEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;

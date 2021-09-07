@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.dekaulitz.mockyup.server.errors.handlers.UnathorizedAccess;
+import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.UnathorizedAccess;
 import com.github.dekaulitz.mockyup.server.model.dto.JwtProfileModel;
 import com.github.dekaulitz.mockyup.server.service.auth.api.JwtService;
 import com.github.dekaulitz.mockyup.server.utils.ResponseCode;

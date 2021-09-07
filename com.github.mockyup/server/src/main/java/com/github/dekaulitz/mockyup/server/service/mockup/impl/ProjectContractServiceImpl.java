@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectContractEntities;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.ProjectEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntities;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
