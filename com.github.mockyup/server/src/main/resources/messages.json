@@ -46,5 +46,16 @@
         "message": "MOCK_NOT_FOUND"
       }
     ]
+  },
+  "UNSUPPORTED_MOCK_TYPE": {
+    "httpCode": 400,
+    "statusCode": 4003,
+    "description": "Unsupported mocking type",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "UNSUPPORTED_MOCK_TYPE"
+      }
+    ]
   }
 }

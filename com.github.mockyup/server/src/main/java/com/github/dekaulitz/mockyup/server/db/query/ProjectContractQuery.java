@@ -19,7 +19,7 @@ public class ProjectContractQuery extends BaseQuery<GetProjectContractParam> {
     this.setPageable(getProjectContractParam);
   }
 
-  private ProjectContractQuery idIn(String[] idArray) {
+  public ProjectContractQuery idIn(String[] idArray) {
     if (ArrayUtils.isNotEmpty(idArray)) {
       ObjectId[] ids = Arrays.stream(idArray).map(ObjectId::new)
           .toArray(ObjectId[]::new);

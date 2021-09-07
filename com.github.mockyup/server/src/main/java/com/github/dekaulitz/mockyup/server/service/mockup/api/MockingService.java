@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 public interface MockingService {
 
   Object mockingRequest(String id, String path, String body, String httpMethod,
-      Map<String, String> headers, Map<String, String[]> parameters) throws ServiceException;
+      Map<String, String> headers, Map<String, String[]> parameters, String contentType) throws ServiceException;
 }

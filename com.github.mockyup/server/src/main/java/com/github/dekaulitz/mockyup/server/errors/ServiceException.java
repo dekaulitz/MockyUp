@@ -43,8 +43,17 @@ public class ServiceException extends Exception {
     super(message);
   }
 
-  public ServiceException(String message, Throwable cause) {
-    super(message, cause);
+  public ServiceException(Message message, Throwable cause) {
+    super(message.getDescription(), cause);
+    ErrorResponse errorModel = new ErrorResponse();
+    errorModel.setDescription(message.getDescription());
+    errorModel.setHttpCode(message.getHttpCode());
+    errorModel.setStatusCode(message.getStatusCode());
+    errorModel.setMessages(message.getMessages());
+    errorModel.getMessages().forEach(translationsMessage -> {
+      translationsMessage.setMessage(translationsMessage.getMessage());
+    });
+    this.serviceMessageError = errorModel;
   }
 
   public ServiceException(Throwable cause) {

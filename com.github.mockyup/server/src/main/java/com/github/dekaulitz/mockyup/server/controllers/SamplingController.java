@@ -86,13 +86,11 @@ public class SamplingController {
     String[] paths = path.split(MockRequest.MOCK_REQUEST_ID_PREFIX);
     Map<String, String> headers = Collections.list(request.getHeaderNames())
         .stream()
-        .collect(Collectors.toMap(
-            name -> name,
-            request::getHeader));
-
+        .collect(Collectors.toMap(name -> name, request::getHeader));
     Map<String, String[]> parameters = request.getParameterMap();
     return ResponseEntity
         .ok(this.mockingService
-            .mockingRequest(paths[0], paths[1], body, request.getMethod(), headers, parameters));
+            .mockingRequest(paths[0], paths[1], body, request.getMethod(), headers, parameters,
+                request.getContentType()));
   }
 }

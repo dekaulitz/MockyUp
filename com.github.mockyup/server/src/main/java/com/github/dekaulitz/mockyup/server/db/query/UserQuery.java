@@ -16,14 +16,14 @@ public class UserQuery extends BaseQuery<GetUserParam> {
     this.setPageable(getUserParam);
   }
 
-  private UserQuery email(String email) {
+  public UserQuery email(String email) {
     if (StringUtils.isNotBlank(email)) {
       this.criteriaSet.add(Criteria.where("email").is(new ObjectId(email)));
     }
     return this;
   }
 
-  private UserQuery username(String username) {
+  public UserQuery username(String username) {
     if (StringUtils.isNotBlank(username)) {
       this.criteriaSet.add(Criteria.where("username").is(new ObjectId(username)));
     }

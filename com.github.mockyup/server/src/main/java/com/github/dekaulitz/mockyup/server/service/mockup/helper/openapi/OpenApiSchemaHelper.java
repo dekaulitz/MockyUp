@@ -31,6 +31,7 @@ public class OpenApiSchemaHelper {
   public static final String STRING_TYPE = "string";
   public static final String BOOLEAN_TYPE = "boolean";
   public static final String OBJECT_TYPE = "object";
+
   public static final String INTEGER32_FORMAT = "int32";
   public static final String INTEGER64_FORMAT = "int64";
   public static final String FLOAT_FORMAT = "float";
