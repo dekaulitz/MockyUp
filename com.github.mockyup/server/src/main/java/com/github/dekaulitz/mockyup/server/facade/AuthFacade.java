@@ -5,7 +5,6 @@ import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.errors.UnauthorizedException;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
-import com.github.dekaulitz.mockyup.server.model.param.GetUserLogLoginParam;
 import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;
 import com.github.dekaulitz.mockyup.server.service.auth.api.JwtService;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
@@ -41,9 +40,7 @@ public class AuthFacade {
       if (!passwordIsValid) {
         throw new ServiceException(ResponseCode.INVALID_USER_LOGIN);
       }
-      userLogLoginService.deleteByParameter(GetUserLogLoginParam.builder()
-          .userId(userEntity.getId())
-          .build());
+      userLogLoginService.deleteByJtiOrUserId(userEntity.getId());
       AuthProfileModel authProfileModel = jwtService.generateToken(userEntity,
           userLoginRequest.isRememberMe());
       userLogLoginService.logLogin(authProfileModel, mandatory);
@@ -63,6 +60,6 @@ public class AuthFacade {
     }
     String token = authorization.substring(7);
     String jti = jwtService.invalidateToken(token);
-    userLogLoginService.deleteByParameter(GetUserLogLoginParam.builder().jti(jti).build());
+    userLogLoginService.deleteByJtiOrUserId(jti);
   }
 }

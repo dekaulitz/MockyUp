@@ -72,6 +72,13 @@ public class UserLogLoginServiceImpl implements UserLogLoginService {
   }
 
   @Override
+  public DeleteResult deleteByJtiOrUserId(@NotBlank String jtIOrUserId) {
+    UserLogLoginQuery userLogLoginQuery = new UserLogLoginQuery();
+    userLogLoginQuery.jtiOrUserId(jtIOrUserId);
+    return mongoTemplate.remove(userLogLoginQuery.getQuery(), UserLogLoginEntity.class);
+  }
+
+  @Override
   public void logLogin(AuthProfileModel authProfileModel, Mandatory mandatory)
       throws ServiceException {
     UserLogLoginEntity userLogLoginEntity = UserLogLoginEntity.builder()

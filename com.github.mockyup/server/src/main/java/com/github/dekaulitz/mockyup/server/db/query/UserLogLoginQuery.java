@@ -10,7 +10,7 @@ public class UserLogLoginQuery extends BaseQuery<GetUserLogLoginParam> {
   public void buildQuery(GetUserLogLoginParam getUserLogLoginParam) {
     this.setPageable(getUserLogLoginParam);
     this.jti(getUserLogLoginParam.getJti());
-    this.jti(getUserLogLoginParam.getJti());
+    this.userId(getUserLogLoginParam.getUserId());
   }
 
   public void jti(String jti) {
@@ -22,6 +22,13 @@ public class UserLogLoginQuery extends BaseQuery<GetUserLogLoginParam> {
   public void userId(String userId) {
     if (StringUtils.isNotBlank(userId)) {
       this.criteriaSet.add(Criteria.where("userId").is(userId));
+    }
+  }
+
+  public void jtiOrUserId(String jtiOrUserId) {
+    if (StringUtils.isNotBlank(jtiOrUserId)) {
+      this.criteriaSet.add(new Criteria().orOperator(Criteria.where("jti").is(jtiOrUserId),
+          Criteria.where("userId").is(jtiOrUserId)));
     }
   }
 }
