@@ -1,35 +1,21 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
-import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtManager;
-import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtProfileModel;
-import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserEntities;
-import com.github.dekaulitz.mockyup.server.db.tmp.repositories.UserRepository;
-import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
-import java.util.List;
-import java.util.Optional;
+import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
+import com.github.dekaulitz.mockyup.server.service.auth.api.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 
 @Component
 public class SecurityProvider extends AbstractUserDetailsAuthenticationProvider {
 
   @Autowired
-  private final UserRepository userRepository;
-  @Autowired
-  private final JwtManager jwtManager;
-
-  public SecurityProvider(UserRepository userRepository,
-      JwtManager jwtManager) {
-    this.userRepository = userRepository;
-    this.jwtManager = jwtManager;
-  }
+  private JwtService jwtService;
 
   @Override
   protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -42,23 +28,8 @@ public class SecurityProvider extends AbstractUserDetailsAuthenticationProvider 
   protected UserDetails retrieveUser(String s,
       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken)
       throws AuthenticationException {
-    SecurityUsernameAuthenticationToken authenticationToken = (SecurityUsernameAuthenticationToken) usernamePasswordAuthenticationToken;
-    JwtProfileModel jwtProfileModel = jwtManager
-        .validateToken(authenticationToken.getToken());
-    Optional<UserEntities> userEntities = this.userRepository
-        .findById(jwtProfileModel.getId());
-    if (!userEntities.isPresent()) {
-      throw new UnathorizedAccess(ResponseCode.USER_NOT_FOUND);
-    }
-    jwtProfileModel.setUsername(userEntities.get().getUsername());
-    List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-        .commaSeparatedStringToAuthorityList(String.join(",", userEntities.get().getAccessList()));
-    jwtProfileModel.setGrantedAuthorities(grantedAuthorities);
-    return jwtProfileModel;
-  }
-
-  @Override
-  public boolean supports(Class<?> authentication) {
-    return SecurityUsernameAuthenticationToken.class.isAssignableFrom(authentication);
+    SecurityAuthenticationToken authenticationToken = (SecurityAuthenticationToken) usernamePasswordAuthenticationToken;
+    AuthProfileModel authProfileModel = jwtService.validateToken(authenticationToken.getToken());
+    return authProfileModel;
   }
 }

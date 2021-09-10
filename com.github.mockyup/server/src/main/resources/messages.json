@@ -1,7 +1,7 @@
 {
   "INVALID_USER_LOGIN": {
     "httpCode": 401,
-    "statusCode": 4011,
+    "statusCode": 4001,
     "description": "Invalid username and password",
     "messages": [
       {
@@ -11,6 +11,39 @@
       {
         "lang": "EN",
         "message": "Invalid username and password"
+      }
+    ]
+  },
+  "REFRESH_TOKEN_REQUIRED": {
+    "httpCode": 401,
+    "statusCode": 4003,
+    "description": "Refreshing token required",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Refresh token required"
+      }
+    ]
+  },
+  "UNAUTHORIZED_ACCESS": {
+    "httpCode": 403,
+    "statusCode": 4031,
+    "description": "UNAUTHORIZED_ACCESS login required",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "UNAUTHORIZED_ACCESS, login required"
+      }
+    ]
+  },
+  "TOKEN_NOT_VALID": {
+    "httpCode": 403,
+    "statusCode": 4032,
+    "description": "Token not valid",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Token not valid, login required"
       }
     ]
   },

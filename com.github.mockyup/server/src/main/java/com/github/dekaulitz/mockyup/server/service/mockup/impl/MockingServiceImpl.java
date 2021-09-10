@@ -7,7 +7,7 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.con
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.MockingService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup.MockRequestHelper;
@@ -33,7 +33,7 @@ public class MockingServiceImpl implements MockingService {
     if (EnumUtils.isValidEnum(OpenApiPathHttpMethod.class, httpMethod.toUpperCase())) {
       openApiPathHttpMethod = OpenApiPathHttpMethod.valueOf(httpMethod.toUpperCase());
     } else {
-      throw new ServiceException(MessageHelper.getMessage(MessageType.UNSUPPORTED_MOCK_TYPE));
+      throw new ServiceException(MessageHelper.getMessage(ResponseCode.UNSUPPORTED_MOCK_TYPE));
     }
     OpenApiContentType openApiContentType = null;
 
@@ -52,7 +52,7 @@ public class MockingServiceImpl implements MockingService {
         .filter(openApiPathEmbedded -> openApiPathEmbedded.getHttpMethod() == pathHttpMethod)
         .collect(Collectors.toList());
     if (CollectionUtils.isEmpty(pathInfos)) {
-      throw new ServiceException(MessageHelper.getMessage(MessageType.MOCK_NOT_FOUND),
+      throw new ServiceException(MessageHelper.getMessage(ResponseCode.MOCK_NOT_FOUND),
           " contractId: " + contractId + " with path: " + requestPath + " method: " + pathHttpMethod);
     }
     MockRequestModel mockRequestModel = new MockRequestModel();

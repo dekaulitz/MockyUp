@@ -10,7 +10,7 @@ import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.mockup.api.ProjectService;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiTransformerHelper;
@@ -58,7 +58,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
         cacheService.createCache(CacheConstants.PROJECT_PREFIX + id, entity,
             CacheConstants.ONE_HOUR_IN_SECONDS);
       } else {
-        throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND));
+        throw new ServiceException(MessageHelper.getMessage(ResponseCode.DATA_NOT_FOUND));
       }
     }
     return entity;
@@ -83,7 +83,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
                 CacheConstants.PROJECT_PREFIX + getProjectContractParam.toStringSkipNulls(),
                 result, CacheConstants.ONE_HOUR_IN_SECONDS);
       } else {
-        throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND));
+        throw new ServiceException(MessageHelper.getMessage(ResponseCode.DATA_NOT_FOUND));
       }
     }
     return result;
@@ -95,7 +95,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
     ProjectEntities projectEntities = projectService
         .getById(createProjectContractRequest.getProjectId());
     if (projectEntities == null) {
-      throw new ServiceException(MessageHelper.getMessage(MessageType.DATA_NOT_FOUND),
+      throw new ServiceException(MessageHelper.getMessage(ResponseCode.DATA_NOT_FOUND),
           "project not found with id " + createProjectContractRequest.getProjectId());
     }
     try {
@@ -128,7 +128,7 @@ public class ProjectContractServiceImpl implements ProjectContractService {
     } catch (Exception e) {
       e.printStackTrace();
       log.error("invalid mock structure ex:{} request:{}", e, createProjectContractRequest);
-      throw new ServiceException(MessageHelper.getMessage(MessageType.INVALID_MOCK_CONTRACT),
+      throw new ServiceException(MessageHelper.getMessage(ResponseCode.INVALID_MOCK_CONTRACT),
           e.getMessage());
     }
   }

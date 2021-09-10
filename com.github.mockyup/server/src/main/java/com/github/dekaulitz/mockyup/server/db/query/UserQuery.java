@@ -3,7 +3,6 @@ package com.github.dekaulitz.mockyup.server.db.query;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 @NoArgsConstructor
@@ -16,17 +15,22 @@ public class UserQuery extends BaseQuery<GetUserParam> {
     this.setPageable(getUserParam);
   }
 
-  public UserQuery email(String email) {
+  public void email(String email) {
     if (StringUtils.isNotBlank(email)) {
-      this.criteriaSet.add(Criteria.where("email").is(new ObjectId(email)));
+      this.criteriaSet.add(Criteria.where("email").is(email));
     }
-    return this;
   }
 
-  public UserQuery username(String username) {
+  public void username(String username) {
     if (StringUtils.isNotBlank(username)) {
-      this.criteriaSet.add(Criteria.where("username").is(new ObjectId(username)));
+      this.criteriaSet.add(Criteria.where("username").is(username));
     }
-    return this;
+  }
+
+  public void usernameOrEmail(String usernameOrEmail) {
+    if (StringUtils.isNotBlank(usernameOrEmail)) {
+      this.criteriaSet.add(new Criteria().orOperator(Criteria.where("username").is(usernameOrEmail),
+          Criteria.where("email").is(usernameOrEmail)));
+    }
   }
 }

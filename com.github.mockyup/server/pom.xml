@@ -99,7 +99,7 @@
     <dependency>
       <artifactId>java-jwt</artifactId>
       <groupId>com.auth0</groupId>
-      <version>3.3.0</version>
+      <version>3.18.1</version>
     </dependency>
     <dependency>
       <artifactId>junit</artifactId>

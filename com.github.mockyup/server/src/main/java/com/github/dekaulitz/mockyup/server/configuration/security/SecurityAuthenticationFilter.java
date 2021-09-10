@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
-import com.github.dekaulitz.mockyup.server.tmp.errors.handlers.UnathorizedAccess;
-import com.github.dekaulitz.mockyup.server.utils.ResponseCode;
+import com.github.dekaulitz.mockyup.server.errors.UnauthorizedException;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.stereotype.Component;
+
 
 public class SecurityAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -18,17 +20,18 @@ public class SecurityAuthenticationFilter extends AbstractAuthenticationProcessi
   }
 
   @Override
-  public Authentication attemptAuthentication(HttpServletRequest request,
-      HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-    String authenticationHeader = request.getHeader("Authorization");
+  public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse)
+      throws AuthenticationException, IOException, ServletException {
+    String authenticationHeader = httpServletRequest.getHeader("Authorization");
     if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer")) {
-      throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
+      throw new UnauthorizedException(ResponseCode.TOKEN_NOT_VALID);
     }
     if (authenticationHeader.length() <= 7) {
-      throw new UnathorizedAccess(ResponseCode.TOKEN_INVALID);
+      throw new UnauthorizedException(ResponseCode.TOKEN_NOT_VALID);
     }
     String token = authenticationHeader.substring(7);
-    SecurityUsernameAuthenticationToken auth = new SecurityUsernameAuthenticationToken(token);
+    SecurityAuthenticationToken auth = new SecurityAuthenticationToken(token);
     return getAuthenticationManager().authenticate(auth);
   }
 

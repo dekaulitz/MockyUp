@@ -1,24 +1,15 @@
 package com.github.dekaulitz.mockyup.server.service.auth.api;
 
-import com.github.dekaulitz.mockyup.server.model.dto.JwtProfileModel;
-import java.io.UnsupportedEncodingException;
-import java.util.Optional;
+
+import com.github.dekaulitz.mockyup.server.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 
 public interface JwtService {
 
   String CAN_DO_REFRESH = "canRefresh";
-  String EXPIRED_AT = "expiredAt";
 
-  String getAuthorizationHeader(String AuthHeader);
+  AuthProfileModel generateToken(UserEntities userEntities, Boolean rememberMe);
 
-  JwtProfileModel generateToken(String userId)
-      throws UnsupportedEncodingException;
+  AuthProfileModel validateToken(String token);
 
-  JwtProfileModel validateToken(String token);
-
-  Optional<String> getUserIdFromToken(String token)
-          throws UnsupportedEncodingException;
-
-  String buildToken(String id)
-              throws UnsupportedEncodingException;
 }

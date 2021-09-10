@@ -1,80 +1,83 @@
 package com.github.dekaulitz.mockyup.server.configuration.filter;
 
-import com.github.dekaulitz.mockyup.server.configuration.LogsMapper;
-import com.github.dekaulitz.mockyup.server.utils.ConstantsRepository;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.dekaulitz.mockyup.server.model.request.IssuerRequestModel;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class RequestFilter extends OncePerRequestFilter {
+@Slf4j
+public class RequestFilter implements Filter {
 
-  private static final Logger log = LoggerFactory.getLogger(RequestFilter.class);
-  @Autowired
-  private final LogsMapper logsMapper;
-
-  public RequestFilter(LogsMapper logsMapper) {
-    this.logsMapper = logsMapper;
-  }
+  private final String LOCALHOST_IPV4 = "127.0.0.1";
+  private final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
 
   @Override
-  protected void doFilterInternal(final HttpServletRequest request,
-      final HttpServletResponse response, final FilterChain chain)
-      throws java.io.IOException, ServletException {
-    long start = System.currentTimeMillis();
-    final String token = getxRequestID(request);
-    if (!StringUtils.isEmpty(ConstantsRepository.REQUEST_ID)) {
-      response.addHeader(ConstantsRepository.REQUEST_ID, token);
-    }
-    MDC.put(ConstantsRepository.REQUEST_ID, token);
-    MDC.put(ConstantsRepository.PATH_ENDPOINT, request.getRequestURI());
-    request.setAttribute(ConstantsRepository.REQUEST_ID, token);
-    request.setAttribute(ConstantsRepository.REQUEST_TIME, start);
-    chain.doFilter(request, response);
-    final String requestTime = (System.currentTimeMillis() - start) + "ms";
-    Map<String, Object> req = new HashMap<>();
-    req.put("headers", getRequestHeaders(request));
-    req.put("responseTime", requestTime);
-    req.put("endpoint", request.getRequestURI());
-    req.put("method", request.getMethod());
-    req.put("responseStatus", response.getStatus());
-    log.info("{}", this.logsMapper.logRequest(req));
-    MDC.remove(ConstantsRepository.REQUEST_ID);
-    MDC.remove(ConstantsRepository.PATH_ENDPOINT);
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+      FilterChain filterChain) throws IOException, ServletException {
+    String requestId = UUID.randomUUID().toString();
+    long requestTime = System.currentTimeMillis();
+    HttpServletRequest req = (HttpServletRequest) servletRequest;
+    IssuerRequestModel issuerRequestModel = IssuerRequestModel.builder()
+        .agent(req.getHeader("User-Agent"))
+        .ip(getClientIp(req))
+        .requestId(requestId)
+        .build();
+    req.setAttribute("x-request-id", issuerRequestModel.getRequestId());
+    req.setAttribute("x-request-time", requestTime);
+    servletRequest.getServletContext().setAttribute("issuer", issuerRequestModel);
+    log.info(
+        "Starting a transaction for req : {}",
+        req.getRequestURI());
+    HttpServletResponse res = (HttpServletResponse) servletResponse;
+    res.setHeader("x-request-id", issuerRequestModel.getRequestId());
+    res.setHeader("x-request-time", String.valueOf(requestTime));
+    filterChain.doFilter(servletRequest, servletResponse);
+    log.info(
+        "Committing a transaction for req : {}",
+        req.getRequestURI());
   }
 
-  private String getxRequestID(HttpServletRequest request) {
-    final String token;
-    if (!StringUtils.isEmpty(ConstantsRepository.REQUEST_ID) && !StringUtils
-        .isEmpty(request.getHeader(ConstantsRepository.REQUEST_ID))) {
-      token = request.getHeader(ConstantsRepository.REQUEST_ID);
-    } else {
-      token = UUID.randomUUID().toString().toUpperCase().replace("-", "");
+  public String getClientIp(HttpServletRequest request) {
+    String ipAddress = request.getHeader("X-Forwarded-For");
+    if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+      ipAddress = request.getHeader("Proxy-Client-IP");
     }
-    return token;
-  }
 
-  private Map<String, Object> getRequestHeaders(HttpServletRequest request) {
-    Map<String, Object> headers = new HashMap<>();
-    Enumeration<String> headerNames = request.getHeaderNames();
-    while (headerNames.hasMoreElements()) {
-      String headerName = headerNames.nextElement();
-      headers.put(headerName, request.getHeader(headerName));
+    if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+      ipAddress = request.getHeader("WL-Proxy-Client-IP");
     }
-    return headers;
 
+    if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+      ipAddress = request.getRemoteAddr();
+      if (LOCALHOST_IPV4.equals(ipAddress) || LOCALHOST_IPV6.equals(ipAddress)) {
+        try {
+          InetAddress inetAddress = InetAddress.getLocalHost();
+          ipAddress = inetAddress.getHostAddress();
+        } catch (UnknownHostException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    if (!StringUtils.isEmpty(ipAddress)
+        && ipAddress.length() > 15
+        && ipAddress.indexOf(",") > 0) {
+      ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+    }
+
+    return ipAddress;
   }
 }
 

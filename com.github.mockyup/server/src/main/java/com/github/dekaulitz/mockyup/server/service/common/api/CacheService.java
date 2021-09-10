@@ -10,7 +10,7 @@ public interface CacheService {
 
   <T> List<T> findCacheListByKey(String key, Class<T> clazz);
 
-  void createCache(String key, Object value, long expirySeconds);
+  Object createCache(String key, Object value, long expirySeconds);
 
   void deleteCache(String key);
 

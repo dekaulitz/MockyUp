@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -58,10 +59,7 @@ public class CacheServiceImpl implements CacheService {
   }
 
   @Override
-  public void createCache(String key, Object value, long expirySeconds) {
-    if (value == null) {
-      return;
-    }
+  public Object createCache(String key, @NotNull Object value, long expirySeconds) {
     try {
       String valueString = objectMapper.writeValueAsString(value);
       redisTemplate.opsForValue().set(key, valueString, expirySeconds, TimeUnit.SECONDS);
@@ -69,6 +67,7 @@ public class CacheServiceImpl implements CacheService {
       e.printStackTrace();
       log.error("createCache failed ex:{} key:{}", e, key);
     }
+    return value;
   }
 
   @Override

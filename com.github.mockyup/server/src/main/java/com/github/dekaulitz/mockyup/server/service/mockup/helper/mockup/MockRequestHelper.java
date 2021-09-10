@@ -9,7 +9,7 @@ import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUp
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.MessageType;
+import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiSchemaHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.server.utils.XmlMapper;
@@ -32,7 +32,7 @@ public class MockRequestHelper {
       OpenApiContentType openApiContentType) throws ServiceException {
     for (OpenApiPathEmbedded pathInfo : pathInfos) {
       if (null == pathInfo.getOperation() || null == pathInfo.getOperation().getMockup()) {
-        throw new ServiceException(MessageHelper.getMessage(MessageType.MOCK_NOT_FOUND),
+        throw new ServiceException(MessageHelper.getMessage(ResponseCode.MOCK_NOT_FOUND),
             " contractId: " + id + " with path: " + path + " method: ");
       }
       MockUpRequestEmbedded mockingPath = pathInfo
@@ -91,7 +91,7 @@ public class MockRequestHelper {
         requestBody = JsonMapper.mapper().readTree(body);
       }
     } catch (Exception ex) {
-      throw new ServiceException(MessageHelper.getMessage(MessageType.UNSUPPORTED_MOCK_TYPE),
+      throw new ServiceException(MessageHelper.getMessage(ResponseCode.UNSUPPORTED_MOCK_TYPE),
           ex);
     }
     for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestBodies) {

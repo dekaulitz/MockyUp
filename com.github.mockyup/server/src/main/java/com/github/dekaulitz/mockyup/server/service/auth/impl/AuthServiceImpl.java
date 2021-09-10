@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.server.service.auth.impl;
 
-import com.github.dekaulitz.mockyup.server.configuration.jwt.JwtManager;
+import com.github.dekaulitz.mockyup.server.tmp.jwt.JwtManager;
 import com.github.dekaulitz.mockyup.server.db.tmp.repositories.v1.UserEntities;
 import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;
-import com.github.dekaulitz.mockyup.server.model.response.UserLoggedResponse;
+import com.github.dekaulitz.mockyup.server.tmp.UserLoggedResponse;
 import com.github.dekaulitz.mockyup.server.service.auth.api.AuthService;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
   public UserLoggedResponse doLogin(UserLoginRequest userLoginRequest)
       throws Exception {
     GetUserParam getUserParam = GetUserParam.builder()
-        .email(userLoginRequest.getEmail())
+        .email(userLoginRequest.getUsernameOrEmail())
         .build();
     UserQuery userQuery = new UserQuery();
     userQuery.buildQuery(getUserParam);
