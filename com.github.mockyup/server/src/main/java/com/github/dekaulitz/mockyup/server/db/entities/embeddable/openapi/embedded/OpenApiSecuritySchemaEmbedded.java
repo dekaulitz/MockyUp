@@ -1,7 +1,7 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiSecurityInType;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiSecurityType;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiSecurityInType;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiSecurityType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

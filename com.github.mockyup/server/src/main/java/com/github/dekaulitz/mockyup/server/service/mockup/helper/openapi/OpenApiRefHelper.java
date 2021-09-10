@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiComponents;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas.BaseSchema;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiComponents;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas.BaseSchema;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 

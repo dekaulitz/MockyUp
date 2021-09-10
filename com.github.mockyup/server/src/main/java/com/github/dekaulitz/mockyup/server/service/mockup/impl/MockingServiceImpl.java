@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiPathHttpMethod;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
@@ -41,7 +41,7 @@ public class MockingServiceImpl implements MockingService {
       openApiContentType = OpenApiContentType.get(contentType);
     }
 
-    ProjectContractEntities contract = projectContractService.getById(contractId);
+    ProjectContractEntity contract = projectContractService.getById(contractId);
     String[] paths = requestPath.split("/");
 
     final OpenApiPathHttpMethod pathHttpMethod = openApiPathHttpMethod;

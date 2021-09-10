@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.server.configuration.security;
 
 
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
@@ -28,6 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   public AuthenticationManager authenticationManager() {
+//    securityProvider.setPreAuthenticationChecks(new PreAuthenticationChecker());
     return new ProviderManager(Collections.singletonList(securityProvider));
   }
 
@@ -36,14 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     SecurityAuthenticationFilter filter = new SecurityAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManager());
     filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
-        new AntPathRequestMatcher("/v1/test")
+        new AntPathRequestMatcher("/v1/users")
     )));
     filter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {
-
         });
     filter.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
-
     });
     return filter;
   }

@@ -1,5 +1,5 @@
 package com.github.dekaulitz.mockyup.server.model.constants;
 
-public enum ErrorMessage {
-
+public enum Language {
+  ID, EN
 }

@@ -1,7 +1,7 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup;
+package com.github.dekaulitz.mockyup.server.db.entities.features.mockup;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingRequestEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingResponseEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseEmbedded;
 import java.io.Serializable;
 import java.util.LinkedList;
 import lombok.AllArgsConstructor;

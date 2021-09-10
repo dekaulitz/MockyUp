@@ -1,24 +1,32 @@
 package com.github.dekaulitz.mockyup.server;
 
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ_WRITE;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECT_READ;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECT_READ_WRITE;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ_WRITE;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.dekaulitz.mockyup.server.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
-import com.github.dekaulitz.mockyup.server.model.embeddable.Message;
+import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +34,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories
 @EnableMongoAuditing
 @Slf4j
-public class App implements CommandLineRunner {
+public class App {
 
   @Autowired
   private MongoTemplate mongoTemplate;
@@ -42,25 +48,32 @@ public class App implements CommandLineRunner {
     SpringApplication.run(App.class, args);
   }
 
-  @Override
-  //injecting user for the first time
-  public void run(String... args) throws Exception {
+  @PostConstruct
+  public void initRootUser() {
     log.info("checking root user exists");
     UserQuery userQuery = new UserQuery();
     userQuery.username("root");
-    UserEntities userEntities = mongoTemplate.findOne(userQuery.getQuery(), UserEntities.class);
-    if (userEntities == null) {
+    UserEntity userEntity = mongoTemplate.findOne(userQuery.getQuery(), UserEntity.class);
+    if (userEntity == null) {
       log.info("user root doesn't exists will create root users");
-      userEntities = UserEntities.builder()
+      userEntity = UserEntity.builder()
           .username("root")
           .password(HashingHelper.hashing("root"))
           .email("root@root.com")
+          .access(new HashSet<>(Arrays
+              .asList(MOCKS_READ, MOCKS_READ_WRITE, USERS_READ, USERS_READ_WRITE, PROJECT_READ,
+                  PROJECT_READ_WRITE)))
+          .isEnabled(true)
+          .isAccountNonLocked(true)
           .build();
-      mongoTemplate.save(userEntities);
+      mongoTemplate.save(userEntity);
       log.info("user root created");
     }
     log.info("user root exists");
+  }
 
+  @PostConstruct
+  public void injectMessages() {
     // load user mesages
     Resource resource = new ClassPathResource("messages.json");
     InputStreamReader isReader = null;
@@ -73,24 +86,24 @@ public class App implements CommandLineRunner {
         sb.append(str);
       }
       ObjectMapper objectMapper = new ObjectMapper();
-      HashMap<String, Message> messageMap = objectMapper
-          .readValue(sb.toString(), new TypeReference<HashMap<String, Message>>() {
+      HashMap<String, ErrorMessageModel> messageMap = objectMapper
+          .readValue(sb.toString(), new TypeReference<HashMap<String, ErrorMessageModel>>() {
           });
       for (ResponseCode responseCode : ResponseCode.values()) {
         String type = responseCode.toString();
         if (messageMap.containsKey(type)) {
           ResponseCode et = ResponseCode.valueOf(type);
-          et.setValue(messageMap.get(type));
+          et.setErrorMessageModel(messageMap.get(type));
         } else {
           throw new RuntimeException("responseCode: " + type + " not found");
         }
       }
+      log.info("{}", ResponseCode.values());
 
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
-
 
   @Bean
   public ModelMapper modelMapper() {

@@ -1,9 +1,8 @@
 package com.github.dekaulitz.mockyup.server.controllers;
 
-import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
-import com.github.dekaulitz.mockyup.server.model.request.IssuerRequestModel;
+import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
+import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
 import javax.servlet.ServletRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,13 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class BaseController {
 
   @ModelAttribute
-  public IssuerRequestModel getIssuerRequestModel(ServletRequest servletRequest) {
-    return (IssuerRequestModel) servletRequest.getServletContext().getAttribute("issuer");
+  public Mandatory getIssuerRequestModel(ServletRequest servletRequest) {
+    return (Mandatory) servletRequest.getServletContext().getAttribute(
+        ApplicationConstants.MANDATORY);
   }
 
-  @ModelAttribute
-  protected AuthProfileModel getAuthenticationProfileModel() {
-    return (AuthProfileModel) SecurityContextHolder.getContext().getAuthentication()
-        .getPrincipal();
-  }
 }

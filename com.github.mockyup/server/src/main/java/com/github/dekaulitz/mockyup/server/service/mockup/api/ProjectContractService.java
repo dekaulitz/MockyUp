@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.api;
 
-import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ProjectContractService {
 
-  ProjectContractEntities getById(String id) throws ServiceException;
+  ProjectContractEntity getById(String id) throws ServiceException;
 
-  List<ProjectContractEntities> getAll(GetProjectContractParam getProjectContractParam)
+  List<ProjectContractEntity> getAll(GetProjectContractParam getProjectContractParam)
       throws ServiceException;
 
-  ProjectContractEntities createContract(CreateProjectContractRequest createProjectContractRequest)
+  ProjectContractEntity createContract(CreateProjectContractRequest createProjectContractRequest)
       throws ServiceException;
 
 }

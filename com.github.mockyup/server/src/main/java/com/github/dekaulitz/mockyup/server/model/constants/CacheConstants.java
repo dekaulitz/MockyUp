@@ -7,6 +7,7 @@ public class CacheConstants {
   public static final String PROJECT_PREFIX = "project:";
   public static final String PROJECT_CONTRACT_PREFIX = "project-contract:";
   public static final String AUTH_PREFIX = "auth:";
+  public static final String USER_PREFIX = "user:";
 
 
   // 30 second

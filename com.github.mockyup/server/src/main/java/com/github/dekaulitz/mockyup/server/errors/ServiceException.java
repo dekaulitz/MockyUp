@@ -1,7 +1,6 @@
 package com.github.dekaulitz.mockyup.server.errors;
 
-import com.github.dekaulitz.mockyup.server.model.embeddable.Message;
-import com.github.dekaulitz.mockyup.server.model.response.ErrorResponse;
+import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import lombok.Getter;
 
@@ -9,73 +8,48 @@ import lombok.Getter;
 public class ServiceException extends Exception {
 
   @Getter
-  private ErrorResponse serviceMessageError = new ErrorResponse();
+  private ErrorMessageModel errorMessagResponseModelError;
 
   public ServiceException() {
   }
 
   public ServiceException(ResponseCode responseCode) {
-    super(responseCode.getValue().getDescription());
-    ErrorResponse errorModel = new ErrorResponse();
-    errorModel.setDescription(responseCode.getValue().getDescription());
-    errorModel.setHttpCode(responseCode.getValue().getHttpCode());
-    errorModel.setStatusCode(responseCode.getValue().getStatusCode());
-    errorModel.setMessages(responseCode.getValue().getMessages());
-    errorModel.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage());
-    });
-    this.serviceMessageError = errorModel;
+    super(responseCode.getErrorMessageModel().getDescription());
+    this.errorMessagResponseModelError = responseCode.getErrorMessageModel();
   }
 
-  public ServiceException(Message message) {
-    super(message.getDescription());
-    ErrorResponse errorModel = new ErrorResponse();
-    errorModel.setDescription(message.getDescription());
-    errorModel.setHttpCode(message.getHttpCode());
-    errorModel.setStatusCode(message.getStatusCode());
-    errorModel.setMessages(message.getMessages());
-    errorModel.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage());
-    });
-    this.serviceMessageError = errorModel;
+  public ServiceException(ErrorMessageModel errorMessagResponseModelError) {
+    super(errorMessagResponseModelError.getDescription());
+    this.errorMessagResponseModelError = errorMessagResponseModelError;
   }
 
-  public ServiceException(Message message, String detailMessage) {
-    super(message.getDescription());
-    ErrorResponse errorModel = new ErrorResponse();
-    errorModel.setDescription(message.getDescription() + " : " + detailMessage);
-    errorModel.setHttpCode(message.getHttpCode());
-    errorModel.setStatusCode(message.getStatusCode());
-    errorModel.setMessages(message.getMessages());
-    errorModel.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage());
-    });
-    this.serviceMessageError = errorModel;
+  public ServiceException(ErrorMessageModel errorMessagResponseModelError, String detailMessage) {
+    super(errorMessagResponseModelError.getDescription());
+    this.errorMessagResponseModelError = errorMessagResponseModelError;
+    this.errorMessagResponseModelError.setDetailMessage(detailMessage);
   }
 
-  public ServiceException(String message) {
-    super(message);
+  public ServiceException(String messageError) {
+    super(messageError);
   }
 
-  public ServiceException(Message message, Throwable cause) {
-    super(message.getDescription(), cause);
-    ErrorResponse errorModel = new ErrorResponse();
-    errorModel.setDescription(message.getDescription());
-    errorModel.setHttpCode(message.getHttpCode());
-    errorModel.setStatusCode(message.getStatusCode());
-    errorModel.setMessages(message.getMessages());
-    errorModel.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage());
-    });
-    this.serviceMessageError = errorModel;
+  public ServiceException(ErrorMessageModel errorMessagResponseModelError, Throwable cause) {
+    super(errorMessagResponseModelError.getDescription(), cause);
+    this.errorMessagResponseModelError = errorMessagResponseModelError;
+    this.errorMessagResponseModelError.setDetailMessage(cause.toString());
   }
 
   public ServiceException(Throwable cause) {
     super(cause);
+    this.errorMessagResponseModelError = ResponseCode.INTERNAL_SERVER_ERROR.getErrorMessageModel();
+    this.errorMessagResponseModelError.setDetailMessage(cause.toString());
   }
 
-  public ServiceException(String message, Throwable cause, boolean enableSuppression,
+  public ServiceException(String messageError, Throwable cause, boolean enableSuppression,
       boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
+    super(messageError, cause, enableSuppression, writableStackTrace);
+    this.errorMessagResponseModelError = ResponseCode.INTERNAL_SERVER_ERROR.getErrorMessageModel();
+    this.errorMessagResponseModelError.setDescription(messageError);
+    this.errorMessagResponseModelError.setDetailMessage(cause.toString());
   }
 }

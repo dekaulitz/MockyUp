@@ -1,8 +1,7 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.DevStockConfig;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUpRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.features.mockup.MockUpRequestEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import java.io.Serializable;
 import java.util.ArrayList;

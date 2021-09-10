@@ -1,8 +1,8 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiPathHttpMethod;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiParameterEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiPathHttpMethod;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiParameterEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;

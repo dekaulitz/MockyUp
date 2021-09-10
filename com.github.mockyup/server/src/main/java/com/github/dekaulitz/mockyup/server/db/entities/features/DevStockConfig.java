@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.features;
+package com.github.dekaulitz.mockyup.server.db.entities.features;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUpRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.features.mockup.MockUpRequestEmbedded;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

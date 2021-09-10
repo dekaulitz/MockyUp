@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.errors;
 
-import com.github.dekaulitz.mockyup.server.model.response.ErrorResponse;
+import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
@@ -8,26 +8,23 @@ import org.springframework.security.core.AuthenticationException;
 public class UnauthorizedException extends AuthenticationException {
 
   @Getter
-  private ErrorResponse serviceMessageError = new ErrorResponse();
+  private ErrorMessageModel errorMessagResponseModelError;
 
   public UnauthorizedException(String msg, Throwable cause) {
     super(msg, cause);
+    this.errorMessagResponseModelError = ResponseCode.UNAUTHORIZED_ACCESS.getErrorMessageModel();
+    this.errorMessagResponseModelError.setDescription(msg);
+    this.errorMessagResponseModelError.setDetailMessage(cause.toString());
   }
 
   public UnauthorizedException(String msg) {
     super(msg);
+    this.errorMessagResponseModelError = ResponseCode.UNAUTHORIZED_ACCESS.getErrorMessageModel();
+    this.errorMessagResponseModelError.setDescription(msg);
   }
 
   public UnauthorizedException(ResponseCode responseCode) {
-    super(responseCode.getValue().getDescription());
-    ErrorResponse errorModel = new ErrorResponse();
-    errorModel.setDescription(responseCode.getValue().getDescription());
-    errorModel.setHttpCode(responseCode.getValue().getHttpCode());
-    errorModel.setStatusCode(responseCode.getValue().getStatusCode());
-    errorModel.setMessages(responseCode.getValue().getMessages());
-    errorModel.getMessages().forEach(translationsMessage -> {
-      translationsMessage.setMessage(translationsMessage.getMessage());
-    });
-    this.serviceMessageError = errorModel;
+    super(responseCode.getErrorMessageModel().getDescription());
+    this.errorMessagResponseModelError = responseCode.getErrorMessageModel();
   }
 }

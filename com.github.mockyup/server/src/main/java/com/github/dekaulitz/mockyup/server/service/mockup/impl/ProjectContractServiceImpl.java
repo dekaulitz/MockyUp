@@ -1,11 +1,10 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntities;
-import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
-import com.github.dekaulitz.mockyup.server.model.constants.DatabaseCollections;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
@@ -43,17 +42,17 @@ public class ProjectContractServiceImpl implements ProjectContractService {
 
 
   @Override
-  public ProjectContractEntities getById(String id) throws ServiceException {
+  public ProjectContractEntity getById(String id) throws ServiceException {
     final String cacheKey = CacheConstants.PROJECT_CONTRACT_PREFIX + id;
-    ProjectContractEntities entity = cacheService
-        .findCacheByKey(cacheKey, ProjectContractEntities.class);
+    ProjectContractEntity entity = cacheService
+        .findCacheByKey(cacheKey, ProjectContractEntity.class);
     if (entity == null) {
       GetProjectContractParam getProjectParam = GetProjectContractParam.builder()
           .id(id)
           .build();
       ProjectContractQuery query = new ProjectContractQuery();
       query.buildQuery(getProjectParam);
-      entity = mongoTemplate.findOne(query.getQuery(), ProjectContractEntities.class);
+      entity = mongoTemplate.findOne(query.getQuery(), ProjectContractEntity.class);
       if (entity != null) {
         cacheService.createCache(CacheConstants.PROJECT_PREFIX + id, entity,
             CacheConstants.ONE_HOUR_IN_SECONDS);
@@ -65,18 +64,17 @@ public class ProjectContractServiceImpl implements ProjectContractService {
   }
 
   @Override
-  public List<ProjectContractEntities> getAll(GetProjectContractParam getProjectContractParam)
+  public List<ProjectContractEntity> getAll(GetProjectContractParam getProjectContractParam)
       throws ServiceException {
     final String cacheKey =
         CacheConstants.PROJECT_CONTRACT_PREFIX + getProjectContractParam.toStringSkipNulls();
-    List<ProjectContractEntities> result = cacheService
-        .findCacheListByKey(cacheKey, ProjectContractEntities.class);
+    List<ProjectContractEntity> result = cacheService
+        .findCacheListByKey(cacheKey, ProjectContractEntity.class);
     if (CollectionUtils.isEmpty(result)) {
       ProjectContractQuery query = new ProjectContractQuery();
       query.buildQuery(getProjectContractParam);
       result = mongoTemplate
-          .find(query.getQueryWithPaging(), ProjectContractEntities.class,
-              DatabaseCollections.PROJECT_CONTRACT_COLLECTIONS);
+          .find(query.getQueryWithPaging(), ProjectContractEntity.class);
       if (CollectionUtils.isNotEmpty(result)) {
         cacheService
             .createCache(
@@ -90,11 +88,11 @@ public class ProjectContractServiceImpl implements ProjectContractService {
   }
 
   @Override
-  public ProjectContractEntities createContract(
+  public ProjectContractEntity createContract(
       CreateProjectContractRequest createProjectContractRequest) throws ServiceException {
-    ProjectEntities projectEntities = projectService
+    ProjectEntity projectEntity = projectService
         .getById(createProjectContractRequest.getProjectId());
-    if (projectEntities == null) {
+    if (projectEntity == null) {
       throw new ServiceException(MessageHelper.getMessage(ResponseCode.DATA_NOT_FOUND),
           "project not found with id " + createProjectContractRequest.getProjectId());
     }
@@ -104,27 +102,27 @@ public class ProjectContractServiceImpl implements ProjectContractService {
           JsonMapper.mapper().writeValueAsString(createProjectContractRequest.getSpec()), null,
           null);
       OpenAPI openApi = result.getOpenAPI();
-      ProjectContractEntities projectContractEntities = new ProjectContractEntities();
-      projectContractEntities.setProjectId(createProjectContractRequest.getProjectId());
-      projectContractEntities.setOpenApiVersion(openApi.getOpenapi());
-      projectContractEntities
+      ProjectContractEntity projectContractEntity = new ProjectContractEntity();
+      projectContractEntity.setProjectId(createProjectContractRequest.getProjectId());
+      projectContractEntity.setOpenApiVersion(openApi.getOpenapi());
+      projectContractEntity
           .setRawSpecs(
               JsonMapper.mapper().writeValueAsString(createProjectContractRequest.getSpec()));
-      projectContractEntities.setInfo(
+      projectContractEntity.setInfo(
           OpenApiTransformerHelper.initOpenApiInfo(openApi.getInfo(), modelMapper));
       // @TODO i think it will be nice if we also injecting mockup server too after saved data into database
-      projectContractEntities.setSecurity(
+      projectContractEntity.setSecurity(
           OpenApiTransformerHelper.iniOpenApiSecurity(openApi.getSecurity()));
-      projectContractEntities.setServers(
+      projectContractEntity.setServers(
           OpenApiTransformerHelper.getOpenApiServers(openApi.getServers()));
-      projectContractEntities.setTags(OpenApiTransformerHelper.getOpenApiTags(openApi.getTags()));
-      projectContractEntities
+      projectContractEntity.setTags(OpenApiTransformerHelper.getOpenApiTags(openApi.getTags()));
+      projectContractEntity
           .setComponents(OpenApiTransformerHelper.getOpenApiComponents(openApi.getComponents()));
-      projectContractEntities
+      projectContractEntity
           .setPaths(OpenApiTransformerHelper.initOpenApiPath(openApi.getPaths()));
 //      OpenApiRefHelper.rendering$refInformation(projectContractEntities);
       return mongoTemplate
-          .insert(projectContractEntities);
+          .insert(projectContractEntity);
     } catch (Exception e) {
       e.printStackTrace();
       log.error("invalid mock structure ex:{} request:{}", e, createProjectContractRequest);

@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

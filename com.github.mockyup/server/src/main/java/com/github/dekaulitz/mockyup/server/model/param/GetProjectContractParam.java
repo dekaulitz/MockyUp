@@ -12,8 +12,8 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder(toBuilder = true)
 @ToString(callSuper = true)
-@Builder
 public class GetProjectContractParam extends PageableParam implements Serializable {
 
   private String[] ids;

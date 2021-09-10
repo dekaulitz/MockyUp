@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.constants.DevStockEnum;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.features.mockup.MockUpRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.features.constants.DevStockEnum;
+import com.github.dekaulitz.mockyup.server.db.entities.features.mockup.MockUpRequestEmbedded;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;

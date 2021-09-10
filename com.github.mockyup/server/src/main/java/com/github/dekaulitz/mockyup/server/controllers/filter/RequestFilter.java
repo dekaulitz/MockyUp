@@ -1,6 +1,8 @@
-package com.github.dekaulitz.mockyup.server.configuration.filter;
+package com.github.dekaulitz.mockyup.server.controllers.filter;
 
-import com.github.dekaulitz.mockyup.server.model.request.IssuerRequestModel;
+import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
+import com.github.dekaulitz.mockyup.server.model.constants.Language;
+import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,33 +22,33 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class RequestFilter implements Filter {
 
-  private final String LOCALHOST_IPV4 = "127.0.0.1";
-  private final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
-
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
       FilterChain filterChain) throws IOException, ServletException {
     String requestId = UUID.randomUUID().toString();
     long requestTime = System.currentTimeMillis();
     HttpServletRequest req = (HttpServletRequest) servletRequest;
-    IssuerRequestModel issuerRequestModel = IssuerRequestModel.builder()
+    Mandatory mandatory = Mandatory.builder()
         .agent(req.getHeader("User-Agent"))
         .ip(getClientIp(req))
         .requestId(requestId)
+        .requestTime(requestTime)
+        .language(Language.EN)
         .build();
-    req.setAttribute("x-request-id", issuerRequestModel.getRequestId());
-    req.setAttribute("x-request-time", requestTime);
-    servletRequest.getServletContext().setAttribute("issuer", issuerRequestModel);
-    log.info(
-        "Starting a transaction for req : {}",
-        req.getRequestURI());
+    req.setAttribute(ApplicationConstants.X_REQUEST_ID, mandatory.getRequestId());
+    req.setAttribute(ApplicationConstants.X_REQUEST_TIME, mandatory.getRequestTime());
+    servletRequest.getServletContext()
+        .setAttribute(ApplicationConstants.MANDATORY, mandatory);
+//    log.info(
+//        "Starting a transaction for req : {}",
+//        req.getRequestURI());
     HttpServletResponse res = (HttpServletResponse) servletResponse;
-    res.setHeader("x-request-id", issuerRequestModel.getRequestId());
-    res.setHeader("x-request-time", String.valueOf(requestTime));
+    res.setHeader(ApplicationConstants.X_REQUEST_ID, mandatory.getRequestId());
+    res.setHeader(ApplicationConstants.X_REQUEST_TIME, String.valueOf(mandatory.getRequestTime()));
     filterChain.doFilter(servletRequest, servletResponse);
-    log.info(
-        "Committing a transaction for req : {}",
-        req.getRequestURI());
+//    log.info(
+//        "Committing a transaction for req : {}",
+//        req.getRequestURI());
   }
 
   public String getClientIp(HttpServletRequest request) {
@@ -61,6 +63,8 @@ public class RequestFilter implements Filter {
 
     if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
       ipAddress = request.getRemoteAddr();
+      String LOCALHOST_IPV4 = "127.0.0.1";
+      String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
       if (LOCALHOST_IPV4.equals(ipAddress) || LOCALHOST_IPV6.equals(ipAddress)) {
         try {
           InetAddress inetAddress = InetAddress.getLocalHost();

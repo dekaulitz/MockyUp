@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.server.db.entities;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiComponents;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiPathEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiProjectInfoEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiServerEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.OpenApiTagEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiComponents;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiProjectInfoEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiTagEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "projectContracts")
@@ -25,8 +26,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProjectContractEntities extends BaseMongo implements Serializable {
+@Builder(toBuilder = true)
+@ToString(callSuper = true)
+public class ProjectContractEntity extends BaseMongo implements Serializable {
 
   private static final Long serialVersionUID = 1L;
 

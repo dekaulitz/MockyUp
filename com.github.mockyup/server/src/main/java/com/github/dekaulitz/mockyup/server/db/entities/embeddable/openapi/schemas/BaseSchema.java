@@ -1,7 +1,7 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiDiscriminatorEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiXmlEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiDiscriminatorEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiXmlEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import java.io.Serializable;
 import java.math.BigDecimal;

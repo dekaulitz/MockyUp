@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded.OpenApiContactEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiContactEmbedded;
 import io.swagger.v3.oas.models.info.License;
 import java.io.Serializable;
 import java.util.HashMap;

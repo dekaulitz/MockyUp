@@ -64,7 +64,6 @@ public class CacheServiceImpl implements CacheService {
       String valueString = objectMapper.writeValueAsString(value);
       redisTemplate.opsForValue().set(key, valueString, expirySeconds, TimeUnit.SECONDS);
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
       log.error("createCache failed ex:{} key:{}", e, key);
     }
     return value;
@@ -75,7 +74,6 @@ public class CacheServiceImpl implements CacheService {
     try {
       redisTemplate.delete(key);
     } catch (Exception e) {
-      e.printStackTrace();
       log.error("deleteCache failed ex:{} key:{}", e, key);
     }
   }
@@ -88,7 +86,6 @@ public class CacheServiceImpl implements CacheService {
         try {
           redisTemplate.delete(key);
         } catch (Exception e) {
-          e.printStackTrace();
           log.error("deleteCacheByPrefixKey failed ex:{} key:{}", e, key);
         }
       });

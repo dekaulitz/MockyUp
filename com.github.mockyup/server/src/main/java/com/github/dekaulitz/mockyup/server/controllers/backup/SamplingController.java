@@ -1,10 +1,11 @@
 package com.github.dekaulitz.mockyup.server.controllers.backup;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingResponseContentEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup.MockingMatchingResponseEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
+
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseContentEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseEmbedded;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.model.constants.MockRequest;
+import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
@@ -88,8 +89,8 @@ public class SamplingController {
       @RequestBody(required = false) String body,
       HttpServletRequest request) throws ServiceException {
     String path = request.getRequestURI()
-        .split(request.getContextPath() + MockRequest.MOCK_REQUEST_PREFIX)[1];
-    String[] paths = path.split(MockRequest.MOCK_REQUEST_ID_PREFIX);
+        .split(request.getContextPath() + ApplicationConstants.MOCK_REQUEST_PREFIX)[1];
+    String[] paths = path.split(ApplicationConstants.MOCK_REQUEST_ID_PREFIX);
     Map<String, String> headers = Collections.list(request.getHeaderNames())
         .stream()
         .collect(Collectors.toMap(name -> name, request::getHeader));
@@ -105,8 +106,7 @@ public class SamplingController {
 
   private ResponseEntity<Object> generateMockResponseEntity(MockRequestModel mock,
       String contentType) {
-    MockingMatchingResponseEmbedded response = mock
-        .getResponse();
+    MockingMatchingResponseEmbedded response = mock.getResponse();
     HttpHeaders httpHeaders = new HttpHeaders();
     if (response.getHeaders() != null) {
       response.getHeaders().forEach((s, o) -> {

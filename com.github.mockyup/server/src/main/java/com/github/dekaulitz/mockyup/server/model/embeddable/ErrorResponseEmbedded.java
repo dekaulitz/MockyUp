@@ -1,24 +1,27 @@
 package com.github.dekaulitz.mockyup.server.model.embeddable;
 
 import java.io.Serializable;
-import java.util.Set;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Setter
 @Getter
+@ToString
+public class ErrorResponseEmbedded implements Serializable {
 
-public class Message implements Serializable {
-
-  private Integer httpCode;
-  private Integer statusCode;
+  private String exception;
   private String description;
-  private Set<TranslationsMessage> messages;
-
+  private Object extraMessage;
+  @NotNull
+  @Valid
+  private TranslationsMessage message;
 }

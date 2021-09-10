@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable;
 
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import javax.validation.constraints.NotBlank;

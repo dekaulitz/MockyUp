@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas;
 
 import java.time.OffsetDateTime;
 import lombok.Getter;

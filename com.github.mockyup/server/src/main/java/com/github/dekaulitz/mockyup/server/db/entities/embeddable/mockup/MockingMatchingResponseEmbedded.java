@@ -1,6 +1,6 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

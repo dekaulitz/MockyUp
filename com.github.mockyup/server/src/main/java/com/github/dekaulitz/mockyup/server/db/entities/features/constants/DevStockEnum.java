@@ -1,6 +1,5 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.features.constants;
+package com.github.dekaulitz.mockyup.server.db.entities.features.constants;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;

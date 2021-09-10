@@ -1,7 +1,8 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.embedded;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.constants.OpenApiContentType;
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas.BaseSchema;
+
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas.BaseSchema;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class OpenApiContentEmbedded implements Serializable {
 
   private OpenApiContentType contentType;
   private BaseSchema schema;
-  private Map<String, OpenApiExampleEmbedded> examples = new HashMap<>();
+  private Map<String, com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiExampleEmbedded> examples = new HashMap<>();
   private Object example;
   private Map<String, OpenApiEncodingEmbedded> encoding = new HashMap<>();
   private Map<String, Object> extensions = new HashMap<>();

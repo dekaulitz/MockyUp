@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.github.dekaulitz.mockyup.server.db.entities.UserEntities;
+import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.errors.UnauthorizedException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
@@ -36,7 +36,11 @@ public class JwtServiceImpl implements JwtService {
   private CacheService cacheService;
 
   @Override
-  public AuthProfileModel generateToken(UserEntities userEntities, Boolean rememberMe) {
+  public AuthProfileModel generateToken(UserEntity userEntity, Boolean rememberMe) {
+    if (!userEntity.isAccountNonLocked() || !userEntity.isEnabled()) {
+      throw new UnauthorizedException(ResponseCode.USER_DISABLED);
+    }
+    String jti = UUID.randomUUID().toString();
     Calendar date = Calendar.getInstance();
     long t = date.getTimeInMillis();
     if (rememberMe) {
@@ -45,12 +49,15 @@ public class JwtServiceImpl implements JwtService {
     Date canDoRefreshTime = new Date(t + 60 * refreshTime);
     Date tokenExpireTime = new Date(t + 60 * expiredTime);
     //@TODO i think it should more than this that we can keep user data on token
-    String jti = UUID.randomUUID().toString();
     String token = buildToken(jti, canDoRefreshTime, tokenExpireTime);
     AuthProfileModel authProfileModel = new AuthProfileModel();
+    authProfileModel.setJti(jti);
     authProfileModel.setToken(token);
-    authProfileModel.setId(userEntities.getId());
-    authProfileModel.setUsername(userEntities.getUsername());
+    authProfileModel.setId(userEntity.getId());
+    authProfileModel.setUsername(userEntity.getUsername());
+    authProfileModel.setAccess(userEntity.getAccess());
+    authProfileModel.setAccountNonLocked(userEntity.isAccountNonLocked());
+    authProfileModel.setEnabled(userEntity.isEnabled());
     String cacheKey = CacheConstants.AUTH_PREFIX + jti;
     return (AuthProfileModel) cacheService
         .createCache(cacheKey, authProfileModel, canDoRefreshTime.getTime());
@@ -66,6 +73,8 @@ public class JwtServiceImpl implements JwtService {
       if (canRefresh.getTime() >= currentTime) {
         throw new UnauthorizedException(ResponseCode.REFRESH_TOKEN_REQUIRED);
       } else {
+        String cacheKey = CacheConstants.AUTH_PREFIX + jwt.getId();
+        cacheService.deleteCache(cacheKey);
         throw new UnauthorizedException(ResponseCode.TOKEN_NOT_VALID);
       }
     }
@@ -75,6 +84,14 @@ public class JwtServiceImpl implements JwtService {
       throw new UnauthorizedException(ResponseCode.TOKEN_NOT_VALID);
     }
     return authProfile;
+  }
+
+  @Override
+  public String invalidateToken(String token) {
+    DecodedJWT jwt = decodeToken(token, secret);
+    String cacheKey = CacheConstants.AUTH_PREFIX + jwt.getId();
+    cacheService.deleteCache(cacheKey);
+    return jwt.getId();
   }
 
 

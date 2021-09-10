@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.models.ExternalDocumentation;

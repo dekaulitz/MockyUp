@@ -1,14 +1,12 @@
-package com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.mockup;
+package com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup;
 
-import com.github.dekaulitz.mockyup.server.db.entities.v2.embeddable.openapi.schemas.BaseSchema;
-import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiSchemaHelper;
+import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas.BaseSchema;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.collections4.MapUtils;
 
 @AllArgsConstructor
 @NoArgsConstructor

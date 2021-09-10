@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "projects")
@@ -16,8 +17,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProjectEntities extends BaseMongo implements Serializable {
+@Builder(toBuilder = true)
+@ToString(callSuper = true)
+public class ProjectEntity extends BaseMongo implements Serializable {
 
   private static final Long serialVersionUID = 1L;
 

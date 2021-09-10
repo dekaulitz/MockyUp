@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @ToString(callSuper = true)
 public class GetProjectParam extends PageableParam implements Serializable {
 
