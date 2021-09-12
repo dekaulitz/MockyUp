@@ -47,7 +47,7 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
   }
 
   private ResponseEntity<Object> handlingErrorResponse(Exception ex, MandatoryModel mandatoryModel) {
-    ErrorMessageModel errorMessageModel = null;
+    ErrorMessageModel errorMessageModel;
     if (ex instanceof ServiceException) {
       errorMessageModel = ((ServiceException) ex).getErrorMessagResponseModelError();
     } else if (ex instanceof UnauthorizedException) {
