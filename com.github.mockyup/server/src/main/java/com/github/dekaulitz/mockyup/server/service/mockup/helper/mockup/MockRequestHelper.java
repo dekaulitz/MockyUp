@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
+import com.github.dekaulitz.mockyup.server.model.dto.MockRequestAttributeModel;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.features.mockup.MockUpRequestEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingRequestEmbedded;
@@ -19,16 +20,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
+// @TODO need to enhance the method structure for more readable
 public class MockRequestHelper {
 
   private MockRequestHelper() {
   }
 
-  public static void initMockRequest(List<OpenApiPathEmbedded> pathInfos,
-      Map<String, String> headers,
-      Map<String, String[]> parameters, String path, String body,
-      MockRequestModel mockRequestModel, String id,
-      OpenApiContentType openApiContentType) throws ServiceException {
+  public static void initMockRequest(MockRequestAttributeModel mockRequestAttributeModel,
+      List<OpenApiPathEmbedded> pathInfos, MockRequestModel mockRequestModel,
+      OpenApiContentType openApiContentType)
+      throws ServiceException {
+    Map<String, String> headers = mockRequestAttributeModel.getHeaders();
+    Map<String, String[]> parameters = mockRequestAttributeModel.getParameters();
+    String id = mockRequestAttributeModel.getContractId();
+
+    String path = mockRequestAttributeModel.getRequestPath();
+    String body = mockRequestAttributeModel.getBody();
     for (OpenApiPathEmbedded pathInfo : pathInfos) {
       if (null == pathInfo.getOperation() || null == pathInfo.getOperation().getMockup()) {
         throw new ServiceException(ResponseCode.MOCK_NOT_FOUND,

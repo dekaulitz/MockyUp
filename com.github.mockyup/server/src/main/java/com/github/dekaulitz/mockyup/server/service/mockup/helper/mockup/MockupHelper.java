@@ -21,9 +21,10 @@ import org.springframework.beans.BeanUtils;
 @Slf4j
 public class MockupHelper {
 
-  public static LinkedList<MockingMatchingRequestEmbedded> getMatchingAttributes(JsonNode mockupNode,String mockingType) {
+  public static LinkedList<MockingMatchingRequestEmbedded> getMatchingAttributes(
+      JsonNode mockupNode, String mockingType) {
     if (!mockupNode.has(mockingType)) {
-      log.debug("getRequestQueries {} not found on node :{}",mockingType, mockupNode);
+      log.debug("getRequestQueries {} not found on node :{}", mockingType, mockupNode);
       return null;
     }
     ArrayNode mockingQueryRequestNode = (ArrayNode) mockupNode.get(mockingType);
@@ -53,7 +54,7 @@ public class MockupHelper {
 
     /**
      * @TODO need enhance the logic
-     * we should convert to baseSchema but we also convert but we should get what instance the type
+     * we should convert to baseSchema for getting schema type and convert again to convert the properties
      */
     if (matchingProperty.has("properties")) {
       Map<String, BaseSchema> properties = JsonMapper.mapper()
@@ -62,9 +63,10 @@ public class MockupHelper {
               });
       Map<String, BaseSchema> schemaMap = new HashMap<>();
       properties.forEach((s, objectNode) -> {
-        BaseSchema baseSchema = OpenApiSchemaHelper.createSchema(objectNode.getType(),objectNode.getFormat());
-        BeanUtils.copyProperties(objectNode,baseSchema);
-        schemaMap.put(s,baseSchema);
+        BaseSchema baseSchema = OpenApiSchemaHelper.createSchema(objectNode.getType(),
+            objectNode.getFormat());
+        BeanUtils.copyProperties(objectNode, baseSchema);
+        schemaMap.put(s, baseSchema);
       });
       mockingMatchingAttributeEmbedded.setProperties(schemaMap);
     }
