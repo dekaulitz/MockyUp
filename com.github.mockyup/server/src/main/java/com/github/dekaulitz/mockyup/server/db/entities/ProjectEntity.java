@@ -31,6 +31,4 @@ public class ProjectEntity extends BaseMongo implements Serializable {
 
   private Set<String> projectTags = new HashSet<>();
 
-  private String gitUrl;
-
 }

@@ -2,8 +2,8 @@ package com.github.dekaulitz.mockyup.server;
 
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ_WRITE;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECT_READ;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECT_READ_WRITE;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ;
+import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ_WRITE;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ_WRITE;
 
@@ -30,13 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableMongoAuditing
@@ -64,8 +61,9 @@ public class App {
           .password(HashingHelper.hashing("root"))
           .email("root@root.com")
           .access(new HashSet<>(Arrays
-              .asList(MOCKS_READ, MOCKS_READ_WRITE, USERS_READ, USERS_READ_WRITE, PROJECT_READ,
-                  PROJECT_READ_WRITE)))
+              .asList(MOCKS_READ, MOCKS_READ_WRITE, USERS_READ, USERS_READ_WRITE,
+                  PROJECTS_READ_WRITE,
+                  PROJECTS_READ)))
           .isEnabled(true)
           .isAccountNonLocked(true)
           .build();

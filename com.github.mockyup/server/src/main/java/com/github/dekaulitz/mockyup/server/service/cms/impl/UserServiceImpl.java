@@ -5,7 +5,9 @@ import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
+import com.github.dekaulitz.mockyup.server.model.request.user.CreateUserRequest;
 import com.github.dekaulitz.mockyup.server.model.request.user.UpdateUserRequest;
+import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.service.cms.api.UserService;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
@@ -20,7 +22,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service(value = "userService")
 @Slf4j
 public class UserServiceImpl extends
     BaseCrudServiceImpl<UserEntity> implements UserService {
@@ -58,13 +60,10 @@ public class UserServiceImpl extends
       }
     }
     UserEntity userEntity = this.getById(id, UserEntity.class);
-    userEntity.setUsername(updateUserRequest.getUsername());
-    userEntity.setEmail(updateUserRequest.getEmail());
-    userEntity.setAccess(updateUserRequest.getAccess());
-    userEntity.setEnabled(updateUserRequest.isEnabled());
-    userEntity.setAccountNonLocked(updateUserRequest.isAccountNonLocked());
-    userEntity.setAccessProjects(updateUserRequest.getAccessProjects());
-    userEntity.setUpdatedByUserId(authProfileModel.getId());
+    if (userEntity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
+    }
+    modelMapper.map(updateUserRequest, userEntity);
     return this.update(userEntity);
   }
 
@@ -75,14 +74,20 @@ public class UserServiceImpl extends
     return this.getAll(userQuery.getQueryWithPaging(), UserEntity.class);
   }
 
-  @Override
-  public UserEntity save(UserEntity userEntity) throws ServiceException {
+  public UserEntity createUser(CreateUserRequest createUserRequest,
+      AuthProfileModel authProfileModel) throws ServiceException {
     UserQuery userQuery = new UserQuery();
-    userQuery.usernameOrEmail(userEntity.getUsername(), userEntity.getEmail());
+    userQuery.usernameOrEmail(createUserRequest.getUsername(), createUserRequest.getEmail());
     List<UserEntity> userExists = this.getAll(userQuery.getQuery(), UserEntity.class);
     if (CollectionUtils.isNotEmpty(userExists)) {
       throw new ServiceException(ResponseCode.DUPLICATE_DATA_ENTRY);
     }
+
+    UserEntity userEntity = modelMapper.map(createUserRequest, UserEntity.class);
+    userEntity.setPassword(HashingHelper.hashing(userEntity.getPassword()));
+    userEntity.setCreatedByUserId(authProfileModel.getId());
+    userEntity.setUpdatedByUserId(authProfileModel.getId());
+
     return super.save(userEntity);
   }
 }

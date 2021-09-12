@@ -13,6 +13,7 @@ public class ApplicationConstants {
   public final static String LOGIN = "/login";
   public final static String LOGOUT = "/logout";
   public final static String USERS = "/users";
+  public final static String PROJECTS = "/projects";
 
   private ApplicationConstants() {
   }

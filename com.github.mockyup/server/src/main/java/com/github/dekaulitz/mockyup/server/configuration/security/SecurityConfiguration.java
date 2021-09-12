@@ -40,7 +40,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     filter.setAuthenticationManager(authenticationManager());
     filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
         new AntPathRequestMatcher("/v1/users/***"),
-        new AntPathRequestMatcher("/v1/users")
+        new AntPathRequestMatcher("/v1/users"),
+        new AntPathRequestMatcher("/v1/projects/***"),
+        new AntPathRequestMatcher("/v1/projects")
     )));
     filter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {

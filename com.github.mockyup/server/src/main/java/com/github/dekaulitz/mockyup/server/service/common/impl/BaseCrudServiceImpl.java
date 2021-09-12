@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.lang.Nullable;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 @Service("baseCrud")
@@ -27,6 +27,7 @@ public abstract class BaseCrudServiceImpl<T extends BaseMongo> implements
   private MongoTemplate mongoTemplate;
 
   @Override
+  @Nullable
   public T getById(String id, Class<T> entityClass) throws ServiceException {
     return mongoTemplate.findById(new ObjectId(id), entityClass);
   }

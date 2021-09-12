@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class CreateProjectRequest implements Serializable {
+public class UpdateProjectRequest implements Serializable {
 
   @NotBlank
   private String projectName;
