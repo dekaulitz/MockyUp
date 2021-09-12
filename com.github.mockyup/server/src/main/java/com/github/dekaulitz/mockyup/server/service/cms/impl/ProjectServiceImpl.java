@@ -3,12 +3,12 @@ package com.github.dekaulitz.mockyup.server.service.cms.impl;
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
 import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectService;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
 import java.util.List;
 import org.modelmapper.ModelMapper;
@@ -46,7 +46,7 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
       AuthProfileModel authProfileModel)
       throws ServiceException {
     ProjectEntity projectEntity = this.getById(id, ProjectEntity.class);
-    if (projectEntity == null) {
+    if(projectEntity== null){
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
     modelMapper.map(updateProjectRequest, projectEntity);

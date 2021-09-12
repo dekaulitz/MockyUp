@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.model.request;
+package com.github.dekaulitz.mockyup.server.model.request.contract;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

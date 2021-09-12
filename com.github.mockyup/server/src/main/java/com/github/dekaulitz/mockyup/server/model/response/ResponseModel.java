@@ -17,10 +17,10 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Setter
 @Getter
-@ToString
+@Builder(toBuilder = true)
+@ToString(callSuper = true)
 public class ResponseModel implements Serializable {
 
   @NotNull

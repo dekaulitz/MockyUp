@@ -4,7 +4,6 @@ import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
 
 public class SecurityAuthenticationToken extends UsernamePasswordAuthenticationToken {

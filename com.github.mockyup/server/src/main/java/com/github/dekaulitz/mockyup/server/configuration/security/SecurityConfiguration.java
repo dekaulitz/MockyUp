@@ -1,6 +1,12 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
 
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECTS;
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECT_CONTRACTS;
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.REGEX_PATH;
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.USERS;
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.V1;
+
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +45,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     SecurityAuthenticationFilter filter = new SecurityAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManager());
     filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
-        new AntPathRequestMatcher("/v1/users/***"),
-        new AntPathRequestMatcher("/v1/users"),
-        new AntPathRequestMatcher("/v1/projects/***"),
-        new AntPathRequestMatcher("/v1/projects")
+        new AntPathRequestMatcher(V1 + USERS + REGEX_PATH),
+        new AntPathRequestMatcher(V1 + USERS),
+        new AntPathRequestMatcher(V1 + PROJECTS + REGEX_PATH),
+        new AntPathRequestMatcher(V1 + PROJECTS),
+        new AntPathRequestMatcher(V1 + PROJECT_CONTRACTS + REGEX_PATH),
+        new AntPathRequestMatcher(V1 + PROJECT_CONTRACTS)
     )));
     filter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {

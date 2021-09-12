@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
-import com.github.dekaulitz.mockyup.server.model.constants.Language;
 import com.github.dekaulitz.mockyup.server.model.common.MultiTranslations;
+import com.github.dekaulitz.mockyup.server.model.constants.Language;
 import com.github.dekaulitz.mockyup.server.model.embeddable.TranslationsMessage;
 import java.io.Serializable;
 import java.util.Set;

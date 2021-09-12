@@ -8,7 +8,6 @@ import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.Mock
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseContentEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
-
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.schemas.BaseSchema;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiSchemaHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;

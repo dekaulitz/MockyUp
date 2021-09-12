@@ -1,19 +1,13 @@
 package com.github.dekaulitz.mockyup.server;
 
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ_WRITE;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ_WRITE;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ_WRITE;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
+import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -56,14 +51,12 @@ public class App {
     UserEntity userEntity = mongoTemplate.findOne(userQuery.getQuery(), UserEntity.class);
     if (userEntity == null) {
       log.info("user root doesn't exists will create root users");
+      Set<Role> roles = new HashSet<>(Arrays.asList(Role.values()));
       userEntity = UserEntity.builder()
           .username("root")
           .password(HashingHelper.hashing("root"))
           .email("root@root.com")
-          .access(new HashSet<>(Arrays
-              .asList(MOCKS_READ, MOCKS_READ_WRITE, USERS_READ, USERS_READ_WRITE,
-                  PROJECTS_READ_WRITE,
-                  PROJECTS_READ)))
+          .access(roles)
           .isEnabled(true)
           .isAccountNonLocked(true)
           .build();

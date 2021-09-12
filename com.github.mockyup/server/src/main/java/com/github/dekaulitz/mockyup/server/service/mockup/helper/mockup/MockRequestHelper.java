@@ -1,15 +1,14 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
+import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.features.mockup.MockUpRequestEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingRequestEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiPathEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.schemas.BaseSchema;
-import com.github.dekaulitz.mockyup.server.model.embeddable.document.features.mockup.MockUpRequestEmbedded;
-import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
-import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiSchemaHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
 import com.github.dekaulitz.mockyup.server.utils.XmlMapper;
@@ -32,7 +31,7 @@ public class MockRequestHelper {
       OpenApiContentType openApiContentType) throws ServiceException {
     for (OpenApiPathEmbedded pathInfo : pathInfos) {
       if (null == pathInfo.getOperation() || null == pathInfo.getOperation().getMockup()) {
-        throw new ServiceException(MessageHelper.getMessage(ResponseCode.MOCK_NOT_FOUND),
+        throw new ServiceException(ResponseCode.MOCK_NOT_FOUND,
             " contractId: " + id + " with path: " + path + " method: ");
       }
       MockUpRequestEmbedded mockingPath = pathInfo
@@ -91,7 +90,7 @@ public class MockRequestHelper {
         requestBody = JsonMapper.mapper().readTree(body);
       }
     } catch (Exception ex) {
-      throw new ServiceException(MessageHelper.getMessage(ResponseCode.UNSUPPORTED_MOCK_TYPE),
+      throw new ServiceException(ResponseCode.UNSUPPORTED_MOCK_TYPE,
           ex);
     }
     for (MockingMatchingRequestEmbedded mockingMatchingRequestEmbedded : mockingRequestBodies) {

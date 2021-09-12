@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
 import com.github.dekaulitz.mockyup.server.errors.UnauthorizedException;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.stereotype.Component;
 
 
 public class SecurityAuthenticationFilter extends AbstractAuthenticationProcessingFilter {

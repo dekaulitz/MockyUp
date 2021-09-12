@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.errors;
 
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import lombok.Getter;
 
 //@TODO need do some enhancement relate on response message
@@ -16,6 +16,12 @@ public class ServiceException extends Exception {
   public ServiceException(ResponseCode responseCode) {
     super(responseCode.getErrorMessageModel().getDescription());
     this.errorMessagResponseModelError = responseCode.getErrorMessageModel();
+  }
+
+  public ServiceException(ResponseCode responseCode, String detailMessage) {
+    super(responseCode.getErrorMessageModel().getDescription());
+    this.errorMessagResponseModelError = responseCode.getErrorMessageModel();
+    this.errorMessagResponseModelError.setDetailMessage(detailMessage);
   }
 
   public ServiceException(ErrorMessageModel errorMessagResponseModelError) {
@@ -33,9 +39,9 @@ public class ServiceException extends Exception {
     super(messageError);
   }
 
-  public ServiceException(ErrorMessageModel errorMessagResponseModelError, Throwable cause) {
-    super(errorMessagResponseModelError.getDescription(), cause);
-    this.errorMessagResponseModelError = errorMessagResponseModelError;
+  public ServiceException(ResponseCode responseCode, Throwable cause) {
+    super(responseCode.getErrorMessageModel().getDescription(), cause);
+    this.errorMessagResponseModelError = responseCode.getErrorMessageModel();
     this.errorMessagResponseModelError.setDetailMessage(cause.toString());
   }
 

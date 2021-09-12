@@ -3,7 +3,6 @@ package com.github.dekaulitz.mockyup.server.model.request.user;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.UserAccessProjectEmbedded;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;

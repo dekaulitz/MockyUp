@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded;
 
-import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.features.mockup.MockUpRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import java.io.Serializable;
 import java.util.ArrayList;

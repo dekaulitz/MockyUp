@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.errors;
 
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 

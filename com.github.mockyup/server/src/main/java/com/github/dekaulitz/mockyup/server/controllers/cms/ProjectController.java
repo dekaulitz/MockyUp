@@ -5,7 +5,7 @@ import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationCon
 
 import com.github.dekaulitz.mockyup.server.controllers.BaseController;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.facade.CmsFacade;
+import com.github.dekaulitz.mockyup.server.facade.cms.CmsFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;

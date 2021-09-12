@@ -6,7 +6,7 @@ import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationCon
 import com.github.dekaulitz.mockyup.server.controllers.BaseController;
 import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.facade.CmsFacade;
+import com.github.dekaulitz.mockyup.server.facade.cms.CmsFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.user.CreateUserRequest;
@@ -52,11 +52,21 @@ public class UsersController extends BaseController {
     return ResponseEntity.ok(ResponseModel.initSuccessResponse(userEntity, mandatoryModel));
   }
 
+
   @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
   @GetMapping(value = USERS, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> getAll(@ModelAttribute MandatoryModel mandatoryModel,
       @Valid GetUserParam getUserParam) throws ServiceException {
     return ResponseEntity.ok(
         ResponseModel.initSuccessResponse(this.cmsFacade.allUsers(getUserParam), mandatoryModel));
+  }
+
+  @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
+  @GetMapping(value = USERS + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> getUserById(@PathVariable String id,
+      @ModelAttribute MandatoryModel mandatoryModel)
+      throws ServiceException {
+    UserEntity userEntity = this.cmsFacade.getUserDetail(id);
+    return ResponseEntity.ok(ResponseModel.initSuccessResponse(userEntity, mandatoryModel));
   }
 }

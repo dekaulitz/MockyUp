@@ -1,19 +1,25 @@
-package com.github.dekaulitz.mockyup.server.facade;
+package com.github.dekaulitz.mockyup.server.facade.cms;
 
+import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
 import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
+import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
+import com.github.dekaulitz.mockyup.server.model.request.contract.CreateProjectContractRequest;
+import com.github.dekaulitz.mockyup.server.model.request.contract.UpdateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.model.request.user.CreateUserRequest;
 import com.github.dekaulitz.mockyup.server.model.request.user.UpdateUserRequest;
+import com.github.dekaulitz.mockyup.server.model.response.contract.ContractCardResponseModel;
 import com.github.dekaulitz.mockyup.server.service.auth.WithAuthService;
+import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectContractService;
 import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectService;
 import com.github.dekaulitz.mockyup.server.service.cms.api.UserService;
-import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -30,6 +36,10 @@ public class CmsFacade extends WithAuthService {
   @Autowired
   @Qualifier(value = "projectService")
   private ProjectService projectService;
+
+  @Autowired
+  @Qualifier(value = "projectContractService")
+  private ProjectContractService projectContractService;
 
   public UserEntity createUser(@Valid @NotNull CreateUserRequest createUserRequest)
       throws ServiceException {
@@ -80,5 +90,32 @@ public class CmsFacade extends WithAuthService {
   public List<ProjectEntity> allProjects(@Valid @NotNull GetProjectParam getProjectParam)
       throws ServiceException {
     return projectService.getAll(getProjectParam);
+  }
+
+  public List<ContractCardResponseModel> allContractCards(
+      GetProjectContractParam getProjectContractParam) {
+    return projectContractService.getContractCards(getProjectContractParam);
+  }
+
+  public ProjectContractEntity getByContractId(String contractId) throws ServiceException {
+    ProjectContractEntity projectContractEntity = projectContractService.getById(contractId,
+        ProjectContractEntity.class);
+    if (projectContractEntity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
+    }
+    return projectContractEntity;
+  }
+
+  public ProjectContractEntity createContract(
+      CreateProjectContractRequest createProjectContractRequest) throws ServiceException {
+    AuthProfileModel authProfileModel = this.getAuthProfile();
+    return projectContractService.createContract(createProjectContractRequest, authProfileModel);
+  }
+
+  public ProjectContractEntity updateContract(String id,
+      UpdateProjectContractRequest updateProjectContractRequest) throws ServiceException {
+    AuthProfileModel authProfileModel = this.getAuthProfile();
+    return projectContractService.updateContract(id, updateProjectContractRequest,
+        authProfileModel);
   }
 }

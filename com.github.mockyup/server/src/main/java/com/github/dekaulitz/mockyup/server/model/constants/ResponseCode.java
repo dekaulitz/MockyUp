@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.service.common.helper.constants;
+package com.github.dekaulitz.mockyup.server.model.constants;
 
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import lombok.Getter;

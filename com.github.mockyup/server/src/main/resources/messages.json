@@ -2,15 +2,15 @@
   "PAGE_NOT_FOUND": {
     "httpCode": 404,
     "statusCode": 4041,
-    "description": "PAGE_NOT_FOUND ",
+    "description": "PAGE_NOT_FOUND",
     "messages": [
       {
         "lang": "ID",
-        "message": "PAGE_NOT_FOUND"
+        "message": "You lost, please check your request"
       },
       {
         "lang": "EN",
-        "message": "PAGE_NOT_FOUND"
+        "message": "You lost, please check your request"
       }
     ]
   },

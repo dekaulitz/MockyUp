@@ -41,6 +41,7 @@ public class MongoConfiguration extends AbstractMongoClientConfiguration {
 //    converters.add(new LocalTimeToStringConverter());
 //    converters.add(new StringToLocalTimeConverter());
     converters.add(new ObjectNodeToMapConverter());
+    converters.add(new ArrayNodeToArrayObjectConverter());
     return new MongoCustomConversions(converters);
   }
 
