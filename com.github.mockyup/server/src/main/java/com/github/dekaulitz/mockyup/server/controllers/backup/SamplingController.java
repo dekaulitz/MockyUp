@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.server.controllers.backup;
 
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseContentEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseContentEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * web mvc and configuration
  */
 @Configuration
-@EnableWebMvc
 public class CorsConfiguration implements WebMvcConfigurer {
 
   @Override

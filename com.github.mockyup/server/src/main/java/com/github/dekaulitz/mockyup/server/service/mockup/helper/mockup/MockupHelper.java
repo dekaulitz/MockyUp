@@ -3,24 +3,19 @@ package com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingAttributeEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingRequestEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseContentEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.mockup.MockingMatchingResponseEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingAttributeEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingRequestEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseContentEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.schemas.BaseSchema;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.schemas.BaseSchema;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiSchemaHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
-import io.swagger.v3.oas.models.media.Schema;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 
 

@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.model.response;
 
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.ErrorResponseEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.TranslationsMessage;
 import java.io.Serializable;
@@ -35,8 +35,8 @@ public class ResponseModel implements Serializable {
   private Long requestTime;
 
   public static ResponseModel initErrorResponse(ErrorMessageModel errorMessageModel,
-      Mandatory mandatory, Exception exception) {
-    errorMessageModel = errorMessageModel.filterTranslation(mandatory.getLanguage());
+      MandatoryModel mandatoryModel, Exception exception) {
+    errorMessageModel = errorMessageModel.filterTranslation(mandatoryModel.getLanguage());
     TranslationsMessage message = errorMessageModel.getMessages().stream().findFirst().orElse(null);
 
     ErrorResponseEmbedded error = ErrorResponseEmbedded.builder()
@@ -49,18 +49,18 @@ public class ResponseModel implements Serializable {
     return ResponseModel.builder()
         .statusCode(errorMessageModel.getStatusCode())
         .message(errorMessageModel.getDescription())
-        .requestId(mandatory.getRequestId())
+        .requestId(mandatoryModel.getRequestId())
         .error(error)
-        .requestTime(mandatory.getRequestTime())
+        .requestTime(mandatoryModel.getRequestTime())
         .build();
   }
 
-  public static ResponseModel initSuccessResponse(Object data, Mandatory mandatory) {
+  public static ResponseModel initSuccessResponse(Object data, MandatoryModel mandatoryModel) {
     return ResponseModel.builder()
         .statusCode(2000)
         .message("success")
-        .requestId(mandatory.getRequestId())
-        .requestTime(mandatory.getRequestTime())
+        .requestId(mandatoryModel.getRequestId())
+        .requestTime(mandatoryModel.getRequestTime())
         .data(data)
         .build();
   }

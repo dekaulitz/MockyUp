@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.controllers;
 
 import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import javax.servlet.ServletRequest;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class BaseController {
 
   @ModelAttribute
-  public Mandatory getIssuerRequestModel(ServletRequest servletRequest) {
-    return (Mandatory) servletRequest.getServletContext().getAttribute(
+  public MandatoryModel getMandatory(ServletRequest servletRequest) {
+    return (MandatoryModel) servletRequest.getServletContext().getAttribute(
         ApplicationConstants.MANDATORY);
   }
 

@@ -6,7 +6,7 @@ import com.github.dekaulitz.mockyup.server.errors.UnauthorizedException;
 import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
 import com.github.dekaulitz.mockyup.server.model.constants.Language;
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.response.ResponseModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.constants.ResponseCode;
 import javax.servlet.RequestDispatcher;
@@ -27,7 +27,7 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
   @RequestMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public ResponseEntity<Object> handleError(HttpServletRequest request) {
-    Mandatory mandatory = (Mandatory) request.getServletContext()
+    MandatoryModel mandatoryModel = (MandatoryModel) request.getServletContext()
         .getAttribute(ApplicationConstants.MANDATORY);
     Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
     //if the exception is part of HttpServletRequest should be extracted
@@ -39,14 +39,14 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
     if (status.equals(HttpStatus.NOT_FOUND.value())) {
       ErrorMessageModel errorMessageModel = ResponseCode.PAGE_NOT_FOUND.getErrorMessageModel();
       return ResponseEntity.status(errorMessageModel.getHttpCode())
-          .body(ResponseModel.initErrorResponse(errorMessageModel, mandatory,
+          .body(ResponseModel.initErrorResponse(errorMessageModel, mandatoryModel,
               new ServiceException(ResponseCode.PAGE_NOT_FOUND)));
     }
-    return this.handlingErrorResponse(exception, mandatory);
+    return this.handlingErrorResponse(exception, mandatoryModel);
 
   }
 
-  private ResponseEntity<Object> handlingErrorResponse(Exception ex, Mandatory mandatory) {
+  private ResponseEntity<Object> handlingErrorResponse(Exception ex, MandatoryModel mandatoryModel) {
     ErrorMessageModel errorMessageModel = null;
     if (ex instanceof ServiceException) {
       errorMessageModel = ((ServiceException) ex).getErrorMessagResponseModelError();
@@ -57,6 +57,6 @@ public class ErrorHandlerController extends BaseController implements ErrorContr
     }
     errorMessageModel.filterTranslation(Language.EN);
     return ResponseEntity.status(errorMessageModel.getHttpCode())
-        .body(ResponseModel.initErrorResponse(errorMessageModel, mandatory, ex));
+        .body(ResponseModel.initErrorResponse(errorMessageModel, mandatoryModel, ex));
   }
 }

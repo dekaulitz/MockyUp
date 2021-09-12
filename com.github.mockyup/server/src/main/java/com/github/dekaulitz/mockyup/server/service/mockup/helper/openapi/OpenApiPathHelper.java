@@ -1,14 +1,14 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiPathEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiServerEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiParameterPosition;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiParameterStyle;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiPathHttpMethod;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiCallbackEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiParameterEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiPathOperationEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiParameterPosition;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiParameterStyle;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiPathHttpMethod;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiCallbackEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiParameterEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiPathOperationEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiSecurityEmbedded;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.mockup.DevStockHelper;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;

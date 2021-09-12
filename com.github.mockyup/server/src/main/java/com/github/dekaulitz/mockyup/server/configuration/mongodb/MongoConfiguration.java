@@ -31,6 +31,11 @@ public class MongoConfiguration extends AbstractMongoClientConfiguration {
     return databaseName;
   }
 
+  @Override
+  protected boolean autoIndexCreation() {
+    return true;
+  }
+
   public MongoCustomConversions customConversions() {
     List<Converter<?, ?>> converters = new ArrayList<>();
 //    converters.add(new LocalTimeToStringConverter());

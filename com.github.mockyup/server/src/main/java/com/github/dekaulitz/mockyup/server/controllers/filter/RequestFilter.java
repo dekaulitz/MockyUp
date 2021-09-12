@@ -2,7 +2,7 @@ package com.github.dekaulitz.mockyup.server.controllers.filter;
 
 import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
 import com.github.dekaulitz.mockyup.server.model.constants.Language;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,27 +28,27 @@ public class RequestFilter implements Filter {
     String requestId = UUID.randomUUID().toString();
     long requestTime = System.currentTimeMillis();
     HttpServletRequest req = (HttpServletRequest) servletRequest;
-    Mandatory mandatory = Mandatory.builder()
+    MandatoryModel mandatoryModel = MandatoryModel.builder()
         .agent(req.getHeader("User-Agent"))
         .ip(getClientIp(req))
         .requestId(requestId)
         .requestTime(requestTime)
         .language(Language.EN)
         .build();
-    req.setAttribute(ApplicationConstants.X_REQUEST_ID, mandatory.getRequestId());
-    req.setAttribute(ApplicationConstants.X_REQUEST_TIME, mandatory.getRequestTime());
+    req.setAttribute(ApplicationConstants.X_REQUEST_ID, mandatoryModel.getRequestId());
+    req.setAttribute(ApplicationConstants.X_REQUEST_TIME, mandatoryModel.getRequestTime());
     servletRequest.getServletContext()
-        .setAttribute(ApplicationConstants.MANDATORY, mandatory);
-//    log.info(
-//        "Starting a transaction for req : {}",
-//        req.getRequestURI());
+        .setAttribute(ApplicationConstants.MANDATORY, mandatoryModel);
+    log.info(
+        "Starting a transaction for req : {}",
+        req.getRequestURI());
     HttpServletResponse res = (HttpServletResponse) servletResponse;
-    res.setHeader(ApplicationConstants.X_REQUEST_ID, mandatory.getRequestId());
-    res.setHeader(ApplicationConstants.X_REQUEST_TIME, String.valueOf(mandatory.getRequestTime()));
+    res.setHeader(ApplicationConstants.X_REQUEST_ID, mandatoryModel.getRequestId());
+    res.setHeader(ApplicationConstants.X_REQUEST_TIME, String.valueOf(mandatoryModel.getRequestTime()));
     filterChain.doFilter(servletRequest, servletResponse);
-//    log.info(
-//        "Committing a transaction for req : {}",
-//        req.getRequestURI());
+    log.info(
+        "Committing a transaction for req : {}",
+        req.getRequestURI());
   }
 
   public String getClientIp(HttpServletRequest request) {

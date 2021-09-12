@@ -146,5 +146,16 @@
         "message": "UNSUPPORTED_MOCK_TYPE"
       }
     ]
+  },
+  "DUPLICATE_DATA_ENTRY": {
+    "httpCode": 400,
+    "statusCode": 4004,
+    "description": "Data already exists",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Data already exists"
+      }
+    ]
   }
 }

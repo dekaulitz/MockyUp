@@ -33,4 +33,11 @@ public class UserQuery extends BaseQuery<GetUserParam> {
           Criteria.where("email").is(usernameOrEmail)));
     }
   }
+
+  public void usernameOrEmail(String username, String email) {
+    if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(email)) {
+      this.criteriaSet.add(new Criteria().orOperator(Criteria.where("username").is(username),
+          Criteria.where("email").is(email)));
+    }
+  }
 }

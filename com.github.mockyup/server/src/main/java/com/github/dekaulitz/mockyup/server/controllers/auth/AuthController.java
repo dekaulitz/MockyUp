@@ -8,16 +8,15 @@ import com.github.dekaulitz.mockyup.server.controllers.BaseController;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.facade.AuthFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
-import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;
-import com.github.dekaulitz.mockyup.server.model.response.AuthResponseModel;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
+import com.github.dekaulitz.mockyup.server.model.request.auth.UserLoginRequest;
+import com.github.dekaulitz.mockyup.server.model.response.auth.AuthResponseModel;
 import com.github.dekaulitz.mockyup.server.model.response.ResponseModel;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,21 +35,21 @@ public class AuthController extends BaseController {
 
   @PostMapping(value = LOGIN, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> login(@Valid @RequestBody UserLoginRequest userLoginRequest,
-      @ModelAttribute Mandatory mandatory)
+      @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
-    AuthProfileModel authProfileModel = this.authFacade.login(userLoginRequest,mandatory);
+    AuthProfileModel authProfileModel = this.authFacade.login(userLoginRequest, mandatoryModel);
     return ResponseEntity.ok(ResponseModel.initSuccessResponse(AuthResponseModel.builder()
         .access(authProfileModel.getAccess())
         .accessToken(authProfileModel.getToken())
         .username(authProfileModel.getUsername())
-        .build(), mandatory));
+        .build(), mandatoryModel));
   }
 
   @PutMapping(value = LOGOUT, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> logOut(
-      @RequestHeader String authorization, @ModelAttribute Mandatory mandatory)
+      @RequestHeader String authorization, @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
     this.authFacade.logout(authorization);
-    return ResponseEntity.ok(ResponseModel.initSuccessResponse(null, mandatory));
+    return ResponseEntity.ok(ResponseModel.initSuccessResponse(null, mandatoryModel));
   }
 }

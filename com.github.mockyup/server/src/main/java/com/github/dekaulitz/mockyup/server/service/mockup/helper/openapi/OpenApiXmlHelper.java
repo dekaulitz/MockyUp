@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiXmlEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiXmlEmbedded;
 import io.swagger.v3.oas.models.media.XML;
 
 public class OpenApiXmlHelper {

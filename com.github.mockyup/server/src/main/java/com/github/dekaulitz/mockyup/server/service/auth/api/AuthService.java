@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.auth.api;
 
-import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;
+import com.github.dekaulitz.mockyup.server.model.request.auth.UserLoginRequest;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.db.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.UserAccessProjectEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.UserAccessProjectEmbedded;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import java.io.Serializable;
 import java.util.HashSet;

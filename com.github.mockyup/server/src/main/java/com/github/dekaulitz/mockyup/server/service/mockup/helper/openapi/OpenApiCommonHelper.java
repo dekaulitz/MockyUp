@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiExampleEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiHeaderEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiExampleEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiHeaderEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiSecurityEmbedded;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.security.SecurityRequirement;

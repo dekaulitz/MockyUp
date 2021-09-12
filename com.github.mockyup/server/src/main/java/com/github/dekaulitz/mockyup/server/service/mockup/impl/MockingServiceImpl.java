@@ -1,9 +1,9 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.impl;
 
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiPathEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiContentType;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.constants.OpenApiPathHttpMethod;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiContentType;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.constants.OpenApiPathHttpMethod;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.service.common.helper.MessageHelper;

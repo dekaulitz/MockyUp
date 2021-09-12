@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.server.db.entities;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiComponents;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiPathEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiProjectInfoEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiServerEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiTagEmbedded;
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.embedded.OpenApiSecurityEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiComponents;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiPathEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiProjectInfoEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiTagEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.embedded.OpenApiSecurityEmbedded;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;

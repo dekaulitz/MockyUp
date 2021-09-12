@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import com.github.dekaulitz.mockyup.server.db.entities.embeddable.openapi.OpenApiServerEmbedded;
+import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
 import io.swagger.v3.oas.models.servers.Server;
 
 public class OpenApiServerHelper {

@@ -10,11 +10,12 @@ import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @FieldNameConstants
-public abstract class BaseMongo implements Serializable {
+public class BaseMongo implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -24,6 +25,10 @@ public abstract class BaseMongo implements Serializable {
   @JsonIgnore
   @Version
   private Long version;
+  @Indexed
+  private String updatedByUserId;
+  @Indexed
+  private String createdByUserId;
 
   @DateTimeFormat(pattern = DateTimeConstants.DATE_TIME_FORMAT)
   @JsonDeserialize(using = DateDeserializer.class)

@@ -30,10 +30,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableMongoAuditing
@@ -98,8 +101,6 @@ public class App {
           throw new RuntimeException("responseCode: " + type + " not found");
         }
       }
-      log.info("{}", ResponseCode.values());
-
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

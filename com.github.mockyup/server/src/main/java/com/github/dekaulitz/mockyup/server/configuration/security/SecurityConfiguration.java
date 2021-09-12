@@ -17,7 +17,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   public AuthenticationManager authenticationManager() {
-//    securityProvider.setPreAuthenticationChecks(new PreAuthenticationChecker());
+    securityProvider.setPreAuthenticationChecks(new PreAuthenticationChecker());
     return new ProviderManager(Collections.singletonList(securityProvider));
   }
 
@@ -39,12 +39,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     SecurityAuthenticationFilter filter = new SecurityAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManager());
     filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
+        new AntPathRequestMatcher("/v1/users/***"),
         new AntPathRequestMatcher("/v1/users")
     )));
     filter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {
         });
     filter.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
+
     });
     return filter;
   }

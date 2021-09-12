@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.auth.impl;
 
-import com.github.dekaulitz.mockyup.server.model.request.UserLoginRequest;
+import com.github.dekaulitz.mockyup.server.model.request.auth.UserLoginRequest;
 import com.github.dekaulitz.mockyup.server.service.auth.api.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

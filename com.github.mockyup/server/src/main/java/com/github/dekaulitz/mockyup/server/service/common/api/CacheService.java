@@ -16,3 +16,4 @@ public interface CacheService {
 
   void deleteCacheByPrefixKey(String key);
 }
+

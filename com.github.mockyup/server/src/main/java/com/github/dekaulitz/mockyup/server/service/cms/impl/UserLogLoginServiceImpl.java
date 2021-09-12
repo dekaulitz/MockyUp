@@ -5,10 +5,11 @@ import com.github.dekaulitz.mockyup.server.db.query.UserLogLoginQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
-import com.github.dekaulitz.mockyup.server.model.dto.Mandatory;
+import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserLogLoginParam;
 import com.github.dekaulitz.mockyup.server.service.cms.api.UserLogLoginService;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
+import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
 import com.mongodb.client.result.DeleteResult;
 import java.util.List;
 import javax.validation.Valid;
@@ -19,18 +20,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserLogLoginServiceImpl implements UserLogLoginService {
+public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEntity> implements
+    UserLogLoginService {
 
   @Autowired
   private MongoTemplate mongoTemplate;
 
   @Autowired
   private CacheService cacheService;
-
-  @Override
-  public UserLogLoginEntity getById(String id) throws ServiceException {
-    return null;
-  }
 
   @Override
   public void delete(UserLogLoginEntity userLogLoginEntity) throws ServiceException {
@@ -43,13 +40,12 @@ public class UserLogLoginServiceImpl implements UserLogLoginService {
 
   @Override
   public List<UserLogLoginEntity> getAll(GetUserLogLoginParam getUserLogLoginParam) {
-    return null;
+    UserLogLoginQuery userLogLoginQuery = new UserLogLoginQuery();
+    userLogLoginQuery.buildQuery(getUserLogLoginParam);
+    return mongoTemplate.find(userLogLoginQuery.getQueryWithPaging(), UserLogLoginEntity.class);
   }
 
-  @Override
-  public UserLogLoginEntity update(UserLogLoginEntity userLogLoginEntity) throws ServiceException {
-    return null;
-  }
+
 
   @Override
   public UserLogLoginEntity save(@Valid @NotNull UserLogLoginEntity userLogLoginEntity)
@@ -79,12 +75,12 @@ public class UserLogLoginServiceImpl implements UserLogLoginService {
   }
 
   @Override
-  public void logLogin(AuthProfileModel authProfileModel, Mandatory mandatory)
+  public void logLogin(AuthProfileModel authProfileModel, MandatoryModel mandatoryModel)
       throws ServiceException {
     UserLogLoginEntity userLogLoginEntity = UserLogLoginEntity.builder()
         .jti(authProfileModel.getJti())
         .userId(authProfileModel.getId())
-        .mandatory(mandatory)
+        .mandatoryModel(mandatoryModel)
         .build();
     save(userLogLoginEntity);
   }
