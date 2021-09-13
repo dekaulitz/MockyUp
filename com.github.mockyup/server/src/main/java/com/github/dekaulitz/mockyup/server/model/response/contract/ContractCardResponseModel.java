@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.response.contract;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiProjectInfoEmbedded;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class ContractCardResponseModel implements Serializable {
+public class ContractCardResponseModel extends BaseModel {
 
   private String id;
   private String projectId;

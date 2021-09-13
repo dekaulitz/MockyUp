@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.request.user;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.UserAccessProjectEmbedded;
 import java.io.Serializable;
@@ -23,7 +24,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class CreateUserRequest implements Serializable {
+public class CreateUserRequest extends BaseModel {
 
   @NotNull
   private String username;

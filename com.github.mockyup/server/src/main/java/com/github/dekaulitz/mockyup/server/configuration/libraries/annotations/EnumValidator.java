@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.configuration.libraries;
+package com.github.dekaulitz.mockyup.server.configuration.libraries.annotations;
 
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.mockup.MockingMatchingResponseEmbedded;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MockRequestModel implements Serializable {
+public class MockRequestModel extends BaseModel {
 
   private String path;
   private MockingMatchingResponseEmbedded response;

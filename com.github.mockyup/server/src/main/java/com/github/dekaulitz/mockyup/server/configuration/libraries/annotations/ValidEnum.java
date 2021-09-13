@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.configuration.libraries;
+package com.github.dekaulitz.mockyup.server.configuration.libraries.annotations;
 
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

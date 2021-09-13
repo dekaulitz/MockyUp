@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.request.user;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.UserAccessProjectEmbedded;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class UpdateUserRequest implements Serializable {
+public class UpdateUserRequest extends BaseModel {
 
   @NotNull
   private String username;

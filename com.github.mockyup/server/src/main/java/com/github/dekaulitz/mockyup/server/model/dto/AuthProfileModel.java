@@ -1,7 +1,8 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.github.dekaulitz.mockyup.server.model.common.CustomAuthorityDeserializer;
+import com.github.dekaulitz.mockyup.server.configuration.libraries.CustomAuthorityDeserializer;
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @Getter
 @ToString
-public class AuthProfileModel implements UserDetails {
+public class AuthProfileModel extends BaseModel implements UserDetails {
 
   private String username;
   // jwt token id

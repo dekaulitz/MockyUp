@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.request.auth;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class UserLoginRequest implements Serializable {
+public class UserLoginRequest extends BaseModel {
 
   @NotNull
   private String usernameOrEmail;

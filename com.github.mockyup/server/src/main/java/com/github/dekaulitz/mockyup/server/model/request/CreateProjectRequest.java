@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.request;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import java.io.Serializable;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class CreateProjectRequest implements Serializable {
+public class CreateProjectRequest extends BaseModel {
 
   @NotBlank
   private String projectName;

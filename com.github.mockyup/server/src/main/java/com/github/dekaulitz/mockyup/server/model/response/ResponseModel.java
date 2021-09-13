@@ -1,10 +1,10 @@
 package com.github.dekaulitz.mockyup.server.model.response;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.dto.ErrorMessageModel;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.ErrorResponseEmbedded;
 import com.github.dekaulitz.mockyup.server.model.embeddable.TranslationsMessage;
-import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class ResponseModel implements Serializable {
+public class ResponseModel extends BaseModel {
 
   @NotNull
   private int statusCode;

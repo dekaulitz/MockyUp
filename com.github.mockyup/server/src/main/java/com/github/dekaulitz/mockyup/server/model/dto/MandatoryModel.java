@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.constants.Language;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class MandatoryModel implements Serializable {
+public class MandatoryModel extends BaseModel {
 
   private String requestId;
   private String agent;

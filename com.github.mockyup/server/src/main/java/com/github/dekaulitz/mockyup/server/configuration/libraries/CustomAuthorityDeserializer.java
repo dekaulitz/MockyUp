@@ -1,4 +1,4 @@
-package com.github.dekaulitz.mockyup.server.model.common;
+package com.github.dekaulitz.mockyup.server.configuration.libraries;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

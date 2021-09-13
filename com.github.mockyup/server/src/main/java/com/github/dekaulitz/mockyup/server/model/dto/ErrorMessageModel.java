@@ -3,7 +3,6 @@ package com.github.dekaulitz.mockyup.server.model.dto;
 import com.github.dekaulitz.mockyup.server.model.common.MultiTranslations;
 import com.github.dekaulitz.mockyup.server.model.constants.Language;
 import com.github.dekaulitz.mockyup.server.model.embeddable.TranslationsMessage;
-import java.io.Serializable;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ErrorMessageModel extends
-    MultiTranslations<ErrorMessageModel> implements Serializable {
+    MultiTranslations<ErrorMessageModel> {
 
   @NotNull
   private Integer httpCode;

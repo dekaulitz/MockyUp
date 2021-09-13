@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.request.contract;
 
-import java.io.Serializable;
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class CreateProjectContractRequest implements Serializable {
+public class CreateProjectContractRequest extends BaseModel {
 
   private String projectId;
 

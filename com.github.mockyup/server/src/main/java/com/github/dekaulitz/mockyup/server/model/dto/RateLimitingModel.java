@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
-public class RateLimitingModel implements Serializable {
+public class RateLimitingModel extends BaseModel {
 
   private boolean isBlocked;
   private String actionType;

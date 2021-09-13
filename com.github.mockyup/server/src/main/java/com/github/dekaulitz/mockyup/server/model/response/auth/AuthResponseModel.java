@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.response.auth;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.constants.Role;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ import lombok.ToString;
 @Getter
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class AuthResponseModel implements Serializable {
+public class AuthResponseModel extends BaseModel {
 
   @NotBlank
   private String username;

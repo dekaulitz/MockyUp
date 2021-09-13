@@ -1,6 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.dto;
 
-import java.io.Serializable;
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import java.util.Map;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import org.apache.http.entity.ContentType;
 @Setter
 @ToString
 @Builder
-public class MockRequestAttributeModel implements Serializable {
+public class MockRequestAttributeModel extends BaseModel {
 
   @NotBlank
   private String contractId;

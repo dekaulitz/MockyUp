@@ -14,12 +14,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class GetUserParam extends PageableParam implements Serializable {
+public class GetUserParam extends PageableParam {
 
   private String email;
   private String username;
 
-  public String toStringSkipNulls() {
-    return removeToStringNullValues(toString());
-  }
 }

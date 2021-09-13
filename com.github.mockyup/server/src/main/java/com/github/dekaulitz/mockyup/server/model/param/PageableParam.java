@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.model.param;
 
+import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.data.domain.Sort;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageableParam implements Pageable {
+public class PageableParam extends BaseModel implements Pageable {
 
   private static int PAGE_NUMBER = 1;
   private static int PAGE_SIZE = 30;
@@ -25,13 +26,6 @@ public class PageableParam implements Pageable {
   private int size = PAGE_SIZE;
   private Sort sort = PAGE_SORT;
 
-  public static String removeToStringNullValues(String lombokToString) {
-    //Pattern
-    return lombokToString != null ? lombokToString
-        .replaceAll("\\@.*?\\,", "")
-        .replaceAll("(?<=(, |\\())[^\\s(]+?=null(?:, )?", "")
-        .replaceFirst(", \\)$", ")") : null;
-  }
 
   /**
    * Returns the page to be returned.

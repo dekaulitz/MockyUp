@@ -14,14 +14,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class GetProjectContractParam extends PageableParam implements Serializable {
+public class GetProjectContractParam extends PageableParam {
 
   private String[] ids;
   private String id;
   private String projectId;
 
-
-  public String toStringSkipNulls() {
-    return removeToStringNullValues(toString());
-  }
 }
