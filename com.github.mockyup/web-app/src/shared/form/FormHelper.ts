@@ -5,11 +5,6 @@ import {
 } from '@/shared/form/InputModel'
 
 export default defineComponent({
-  data () {
-    return {
-      isSubmitted: false
-    }
-  },
   methods: {
     validate (inputAttribute: InputAttributeInterface): void {
       this.checkingValidation(inputAttribute)

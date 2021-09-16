@@ -1,15 +1,13 @@
 <template>
-  <LoginForm/>
-  <HelloWorld></HelloWorld>
+  <hello></hello>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import LoginForm from '@/components/login/LoginForm.vue'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 
-@Options({
-  components: { LoginForm, HelloWorld }
+import { defineComponent } from 'vue'
+import Hello from '@/components/HelloWorld.vue'
+
+export default defineComponent({
+  components: { Hello }
 })
-export default class Home extends Vue {}
 </script>

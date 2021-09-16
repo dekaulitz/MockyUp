@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import 'bootstrap'
 import './assets/styles/_app.scss'
-import WebClient from '@/plugins/WebClient'
+import WebClient from '@/plugins/webclient'
 
 const app = createApp(App)
 app.use(WebClient)

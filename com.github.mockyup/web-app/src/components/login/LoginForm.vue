@@ -19,8 +19,8 @@
           </form-container>
           <form-container class="form-check">
             <form-input-checkbox v-model="rememberMeInputAttributes.value"
-                        :input-attributes="rememberMeInputAttributes"
-                        :event-submitted="rememberMeInputAttributes.formSubmitted"
+                                 :input-attributes="rememberMeInputAttributes"
+                                 :event-submitted="rememberMeInputAttributes.formSubmitted"
             />
             <form-label>Remember me</form-label>
           </form-container>
@@ -49,6 +49,8 @@ import {
 import FormButton from '@/shared/form/FormButton.vue'
 import FormHelper from '@/shared/form/FormHelper'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
+import { AuthLoginService } from '@/plugins/webclient/serice/Service'
+import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -93,9 +95,23 @@ export default defineComponent({
       this.userNameOrEmailInputAttributes.formSubmitted = true
       this.passwordInputAttributes.formSubmitted = true
       this.formButtonAttributes.isLoading = true
-      if (!this.userNameOrEmailInputAttributes.isValid || !this.userNameOrEmailInputAttributes.isValid) {
+      const userNameOrEmail = this.userNameOrEmailInputAttributes.value
+      const password = this.passwordInputAttributes.value
+      const rememberMe = this.rememberMeInputAttributes.value
+      if (!this.passwordInputAttributes.isValid || !this.userNameOrEmailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       }
+      AuthLoginService.doLogin({
+        usernameOrEmail: userNameOrEmail,
+        password: password,
+        rememberMe: rememberMe
+      }).then(value => {
+        this.formButtonAttributes.isLoading = false
+        this.$router.push('/')
+      }).catch(reason => {
+        this.formButtonAttributes.isLoading = false
+        console.log(reason)
+      })
     }
   },
   components: {

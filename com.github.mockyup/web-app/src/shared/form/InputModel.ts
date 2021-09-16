@@ -16,11 +16,6 @@ export interface InputValidationInterface {
   minLength?: number
 }
 
-export interface FormGroupAction {
-  needValidation: boolean
-  isValidated: boolean
-}
-
 export interface InputAttributeInterface {
   validMessage?: string
   placeHolder?: string
@@ -36,10 +31,4 @@ export interface InputAttributeInterface {
 export interface ButtonAttributeInterface {
   isLoading: boolean
   usingLoader: boolean
-}
-
-export interface FormContainerAttributes {
-  successMessage?: string
-  errorMessage?: string
-  isError: boolean
 }
