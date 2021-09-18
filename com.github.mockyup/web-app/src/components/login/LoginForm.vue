@@ -21,10 +21,11 @@
             <form-input-checkbox v-model="rememberMeInputAttributes.value"
                                  :input-attributes="rememberMeInputAttributes"
                                  :event-submitted="rememberMeInputAttributes.formSubmitted"
+                                 value=true
             />
             <form-label>Remember me</form-label>
           </form-container>
-          <form-button class="mt-2" @click.stop.prevent="something"
+          <form-button class="mt-2" @click.stop.prevent="doLogin"
                        :form-button-attribute="formButtonAttributes">Sign in
           </form-button>
         </form-group>
@@ -49,8 +50,7 @@ import {
 import FormButton from '@/shared/form/FormButton.vue'
 import FormHelper from '@/shared/form/FormHelper'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
-import { AuthLoginService } from '@/plugins/webclient/serice/Service'
-import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
+import AuthService from '@/plugins/webclient/serice/AuthService'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -91,7 +91,7 @@ export default defineComponent({
     }
   },
   methods: {
-    something (): void {
+    doLogin (): void {
       this.userNameOrEmailInputAttributes.formSubmitted = true
       this.passwordInputAttributes.formSubmitted = true
       this.formButtonAttributes.isLoading = true
@@ -101,7 +101,7 @@ export default defineComponent({
       if (!this.passwordInputAttributes.isValid || !this.userNameOrEmailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       }
-      AuthLoginService.doLogin({
+      AuthService.doLogin({
         usernameOrEmail: userNameOrEmail,
         password: password,
         rememberMe: rememberMe

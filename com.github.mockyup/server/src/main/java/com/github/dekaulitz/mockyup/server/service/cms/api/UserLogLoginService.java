@@ -19,7 +19,7 @@ public interface UserLogLoginService extends
 
   DeleteResult deleteByParameter(@NotBlank GetUserLogLoginParam getUserLogLoginParam);
 
-  DeleteResult deleteByJtiOrUserId(@NotBlank String jtIOrUserId);
+  UserLogLoginEntity deleteByJtiOrUserId(@NotBlank String jtIOrUserId);
 
   void logLogin(AuthProfileModel authProfileModel, MandatoryModel mandatoryModel) throws ServiceException;
 }

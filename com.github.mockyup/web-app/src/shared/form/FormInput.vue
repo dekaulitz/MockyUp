@@ -4,7 +4,6 @@
          @input="$emit('update:modelValue', $event.target.value);validateAttributes(inputAttributes)"
          :placeholder="inputAttributes.placeHolder" :class="isValidate">
   <div class="form-text">{{ inputAttributes.hint }}</div>
-  {{}}
   <div class="valid-feedback">
     {{ successMessage }}
   </div>

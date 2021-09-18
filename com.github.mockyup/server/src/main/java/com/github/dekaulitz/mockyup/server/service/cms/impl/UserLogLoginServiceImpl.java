@@ -46,7 +46,6 @@ public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEnt
   }
 
 
-
   @Override
   public UserLogLoginEntity save(@Valid @NotNull UserLogLoginEntity userLogLoginEntity)
       throws ServiceException {
@@ -68,10 +67,10 @@ public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEnt
   }
 
   @Override
-  public DeleteResult deleteByJtiOrUserId(@NotBlank String jtIOrUserId) {
+  public UserLogLoginEntity deleteByJtiOrUserId(@NotBlank String jtIOrUserId) {
     UserLogLoginQuery userLogLoginQuery = new UserLogLoginQuery();
     userLogLoginQuery.jtiOrUserId(jtIOrUserId);
-    return mongoTemplate.remove(userLogLoginQuery.getQuery(), UserLogLoginEntity.class);
+    return mongoTemplate.findAndRemove(userLogLoginQuery.getQuery(), UserLogLoginEntity.class);
   }
 
   @Override
