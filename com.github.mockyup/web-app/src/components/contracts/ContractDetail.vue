@@ -1,27 +1,23 @@
 <template>
   <div class="page-container">
-    <template v-if="showContractPlaceHolder">
-      <place-holder-container/>
-    </template>
-    {{data}}
+    <div id="swagger"></div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
-import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 import ContractService from '@/plugins/webclient/serice/ContractService'
+import 'swagger-ui/dist/swagger-ui.css'
+import SwaggerUI from 'swagger-ui/dist/swagger-ui-es-bundle-core'
 
 export default defineComponent({
   name: 'ContractDetail',
   components: {
-    PlaceHolderContainer
+    // PlaceHolderContainer
   },
   data () {
     return {
       data: {},
-
       showContractPlaceHolder: true
     }
   },
@@ -37,6 +33,14 @@ export default defineComponent({
       .then(value => {
         this.showContractPlaceHolder = false
         this.data = value.data
+        SwaggerUI({
+          dom_id: '#swagger',
+          spec: JSON.parse(this.data.rawSpecs),
+          presets: [
+            SwaggerUI.presets.apis,
+            SwaggerUI.SwaggerUIStandalonePreset
+          ]
+        })
       })
   },
   methods: {
@@ -47,5 +51,5 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 </style>

@@ -55,9 +55,11 @@
   </nav>
   <div class="container mt-3">
     <breadcrumb-container/>
-    <transition appear mode="out-in" name="fade">
-      <router-view/>
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition appear mode="out-in" name="fade">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
   <nav class="navbar navbar-light bg-light">
     <div class="container">
