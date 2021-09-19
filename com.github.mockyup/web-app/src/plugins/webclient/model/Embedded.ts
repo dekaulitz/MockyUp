@@ -10,13 +10,3 @@ export interface ContractLicense{
   extensions?:Map<string,string>
 }
 
-export interface ContractProjectInfo{
-  title?:string
-  description?:string
-  termsOfService?:string
-  contact?:ContractContact
-  license?:ContractLicense
-  version?:string
-  extensions?:Map<string,object>
-}
-

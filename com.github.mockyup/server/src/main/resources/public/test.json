@@ -3,7 +3,17 @@
   "info": {
     "title": "Open Api Collection",
     "description": "Open api collection for test",
-    "version": "v1"
+    "version": "v1",
+    "termsOfService": "<ul><li>something</li></ul>",
+    "contact": {
+      "name": "fahmi sulaiman",
+      "email": "suaimanfahmi@gmail.com",
+      "url": "sulaimanfahmi.com"
+    },
+    "license": {
+      "name": "APACHE COMMON",
+      "url": "https://raw.githubusercontent.com/dekaulitz/MockyUp/master/LICENSE"
+    }
   },
   "servers": [
     {

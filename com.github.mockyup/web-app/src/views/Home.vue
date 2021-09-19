@@ -54,7 +54,7 @@
     </div>
   </nav>
   <div class="container mt-3">
-    <breadcrumb-container/>
+    <breadcrumb-container class="holder"/>
     <router-view v-slot="{ Component }">
       <transition appear mode="out-in" name="fade">
         <component :is="Component" />

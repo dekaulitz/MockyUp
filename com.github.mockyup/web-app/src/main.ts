@@ -26,10 +26,10 @@ app.config.globalProperties.$filters = {
     if (!value) {
       return ''
     } else {
-      return value.substr(0, 1)
+      return value.substr(start, end)
     }
   },
-  filterUndefined (value: any):any {
+  filterUndefined (value: unknown):unknown {
     if (!value) {
       return undefined
     } else {

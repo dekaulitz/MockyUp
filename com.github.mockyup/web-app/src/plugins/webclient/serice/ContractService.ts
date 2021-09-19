@@ -4,6 +4,7 @@ import {
 } from '@/plugins/webclient/model/ResponseModel'
 import { WebClient } from '@/plugins/webclient/serice/CommonService'
 import Qs from 'querystring'
+import { ContractDetail } from '@/plugins/webclient/model/openapi/ContractModel'
 export interface GetContractParam {
   page: number
   size: number,
@@ -13,12 +14,12 @@ export interface GetContractParam {
 
 interface ContractService {
   getContracts (getContractParam:GetContractParam): Promise<BaseResponse<ContractCardInterface>>
-  getContractById (id:string): Promise<BaseResponse>
+  getContractById (id:string): Promise<BaseResponse<ContractDetail>>
 }
 
 const ContractService: ContractService = {
-  getContractById (id: string): Promise<BaseResponse> {
-    return WebClient.get<BaseResponse>('/v1/project-contracts/' + id)
+  getContractById (id: string): Promise<BaseResponse<ContractDetail>> {
+    return WebClient.get<BaseResponse<ContractDetail>>('/v1/project-contracts/' + id)
       .then(value => {
         return value.data
       }).catch((reason: BaseResponse) => {

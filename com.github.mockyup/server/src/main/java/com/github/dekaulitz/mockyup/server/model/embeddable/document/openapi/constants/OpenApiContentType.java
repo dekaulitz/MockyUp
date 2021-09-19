@@ -5,7 +5,11 @@ import java.util.Map;
 import lombok.Getter;
 
 public enum OpenApiContentType {
-  APPLICATION_JSON("application/json"), APPLICATION_XML("application/xml");
+  APPLICATION_JSON("application/json"), APPLICATION_XML("application/xml"),
+  // should handle for the next feature
+  APPLICATION_FORM_URL_ENCODED("application/x-www-form-urlencoded"),
+  // should handle for the next feature
+  APPLICATION_OCTET_STREAM("application/octet-stream");
   private static final Map<String, OpenApiContentType> lookup = new HashMap<>();
 
   static {

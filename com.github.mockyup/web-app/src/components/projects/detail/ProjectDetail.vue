@@ -49,7 +49,7 @@ import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 import ContractService, { GetContractParam } from '@/plugins/webclient/serice/ContractService'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
-import ContractCard from '@/components/contracts/cards/ContractCard.vue'
+import ContractCard from '@/components/cards/ContractCard.vue'
 
 export default defineComponent({
   name: 'ProjectDetail',
@@ -88,11 +88,6 @@ export default defineComponent({
             this.showContractPlaceHolder = false
           })
       })
-  },
-  methods: {
-    popUpCard () {
-      alert('berak')
-    }
   }
 })
 </script>
