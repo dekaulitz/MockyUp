@@ -1,7 +1,7 @@
 <template>
-  <nav class="container-fluid navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg bg-indigo-800">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <router-link class="navbar-brand text-white" to="/"><span class="fas fa-align-left me-3"></span>DevStock | MOCK Service</router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
               data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
               aria-expanded="false" aria-label="Toggle navigation">
@@ -10,15 +10,17 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <router-link class="nav-link text-white" aria-current="page" to="/projects">Management Projects</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <router-link class="nav-link text-white" aria-current="page" to="/users">Management Users</router-link>
           </li>
+        </ul>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
+             <span class="fas fa-cogs ms-2"></span> Configuration
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="#">Action</a></li>
@@ -29,18 +31,15 @@
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button"
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown1" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="fas fa-user"></span>
+              <span class="fas fa-user"></span> {{ accountUser.username }}
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown1">
-              <li><a class="dropdown-item" href="#">@{{ accountUser.username }}</a></li>
+              <li><a class="dropdown-item " href="#">
+                @{{ accountUser.username }}
+              </a></li>
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li>
                 <hr class="dropdown-divider">
@@ -48,25 +47,20 @@
 <!--              @TODO  need to enhance in this poisition-->
               <li><button class="dropdown-item" @click="doLogout">Logout</button></li>
             </ul>
-          </div>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
   <div class="container mt-3">
-    <breadcrumb-container class="holder"/>
+    <breadcrumb-container class="border-bottom mb-2"/>
     <router-view v-slot="{ Component }">
       <transition appear mode="out-in" name="fade">
         <component :is="Component" />
       </transition>
     </router-view>
   </div>
-  <nav class="navbar navbar-light bg-light">
-    <div class="container">
-      something
-    </div>
-
-  </nav>
+ <Footer/>
 </template>
 
 <script lang="ts">
@@ -75,11 +69,12 @@ import { defineComponent } from 'vue'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
-import { StorageService } from '@/plugins/webclient/serice/CommonService'
-import AuthService from '@/plugins/webclient/serice/AuthService'
+import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
+import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
+import Footer from '@/components/Footer.vue'
 
 export default defineComponent({
-  components: { BreadcrumbContainer },
+  components: { Footer, BreadcrumbContainer },
   data () {
     return {
       accountUser: {} as AuthResponse

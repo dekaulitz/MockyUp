@@ -1,0 +1,39 @@
+//.content-wrapper .container-fluid, .content-wrapper .container-sm, .content-wrapper .container-md, .content-wrapper .container-lg, .content-wrapper .container-xl {
+//  padding: 0 16px;
+//}
+//.container-limited {
+//  max-width: 1280px
+//}
+//
+//.container-limited.limit-container-width {
+//  max-width: 990px
+//}
+.start-25 {
+  left: 25% !important;
+}
+
+.page-container {
+  min-height: 650px;
+  .page-title{
+    line-height: 1.3;
+    font-size: 1.75em;
+  }
+  .page-subtitle{
+    margin: 1rem 0;
+    line-height: 1.3;
+    font-size: 1.25em;
+    font-weight: 600
+  }
+  .page-controller{
+
+  }
+  .page-body{
+
+  }
+}
+
+.holder{
+  padding: 10px 0;
+  width: 100%;
+  border-bottom: 1px solid #dbdbdb;
+}

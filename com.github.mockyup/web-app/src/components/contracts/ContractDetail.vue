@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ContractService from '@/plugins/webclient/serice/ContractService'
+import ContractService from '@/plugins/webclient/tmp/serice/ContractService'
 import { ContractDetail } from '@/plugins/webclient/model/openapi/ContractModel'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 import ContractInfo from '@/components/contracts/openapiComponent/ContractInfo.vue'

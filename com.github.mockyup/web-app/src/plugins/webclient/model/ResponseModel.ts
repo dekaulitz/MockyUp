@@ -1,4 +1,4 @@
-import { ContractProjectInfo } from '@/plugins/webclient/model/Embedded'
+import { ContractProjectInfo } from '@/plugins/webclient/model/openapi/embeddable/OpenApiEmbedded'
 
 export interface BaseResponse<T = any> {
   statusCode: number
@@ -23,19 +23,31 @@ export interface ProjectCardInterface {
   updatedDate?: string
 }
 
-export interface ProjectInterface{
+export interface ProjectInterface {
   id?: string
-  projectName?:string
-  projectDescription?:string
-  projectTags?:string[]
-  updatedByUserId?:string
-  createdByUserId?:string
-  updatedDate?:string
+  projectName?: string
+  projectDescription?: string
+  projectTags?: string[]
+  updatedByUserId?: string
+  createdByUserId?: string
+  updatedDate?: string
 }
-export interface ContractCardInterface{
-  id?:string
-  projectId?:string
-  private:boolean
-  openApiVersion?:string,
-  info?:ContractProjectInfo
+
+export interface ContractCardInterface {
+  id?: string
+  projectId?: string
+  private: boolean
+  openApiVersion?: string,
+  info?: ContractProjectInfo
+}
+
+export interface UserCardInterface {
+  id?: string
+  updatedByUserId?: string
+  createdByUserId?: string
+  username?: string
+  email?: string
+  enabled: boolean
+  accountNonLocked: boolean
+  updatedDate?: string
 }

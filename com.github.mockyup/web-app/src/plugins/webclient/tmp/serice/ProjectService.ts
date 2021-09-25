@@ -4,7 +4,7 @@ import {
   ProjectCardInterface,
   ProjectInterface
 } from '@/plugins/webclient/model/ResponseModel'
-import { WebClient } from '@/plugins/webclient/serice/CommonService'
+import { WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
 
 export interface GetProjectParam {
   page: number

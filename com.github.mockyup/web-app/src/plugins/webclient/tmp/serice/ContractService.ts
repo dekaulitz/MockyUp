@@ -2,7 +2,7 @@ import {
   BaseResponse,
   ContractCardInterface
 } from '@/plugins/webclient/model/ResponseModel'
-import { WebClient } from '@/plugins/webclient/serice/CommonService'
+import { WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
 import Qs from 'querystring'
 import { ContractDetail } from '@/plugins/webclient/model/openapi/ContractModel'
 export interface GetContractParam {

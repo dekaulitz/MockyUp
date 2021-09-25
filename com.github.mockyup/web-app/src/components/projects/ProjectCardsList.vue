@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProjectService from '@/plugins/webclient/serice/ProjectService'
+import ProjectService from '@/plugins/webclient/tmp/serice/ProjectService'
 import ProjectCard from '@/components/cards/ProjectCard.vue'
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'

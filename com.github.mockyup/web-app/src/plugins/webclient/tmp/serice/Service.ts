@@ -1,6 +1,6 @@
 import { AuthResponse, BaseResponse } from '@/plugins/webclient/model/ResponseModel'
 import { AuthLogin } from '@/plugins/webclient/model/RequestModel'
-import { StorageService, WebClient } from '@/plugins/webclient/serice/CommonService'
+import { StorageService, WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
 import { AxiosResponse } from 'axios'
 

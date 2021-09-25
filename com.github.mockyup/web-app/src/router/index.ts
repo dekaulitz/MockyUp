@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
-import { StorageService, WebClient } from '@/plugins/webclient/serice/CommonService'
+import { StorageService, WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
 import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
 
 const routes: Array<RouteRecordRaw> = [
@@ -32,18 +32,33 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '/',
-        name: 'Projects',
+        name: 'Home',
         component: () => import(/* webpackChunkName: "about" */ '../views/projects/Projects.vue')
       },
       {
         path: '/project-detail/:id',
-        name: 'ProjectsDetail',
+        name: 'something',
         component: () => import(/* webpackChunkName: "about" */ '../views/projects/ProjectDetail.vue')
       },
       {
         path: '/project-detail/:id/contracts/:contractId',
         name: 'ContractDetail',
         component: () => import(/* webpackChunkName: "about" */ '../views/contracts/ContractDetail.vue')
+      },
+      {
+        path: '/users',
+        name: 'Users',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/users/Users.vue')
+      },
+      {
+        path: '/projects',
+        name: 'Projects',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/Projects.vue')
+      },
+      {
+        path: '/projects/:id',
+        name: 'ProjectsDetail',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsDetail.vue')
       }
     ]
   },

@@ -40,13 +40,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProjectService from '@/plugins/webclient/serice/ProjectService'
+import ProjectService from '@/plugins/webclient/tmp/serice/ProjectService'
 import {
   ContractCardInterface,
   ProjectInterface
 } from '@/plugins/webclient/model/ResponseModel'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
-import ContractService, { GetContractParam } from '@/plugins/webclient/serice/ContractService'
+import ContractService, { GetContractParam } from '@/plugins/webclient/tmp/serice/ContractService'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import ContractCard from '@/components/cards/ContractCard.vue'

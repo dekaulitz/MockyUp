@@ -4,7 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import 'bootstrap'
-import './assets/styles/_app.scss'
+import './assets/styles/app.scss'
 import WebClient from '@/plugins/webclient'
 import moment from 'moment'
 

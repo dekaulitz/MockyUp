@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProjectDetail from '@/components/projects/detail/ProjectDetail.vue'
+import ProjectDetail from '@/components/projects/ProjectDetail.vue'
 
 export default defineComponent({
   components: { ProjectDetail }

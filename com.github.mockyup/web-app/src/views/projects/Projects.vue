@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProjectCardList from '@/components/projects/card/ProjectCardsList.vue'
+import ProjectCardList from '@/components/projects/ProjectCardsList.vue'
 
 export default defineComponent({
   components: { ProjectCardList }

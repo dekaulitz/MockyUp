@@ -18,13 +18,13 @@ WebClient.interceptors.request.use(value => {
   return value
 }
 )
-WebClient.interceptors.response.use(value => value, error => {
-  const responseData: BaseResponse = error.response.data
-  if (responseData.statusCode === 4032) {
-    StorageService.clearData(StorageKeyType.AUTH_PROFILE)
-  }
-  return responseData
-})
+// WebClient.interceptors.response.use(value => value, error => {
+//   const responseData: BaseResponse = error.response.data
+//   if (responseData.statusCode === 4032) {
+//     StorageService.clearData(StorageKeyType.AUTH_PROFILE)
+//   }
+//   return error
+// })
 
 interface LocalStorage {
   getData<T = any> (key: StorageKeyType): T

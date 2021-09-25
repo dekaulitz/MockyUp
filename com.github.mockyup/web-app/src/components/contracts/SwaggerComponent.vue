@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ContractService from '@/plugins/webclient/serice/ContractService'
+import ContractService from '@/plugins/webclient/tmp/serice/ContractService'
 import 'swagger-ui/dist/swagger-ui.css'
 import SwaggerUI from 'swagger-ui/dist/swagger-ui-es-bundle-core'
 

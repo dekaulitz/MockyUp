@@ -1,0 +1,51 @@
+$all-colors: map-merge-multiple($indigos);
+
+$utilities: map-merge(
+        $utilities,
+        (
+            "color": map-merge(
+                    map-get($utilities, "color"),
+                    (
+                        values: map-merge(
+                                map-get(map-get($utilities, "color"), "values"),
+                                    (
+                                        $all-colors
+                                    ),
+                        ),
+                    ),
+            ),
+        )
+);
+$utilities: map-merge(
+        $utilities,
+        (
+            "background-color": map-merge(
+                    map-get($utilities, "background-color"),
+                    (
+                        values: map-merge(
+                                map-get(map-get($utilities, "background-color"), "values"),
+                                    (
+                                        $all-colors
+                                    ),
+                        ),
+                    ),
+            ),
+        )
+);
+$utilities: map-merge(
+        $utilities,
+        (
+            "border-color": map-merge(
+                    map-get($utilities, "border-color"),
+                    (
+                        values: map-merge(
+                                map-get(map-get($utilities, "border-color"), "values"),
+                                    (
+                                        $all-colors
+                                    ),
+                        ),
+                    ),
+            ),
+        )
+);
+
