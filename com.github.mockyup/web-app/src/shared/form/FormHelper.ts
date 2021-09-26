@@ -1,15 +1,15 @@
 import { defineComponent } from 'vue'
 import {
-  InputAttributeInterface,
+  InputAttribute,
   InputValidationType
 } from '@/shared/form/InputModel'
 
 export default defineComponent({
   methods: {
-    validate (inputAttribute: InputAttributeInterface): void {
+    validate (inputAttribute: InputAttribute): void {
       this.checkingValidation(inputAttribute)
     },
-    checkingValidation (inputAttribute: InputAttributeInterface) {
+    checkingValidation (inputAttribute: InputAttribute) {
       const value = inputAttribute.value
       for (const validation of inputAttribute.validations) {
         if (validation.validationType === InputValidationType.REQUIRED && (value === '' || value === undefined)) {
@@ -23,11 +23,11 @@ export default defineComponent({
             break
           }
         } else if (validation.validationType === InputValidationType.Length) {
-          if (validation.minLength != null && value < validation.minLength) {
+          if (validation.minLength != null && value.length < validation.minLength) {
             inputAttribute.isValid = false
             inputAttribute.errorMessage = validation.errMessage
             break
-          } else if (validation.maxLength != null && value > validation.maxLength) {
+          } else if (validation.maxLength != null && value.length > validation.maxLength) {
             inputAttribute.isValid = false
             inputAttribute.errorMessage = validation.errMessage
             break

@@ -60,7 +60,7 @@
       </transition>
     </router-view>
   </div>
- <Footer/>
+ <footer-navigation/>
 </template>
 
 <script lang="ts">
@@ -71,10 +71,10 @@ import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
 import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
 import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
-import Footer from '@/components/Footer.vue'
+import FooterNavigation from '@/components/FooterNavigation.vue'
 
 export default defineComponent({
-  components: { Footer, BreadcrumbContainer },
+  components: { FooterNavigation, BreadcrumbContainer },
   data () {
     return {
       accountUser: {} as AuthResponse

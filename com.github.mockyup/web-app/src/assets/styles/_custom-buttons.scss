@@ -1,5 +1,10 @@
 @import "~bootstrap/scss/buttons";
 
+.btn-outline-default{
+  border-color: #c4c4c4;
+}
+
+
 .btn-md{
   padding: 0.5rem 0.75rem !important;
   font-size: 0.875rem !important;

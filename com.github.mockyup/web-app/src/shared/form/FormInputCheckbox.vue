@@ -15,7 +15,7 @@
 <script lang="ts">
 
 import { defineComponent, PropType } from 'vue'
-import { InputAttributeInterface } from '@/shared/form/InputModel'
+import { InputAttribute } from '@/shared/form/InputModel'
 import FormHelper from '@/shared/form/FormHelper'
 
 interface InputAdditionalInfo {
@@ -41,7 +41,7 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    inputAttributes: { type: Object as PropType<InputAttributeInterface> }
+    inputAttributes: { type: Object as PropType<InputAttribute> }
   },
   computed: {
     isValidate (): string {
@@ -54,7 +54,7 @@ export default defineComponent({
     }
   },
   methods: {
-    validateAttributes (formInputAction: InputAttributeInterface) {
+    validateAttributes (formInputAction: InputAttribute) {
       this.validate(formInputAction)
       if ((undefined !== formInputAction.isValid && formInputAction.isValid === false) && (formInputAction.errorMessage !== undefined || formInputAction.errorMessage !== '')) {
         this.hasError = true

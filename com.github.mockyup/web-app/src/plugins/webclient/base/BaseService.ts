@@ -1,5 +1,6 @@
-import { UserCardInterface } from '@/plugins/webclient/model/ResponseModel'
+import { AuthResponse, UserCardInterface } from '@/plugins/webclient/model/ResponseModel'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AuthLogin } from '@/plugins/webclient/model/RequestModel'
 
 export interface PageableParam {
   page: number
@@ -22,4 +23,6 @@ export interface BaseCrudService{
   getCount(parameter?:never): Promise<number>;
 
   getById<T = never>(id:string): Promise<T>;
+
+  doPost<T = never, R = never> (t:T): Promise<R>
 }

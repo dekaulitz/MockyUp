@@ -8,11 +8,13 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^29.2.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
-    "ace-code-editor": "^1.2.3",
+    "ace-builds": "^1.4.12",
     "axios": "^0.21.1",
     "bootstrap": "^5.1.0",
     "bootstrap-icons": "^1.5.0",
+    "ckeditor5": "^29.2.0",
     "is-json": "^2.0.1",
     "js-yaml": "=4.1.0",
     "json-beautify": "^1.0.1",

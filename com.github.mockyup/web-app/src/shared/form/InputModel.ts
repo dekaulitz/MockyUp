@@ -16,7 +16,7 @@ export interface InputValidationInterface {
   minLength?: number
 }
 
-export interface InputAttributeInterface {
+export interface InputAttribute {
   validMessage?: string
   placeHolder?: string
   isValid: boolean
@@ -28,7 +28,7 @@ export interface InputAttributeInterface {
   formSubmitted: boolean
 }
 
-export interface ButtonAttributeInterface {
+export interface ButtonAttribute {
   isLoading: boolean
   usingLoader: boolean
 }

@@ -1,8 +1,8 @@
 <template>
-  <input v-bind="$attrs" class="form-control"
-         :id="id" :type="inputAttributes.type"
+  <textarea v-bind="$attrs" class="form-control"
+         :id="id"
          @input="$emit('update:modelValue', $event.target.value);validateAttributes(inputAttributes)"
-         :placeholder="inputAttributes.placeHolder" :class="isValidate">
+         :placeholder="inputAttributes.placeHolder" :class="isValidate"></textarea>
   <div class="form-text">{{ inputAttributes.hint }}</div>
   <div class="valid-feedback">
     {{ successMessage }}

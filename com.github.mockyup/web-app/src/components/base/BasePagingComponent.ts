@@ -39,13 +39,6 @@ export default defineComponent({
     getAllAndCount () {
       this.getAll()
       this.getCount()
-    },
-    debounce (func:() => void, timeout:number) {
-      let timer
-      return (...args) => {
-        clearTimeout(timer)
-        timer = setTimeout(() => { func.apply(this, args) }, timeout)
-      }
     }
   }
 })

@@ -10,7 +10,10 @@ export default defineComponent({
     return {
       alertAttributes: {} as AlertInterface,
       service: {} as BaseCrudService,
-      value: {} as never
+      value: {} as never,
+      payloadRequest: {} as never,
+      responsePost: {}as never,
+      directionAfterSubmit: {} as never
     }
   },
   methods: {
@@ -18,6 +21,15 @@ export default defineComponent({
       return this.service.getById(id)
         .then(value => {
           this.value = value
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
+    },
+    createNewData () {
+      return this.service.doPost(this.payloadRequest)
+        .then(value => {
+          this.responsePost = value
+          this.$router.push(this.directionAfterSubmit)
         }).catch(reason => {
           this.validateResponse(reason)
         })

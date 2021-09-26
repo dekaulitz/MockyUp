@@ -3,13 +3,14 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Projects</h1>
       <div class="page-controller ms-auto">
-        <button class="btn btn-primary btn-md">Create New Project</button>
+        <router-link class="btn btn-primary btn-md" :to="{
+            name:'ProjectsCreate'}">Create New Project</router-link>
       </div>
     </div>
     <div class=" d-flex align-items-center mt-2">
       <div class="me-auto d-flex">
-        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.userNameOrEmail"/>
-        <button class="btn btn-primary btn-md w-sm" @click="getAllAndCount">Search</button>
+        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.projectName"/>
+        <button class="btn btn-primary btn-md w-sm" @click="searching">Search</button>
       </div>
       <div class="ms-auto d-inline-flex">
         <project-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>
@@ -80,6 +81,11 @@ export default defineComponent({
   mounted () {
     this.getAll()
     this.getCount()
+  },
+  methods: {
+    searching () {
+      this.getAllAndCount()
+    }
   }
 })
 </script>

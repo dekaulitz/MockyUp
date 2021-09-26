@@ -1,5 +1,5 @@
 <template>
-  <button v-bind="$attrs" class="dropdown-toggle" type="button"
+  <button v-bind="$attrs" class="" type="button"
           data-bs-toggle="dropdown" aria-expanded="false">
     <slot></slot>
   </button>

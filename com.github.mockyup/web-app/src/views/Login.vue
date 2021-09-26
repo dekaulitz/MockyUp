@@ -47,7 +47,7 @@
                     />
                     <form-label>Remember me</form-label>
                   </form-container>
-                  <form-button class="mt-2" @click.stop.prevent="doLogin"
+                  <form-button class="mt-2 w-100" @click.stop.prevent="doLogin"
                                :form-button-attribute="formButtonAttributes">Sign in
                   </form-button>
                 </form-group>
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <Footer/>
+  <footer-navigation/>
 </template>
 
 <script lang="ts">
@@ -70,15 +70,15 @@ import CardBody from '@/shared/card/CardBody.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import {
-  ButtonAttributeInterface,
-  InputAttributeInterface,
+  ButtonAttribute,
+  InputAttribute,
   InputValidationType
 } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
 import FormHelper from '@/shared/form/FormHelper'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
-import Footer from '@/components/Footer.vue'
+import FooterNavigation from '@/components/FooterNavigation.vue'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import BaseComponent from '@/components/base/BaseComponent'
 export default defineComponent({
@@ -96,7 +96,7 @@ export default defineComponent({
             errMessage: 'Please input your username or email'
           }
         ]
-      } as InputAttributeInterface,
+      } as InputAttribute,
       passwordInputAttributes: {
         type: 'password',
         placeHolder: 'Password',
@@ -107,15 +107,15 @@ export default defineComponent({
             errMessage: 'Please input your password'
           }
         ]
-      } as InputAttributeInterface,
+      } as InputAttribute,
       rememberMeInputAttributes: {
         type: 'checkbox',
         validations: []
-      } as InputAttributeInterface,
+      } as InputAttribute,
       formButtonAttributes: {
         isLoading: false,
         usingLoader: true
-      } as ButtonAttributeInterface
+      } as ButtonAttribute
     }
   },
   methods: {
@@ -145,7 +145,7 @@ export default defineComponent({
   },
   components: {
     AlertContainer,
-    Footer,
+    FooterNavigation,
     FormInputCheckbox,
     FormButton,
     CardContainer,

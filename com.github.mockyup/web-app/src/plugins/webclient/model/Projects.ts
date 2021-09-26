@@ -1,7 +1,7 @@
 import { PageableParam } from '@/plugins/webclient/model/RequestModel'
 
 export interface GetProjectParam extends PageableParam {
-  projectTitle?: string
+  projectName?: string
 }
 
 export interface ProjectCardResponse {
@@ -20,4 +20,9 @@ export interface ProjectResponse {
   updatedByUserId?: string
   createdByUserId?: string
   updatedDate?: string
+}
+export interface ProjectCreateRequest{
+  projectName:string
+  projectDescription:string
+  projectTags?:string[]
 }
