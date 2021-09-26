@@ -18,5 +18,6 @@ public class GetUserParam extends PageableParam {
 
   private String email;
   private String username;
+  private String userNameOrEmail;
 
 }

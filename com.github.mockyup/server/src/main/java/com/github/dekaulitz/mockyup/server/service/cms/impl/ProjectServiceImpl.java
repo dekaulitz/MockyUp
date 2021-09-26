@@ -1,7 +1,9 @@
 package com.github.dekaulitz.mockyup.server.service.cms.impl;
 
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
+import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectQuery;
+import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
@@ -59,6 +61,13 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
     ProjectQuery projectQuery = new ProjectQuery();
     projectQuery.buildQuery(getProjectParam);
     return this.getAll(projectQuery.getQueryWithPaging(), ProjectEntity.class);
+  }
+
+  @Override
+  public long getCount(GetProjectParam getProjectParam) {
+    ProjectQuery query = new ProjectQuery();
+    query.buildQuery(getProjectParam);
+    return mongoTemplate.count(query.getQuery(), ProjectEntity.class);
   }
 
 

@@ -77,12 +77,8 @@ public class ProjectContractServiceImpl extends
     projectContractQuery.id(contractSaved.getId());
     Update update = new Update();
     update.push("servers").value(serverMockup);
-    UpdateResult updateResult = mongoTemplate.updateFirst(projectContractQuery.getQuery(), update,
+    return mongoTemplate.findAndModify(projectContractQuery.getQuery(), update,
         ProjectContractEntity.class);
-    if(updateResult.wasAcknowledged()){
-      log.info("injecting mockUp server :{}",updateResult.getUpsertedId());
-    }
-    return contractSaved;
   }
 
   @Override

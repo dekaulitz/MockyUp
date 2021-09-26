@@ -74,6 +74,13 @@ public class UserServiceImpl extends
     return this.getAll(userQuery.getQueryWithPaging(), UserEntity.class);
   }
 
+  @Override
+  public long getCount(GetUserParam getUserParam) {
+    UserQuery userQuery = new UserQuery();
+    userQuery.buildQuery(getUserParam);
+    return mongoTemplate.count(userQuery.getQuery(), UserEntity.class);
+  }
+
   public UserEntity createUser(CreateUserRequest createUserRequest,
       AuthProfileModel authProfileModel) throws ServiceException {
     UserQuery userQuery = new UserQuery();

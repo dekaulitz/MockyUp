@@ -66,6 +66,11 @@ public class CmsFacade extends WithAuthService {
     return userService.getAll(getUserParam);
   }
 
+  public long getCount(@Valid GetUserParam getUserParam)
+      throws ServiceException {
+    return userService.getCount(getUserParam);
+  }
+
   public ProjectEntity createProject(CreateProjectRequest createProjectRequest)
       throws ServiceException {
     AuthProfileModel authProfileModel = this.getAuthProfile();
@@ -90,6 +95,11 @@ public class CmsFacade extends WithAuthService {
   public List<ProjectEntity> allProjects(@Valid @NotNull GetProjectParam getProjectParam)
       throws ServiceException {
     return projectService.getAll(getProjectParam);
+  }
+
+  public long getCount(@Valid GetProjectParam getProjectParam)
+      throws ServiceException {
+    return projectService.getCount(getProjectParam);
   }
 
   public List<ContractCardResponseModel> allContractCards(

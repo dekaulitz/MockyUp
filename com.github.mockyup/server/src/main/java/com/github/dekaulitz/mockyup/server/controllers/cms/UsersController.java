@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.controllers.cms;
 
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.COUNT;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.USERS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.V1;
 
@@ -59,6 +60,14 @@ public class UsersController extends BaseController {
       @Valid GetUserParam getUserParam) throws ServiceException {
     return ResponseEntity.ok(
         ResponseModel.initSuccessResponse(this.cmsFacade.allUsers(getUserParam), mandatoryModel));
+  }
+
+  @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
+  @GetMapping(value = USERS + COUNT, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> getCount(@ModelAttribute MandatoryModel mandatoryModel,
+      @Valid GetUserParam getUserParam) throws ServiceException {
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(this.cmsFacade.getCount(getUserParam), mandatoryModel));
   }
 
   @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")

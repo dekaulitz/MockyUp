@@ -19,4 +19,6 @@ public interface ProjectService extends BaseCrudService<ProjectEntity> {
       throws ServiceException;
 
   List<ProjectEntity> getAll(GetProjectParam getProjectParam);
+
+  long getCount(GetProjectParam getProjectParam);
 }

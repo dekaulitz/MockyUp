@@ -47,7 +47,7 @@ public class JwtServiceImpl implements JwtService {
       expiredTime = expiredTime * 1000;
     }
     Date canDoRefreshTime = new Date(t + 60 * refreshTime);
-    Date tokenExpireTime = new Date(t + 60 * expiredTime);
+    Date tokenExpireTime = new Date(t + expiredTime);
     //@TODO i think it should more than this that we can keep user data on token
     String token = buildToken(jti, canDoRefreshTime, tokenExpireTime);
     AuthProfileModel authProfileModel = new AuthProfileModel();

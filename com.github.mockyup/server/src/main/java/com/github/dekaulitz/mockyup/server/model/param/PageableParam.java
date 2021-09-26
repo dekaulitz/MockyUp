@@ -1,21 +1,31 @@
 package com.github.dekaulitz.mockyup.server.model.param;
 
+import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.util.Assert;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class PageableParam extends BaseModel implements Pageable {
 
   private static int PAGE_NUMBER = 1;
@@ -24,8 +34,9 @@ public class PageableParam extends BaseModel implements Pageable {
 
   private int page = PAGE_NUMBER;
   private int size = PAGE_SIZE;
-  private Sort sort = PAGE_SORT;
+  private Sort sort = Sort.unsorted();
 
+//  private String[] sortAttributes;
 
   /**
    * Returns the page to be returned.
@@ -55,6 +66,39 @@ public class PageableParam extends BaseModel implements Pageable {
   @Override
   public long getOffset() {
     return (long) getPageNumber() * (long) this.getPageSize();
+  }
+
+  /**
+   * Returns the sorting parameters.
+   *
+   * @return
+   */
+
+  @Override
+  public Sort getSort() {
+
+    if (sort.isEmpty()) {
+      sort = Sort.unsorted();
+    }
+    return sort;
+  }
+
+  public void setSort(String arguments) throws ServiceException {
+    Assert.notNull(arguments, "Fallback Sort must not be null!");
+    List<Order> orders = new ArrayList<>();
+    String[] argument = arguments.split(",");
+    for (String s : argument) {
+      String[] parameter = s.split(":");
+      if (parameter.length != 2) {
+        throw new ServiceException(ResponseCode.BAD_REQUEST);
+      }
+      if (Sort.Direction.fromString(parameter[1]) == Direction.ASC) {
+        orders.add(new Order(Direction.ASC, parameter[0]));
+      } else if (Sort.Direction.fromString(parameter[1]) == Direction.DESC) {
+        orders.add(new Order(Direction.DESC, parameter[0]));
+      }
+    }
+    this.sort = Sort.by(orders);
   }
 
   /**
@@ -115,5 +159,4 @@ public class PageableParam extends BaseModel implements Pageable {
   public boolean hasPrevious() {
     return this.getPageNumber() > 0;
   }
-
 }

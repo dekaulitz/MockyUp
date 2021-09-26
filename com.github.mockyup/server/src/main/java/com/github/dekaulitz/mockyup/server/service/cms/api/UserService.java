@@ -21,6 +21,8 @@ public interface UserService extends BaseCrudService<UserEntity> {
 
   List<UserEntity> getAll(GetUserParam getUserParam);
 
+  long getCount(GetUserParam getUserParam);
+
   UserEntity createUser(CreateUserRequest createUserRequest,
       AuthProfileModel authProfileModel) throws ServiceException;
 }
