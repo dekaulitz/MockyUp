@@ -2,18 +2,24 @@
 <page-container>
   <div class="d-flex align-items-center holder">
     <div class="avatar avatar-md flex-shrink-0 me-3">
-      <h1>{{$filters.subString(value.projectName,0,1)}}</h1>
+      <h1>{{$filters.subString(data.projectName,0,1)}}</h1>
     </div>
     <div>
-      <h1 class="page-title mb-1">{{value.projectName}}</h1>
-      <div class="text-secondary additional-info">Project ID : {{value.id}}</div>
-      <span class="text-secondary additional-info fw-bold" v-if="value.projectTags">{{value.projectTags.join(',')}}</span>
+      <h1 class="page-title mb-1">{{data.projectName}}</h1>
+      <div class="text-secondary additional-info">Project ID : {{data.id}}</div>
+      <span class="text-secondary additional-info fw-bold" v-if="data.projectTags">{{data.projectTags.join(',')}}</span>
+    </div>
+    <div class="ms-auto button-container">
+      <button type="button" class="btn btn-primary btn-sm"><span class="fas fa-plus-circle"></span> New contract
+      </button>
+      <router-link :to="{name:'ProjectsEdit', params:{id:$route.params.id}}" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Edit
+      </router-link>
     </div>
   </div>
   <card-container class="mt-3">
     <card-body>
       <h5 class="mb-1">Description:</h5>
-      <p v-html="value.projectDescription"></p>
+      <p v-html="data.projectDescription"></p>
     </card-body>
   </card-container>
 </page-container>
@@ -35,11 +41,9 @@ export default defineComponent({
   mixins: [BaseViewComponent],
   data () {
     return {
-      value: {} as ProjectResponse
+      data: {} as ProjectResponse,
+      service: ProjectService
     }
-  },
-  beforeMount () {
-    this.service = ProjectService
   },
   mounted () {
     this.getByDetail(this.$route.params.id)

@@ -64,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/projects/:id',
         name: 'ProjectsDetail',
         component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsDetail.vue')
+      },
+      {
+        path: '/projects/:id/edit',
+        name: 'ProjectsEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsEdit.vue')
       }
     ]
   },

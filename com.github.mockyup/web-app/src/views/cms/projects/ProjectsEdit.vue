@@ -3,40 +3,46 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new project</h1>
       <div class="page-controller ms-auto">
-        <form-button class="btn btn-primary btn-md" @click.stop.prevent="createNewProject"
-                     :form-button-attribute="formButtonAttributes">Submit new project
+        <form-button class="btn btn-primary btn-md" @click.stop.prevent="updateProject"
+                     :form-button-attribute="formButtonAttributes">Update project
         </form-button>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-9">
-        <form-group>
-          <form-container>
-            <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
-                             @showAlert:alert="closeAlert"/>
-            <form-input id="projectName"
-                        v-model="projectNameInputAttribute.value"
-                        :input-attributes="projectNameInputAttribute"
-                        :event-submitted="projectNameInputAttribute.formSubmitted"
-            />
-            <text-editor class="mt-3" v-model="projectDescriptionInputAttribute.value"
-                         :get-content="projectDescriptionInputAttribute.formSubmitted"/>
-          </form-container>
-        </form-group>
+      <div v-if="showPlaceHolder">
+        <place-holder-container/>
       </div>
-      <div class="col-3">
-        <card-container>
-          <card-body>
-            <h5 class="page-title holder">Additional information</h5>
-            <label class="text-break label-bold ">Project tags</label>
-            <div class="text-start">
-              <a class="me-2 project-tag" v-for="(tag, index ) in Array.from(projectTags)" :key="index"
-                 :href="tag">{{ projectTag(tag,index) }}</a>
-            </div>
-            <input-searching-tags @update:projectTags="getProjectTag"/>
-          </card-body>
-        </card-container>
-      </div>
+        <div class="col-9" v-if="!showPlaceHolder">
+          <form-group>
+            <form-container>
+              <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
+                               @showAlert:alert="closeAlert"/>
+              <form-input id="projectName"
+                          v-model="projectNameInputAttribute.value"
+                          :input-attributes="projectNameInputAttribute"
+                          :event-submitted="projectNameInputAttribute.formSubmitted"
+              />
+              <text-editor class="mt-3" v-model="projectDescriptionInputAttribute.value"
+                           :get-content="projectDescriptionInputAttribute.formSubmitted"
+                           :content-value="projectDescriptionInputAttribute.value"
+              />
+            </form-container>
+          </form-group>
+        </div>
+        <div class="col-3">
+          <card-container>
+            <card-body>
+              <h5 class="page-title holder">Additional information</h5>
+              <label class="text-break label-bold ">Project tags</label>
+              <div class="text-start">
+                <a class="me-2 project-tag" v-for="(tag, index ) in Array.from(projectTags)"
+                   :key="index"
+                   :href="tag">{{ projectTag(tag, index) }}</a>
+              </div>
+              <input-searching-tags @update:projectTags="getProjectTag"/>
+            </card-body>
+          </card-container>
+        </div>
     </div>
   </page-container>
 </template>
@@ -54,18 +60,21 @@ import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
-import { ProjectCreateRequest } from '@/plugins/webclient/model/Projects'
+import { ProjectCreateRequest, ProjectResponse } from '@/plugins/webclient/model/Projects'
 import TextEditor from '@/shared/editor/TextEditor.vue'
 import Projects from '@/views/projects/Projects.vue'
 import InputSearchingTags from '@/components/projects/InputSearchingTags.vue'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'
+import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 
 export default defineComponent({
-  name: 'ProjectsCreate',
+  name: 'ProjectsEdit',
   mixins: [BaseViewComponent],
   data () {
     return {
+      data: {} as ProjectResponse,
       service: ProjectService,
+      showPlaceHolder: true,
       directionAfterSubmit: {
         name: 'Projects'
       },
@@ -97,6 +106,7 @@ export default defineComponent({
     }
   },
   components: {
+    PlaceHolderContainer,
     InputSearchingTags,
     CardBody,
     CardContainer,
@@ -110,8 +120,15 @@ export default defineComponent({
     FormGroup,
     PageContainer
   },
+  async mounted () {
+    await this.getByDetail(this.$route.params.id)
+    this.projectNameInputAttribute.value = this.data.projectName
+    this.projectDescriptionInputAttribute.value = this.data.projectDescription
+    this.projectTags = new Set(this.data.projectTags)
+    this.showPlaceHolder = false
+  },
   methods: {
-    createNewProject (): void {
+    updateProject (): void {
       this.projectNameInputAttribute.formSubmitted = true
       this.projectDescriptionInputAttribute.formSubmitted = true
       this.payloadRequest = {
@@ -121,14 +138,16 @@ export default defineComponent({
       } as ProjectCreateRequest
       if (!this.projectNameInputAttribute.isValid) {
         this.formButtonAttributes.isLoading = false
-      } else {
-        this.createNewData()
+      }
+      console.log(this.projectNameInputAttribute.isValid)
+      if (this.projectNameInputAttribute.isValid) {
+        this.updateData()
       }
     },
     getProjectTag (tag: string): void {
       this.projectTags.add(tag)
     },
-    projectTag (tag:string, index: number): string {
+    projectTag (tag: string, index: number): string {
       if (index !== this.projectTags.size - 1) {
         return `${tag},`
       } else {

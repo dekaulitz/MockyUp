@@ -14,6 +14,9 @@ export const UserService: BaseCrudService = {
   doPost<T = never, R = never> (t: T): Promise<R> {
     return Promise.resolve(undefined)
   },
+  doUpdate<T = never, R = never> (t: T, id:string): Promise<R> {
+    return Promise.resolve(undefined)
+  },
   getById<T = never> (id: string): Promise<T> {
     return Promise.resolve(undefined)
   },
@@ -65,6 +68,11 @@ export const ProjectService: ProjectServiceInterface = {
       .then(value => {
         return value.data.data
       })
+  },
+  doUpdate: async function <ProjectCreateRequest, BaseResponse> (updateRequest: ProjectCreateRequest, id:string): Promise<BaseResponse> {
+    return WebClient.put<ProjectCreateRequest, AxiosResponse<BaseResponse>>('/v1/projects/' + id, updateRequest)
+      .then(value => {
+        return value.data
+      })
   }
-
 }

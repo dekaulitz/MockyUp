@@ -46,6 +46,8 @@ export default defineComponent({
           }).catch(reason => {
             this.validateResponse(reason)
           })
+      } else {
+        this.projectTagResponses = []
       }
     },
     onTagInput () {

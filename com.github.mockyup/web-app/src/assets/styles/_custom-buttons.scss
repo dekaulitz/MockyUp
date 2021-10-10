@@ -4,6 +4,9 @@
   border-color: #c4c4c4;
 }
 
+.button-container>button:not(:last-child){
+  margin-right: 5px;
+}
 
 .btn-md{
   padding: 0.5rem 0.75rem !important;

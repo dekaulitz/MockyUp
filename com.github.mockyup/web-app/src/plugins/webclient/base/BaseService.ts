@@ -25,4 +25,6 @@ export interface BaseCrudService{
   getById<T = never>(id:string): Promise<T>;
 
   doPost<T = never, R = never> (t:T): Promise<R>
+
+  doUpdate<T = never, R = never> (t:T, id:string): Promise<R>
 }

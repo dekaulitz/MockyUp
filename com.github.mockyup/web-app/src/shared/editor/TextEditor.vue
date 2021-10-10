@@ -1,7 +1,7 @@
 <template>
   <div v-bind="$attrs">
     <div id="toolbar-container"></div>
-    <textarea id="text-editor">
+    <textarea id="text-editor" v-model="content">
     </textarea>
   </div>
 </template>
@@ -16,28 +16,28 @@ export default defineComponent({
   data () {
     return {
       contentData: ClassicEditor,
+      content: '',
       $_instance: null
     }
   },
-  model: {
-    prop: 'modelValue',
-    event: 'update:modelValue'
+  props: {
+    contentValue: { type: String, default () { return '' } }
   },
-  mounted () {
-    this.content = false
+  async mounted () {
     // eslint-disable-next-line no-undef
-    this.contentData.create(document.querySelector('#text-editor'))
+    await this.contentData.create(document.querySelector('#text-editor'))
       .then(editor => {
-        const toolbarContainer = document.querySelector('#toolbar-container')
-        toolbarContainer.appendChild(editor.ui.view.toolbar.element)
-        // this.contentData = editor
-        // this.contentData = markRaw(editor)
+        // const toolbarContainer = document.querySelector('#toolbar-container')
+        // // toolbarContainer.appendChild(editor.ui.view.toolbar.element)
+        // // this.contentData = editor
+        // // this.contentData = markRaw(editor)
         this.$_instance = editor
         this.setUpEditor()
       })
       .catch(error => {
         console.error(error)
       })
+    this.content = this.contentValue
   },
   watch: {
     modelValue (newValue, oldValue) {
@@ -49,6 +49,7 @@ export default defineComponent({
   methods: {
     setUpEditor () {
       const editor = this.$_instance
+      editor.setData(this.contentValue)
       const publishMessage = (message: any) => {
         this.$emit('update:modelValue', message)
       }

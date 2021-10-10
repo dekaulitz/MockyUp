@@ -1,6 +1,7 @@
 <template>
   <input v-bind="$attrs" class="form-control"
          :id="id" :type="inputAttributes.type"
+         :value="inputAttributes.value"
          @input="$emit('update:modelValue', $event.target.value);validateAttributes(inputAttributes)"
          :placeholder="inputAttributes.placeHolder" :class="isValidate">
   <div class="form-text">{{ inputAttributes.hint }}</div>
@@ -41,6 +42,11 @@ export default defineComponent({
       default: false
     },
     inputAttributes: { type: Object as PropType<InputAttribute> }
+  },
+  mounted () {
+    if (this.inputAttributes.value) {
+      this.validateAttributes(this.inputAttributes)
+    }
   },
   computed: {
     isValidate (): string {
