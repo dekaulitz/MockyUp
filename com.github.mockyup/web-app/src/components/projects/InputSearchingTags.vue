@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BaseComponent from '@/components/base/BaseComponent'
+import BaseComponent from '@/shared/base/BaseComponent'
 import { ProjectService } from '@/plugins/webclient/service/CmsService'
 import { GetProjectTags, ProjectTagsResponse } from '@/plugins/webclient/model/Projects'
 

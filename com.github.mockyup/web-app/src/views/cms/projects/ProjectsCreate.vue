@@ -58,7 +58,7 @@ import { ProjectCreateRequest } from '@/plugins/webclient/model/Projects'
 import TextEditor from '@/shared/editor/TextEditor.vue'
 import Projects from '@/views/projects/Projects.vue'
 import InputSearchingTags from '@/components/projects/InputSearchingTags.vue'
-import BaseViewComponent from '@/components/base/BaseViewComponent'
+import BaseViewComponent from '@/shared/base/BaseViewComponent'
 
 export default defineComponent({
   name: 'Projects',

@@ -3,7 +3,7 @@ import { BaseCrudService, BaseResponse } from '@/plugins/webclient/base/BaseServ
 import { AlertInterface, AlertType } from '@/shared/alert'
 import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
-import BaseComponent from '@/components/base/BaseComponent'
+import BaseComponent from '@/shared/base/BaseComponent'
 
 export default defineComponent({
   name: 'BaseComponent',

@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { PageableParam } from '@/plugins/webclient/model/RequestModel'
 import { PagingAttributes } from '@/shared/pagination'
 import { BaseCrudService } from '@/plugins/webclient/base/BaseService'
-import BaseComponent from '@/components/base/BaseComponent'
+import BaseComponent from '@/shared/base/BaseComponent'
 
 export default defineComponent({
   name: 'BasePagingComponent',

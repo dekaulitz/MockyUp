@@ -21,13 +21,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BaseComponent from '@/components/base/BaseComponent'
+import BaseComponent from '@/shared/base/BaseComponent'
 import { ProjectService } from '@/plugins/webclient/service/CmsService'
 import PageContainer from '@/pages/PageContainer.vue'
 import { ProjectResponse } from '@/plugins/webclient/model/Projects'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
-import BaseViewComponent from '@/components/base/BaseViewComponent'
+import BaseViewComponent from '@/shared/base/BaseViewComponent'
 
 export default defineComponent({
   name: 'ProjectsDetail',

@@ -41,7 +41,7 @@
 import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
-import BasePagingComponent from '@/components/base/BasePagingComponent'
+import BasePagingComponent from '@/shared/base/BasePagingComponent'
 import { UserService } from '@/plugins/webclient/service/CmsService'
 import { GetUsersParam, UserCardsResponse } from '@/plugins/webclient/model/Users'
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'

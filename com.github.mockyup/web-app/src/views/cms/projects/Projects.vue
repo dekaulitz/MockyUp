@@ -58,7 +58,7 @@ import { ProjectService } from '@/plugins/webclient/service/CmsService'
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
 import { GetProjectParam, ProjectCardResponse } from '@/plugins/webclient/model/Projects'
 import ProjectSortingDropDown from '@/components/sorting/ProjectsSortingDropDown.vue'
-import BasePagingComponent from '@/components/base/BasePagingComponent'
+import BasePagingComponent from '@/shared/base/BasePagingComponent'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 
 export default defineComponent({

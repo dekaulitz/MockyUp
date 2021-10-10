@@ -80,7 +80,7 @@ import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
-import BaseComponent from '@/components/base/BaseComponent'
+import BaseComponent from '@/shared/base/BaseComponent'
 export default defineComponent({
   mixins: [FormHelper, BaseComponent],
   data () {
