@@ -11,6 +11,9 @@ export default defineComponent({
     },
     checkingValidation (inputAttribute: InputAttribute) {
       const value = inputAttribute.value
+      if (inputAttribute.validations === undefined) {
+        return
+      }
       for (const validation of inputAttribute.validations) {
         if (validation.validationType === InputValidationType.REQUIRED && (value === '' || value === undefined)) {
           inputAttribute.isValid = false

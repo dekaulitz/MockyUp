@@ -27,11 +27,12 @@ import PageContainer from '@/pages/PageContainer.vue'
 import { ProjectResponse } from '@/plugins/webclient/model/Projects'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
+import BaseViewComponent from '@/components/base/BaseViewComponent'
 
 export default defineComponent({
   name: 'ProjectsDetail',
   components: { CardBody, CardContainer, PageContainer },
-  mixins: [BaseComponent],
+  mixins: [BaseViewComponent],
   data () {
     return {
       value: {} as ProjectResponse

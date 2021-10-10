@@ -4,9 +4,13 @@ import { WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
 import Qs from 'querystring'
 import { GetUsersParam } from '@/plugins/webclient/model/Users'
 import { AxiosResponse } from 'axios'
-import { GetProjectParam } from '@/plugins/webclient/model/Projects'
+import {
+  GetProjectParam,
+  GetProjectTags,
+  ProjectTagsResponse
+} from '@/plugins/webclient/model/Projects'
 
-export const UserService:BaseCrudService = {
+export const UserService: BaseCrudService = {
   doPost<T = never, R = never> (t: T): Promise<R> {
     return Promise.resolve(undefined)
   },
@@ -27,8 +31,18 @@ export const UserService:BaseCrudService = {
   }
 }
 
-export const ProjectService:BaseCrudService = {
-  doPost: async function<ProjectCreateRequest, BaseResponse> (createRequest: ProjectCreateRequest): Promise<BaseResponse> {
+export interface ProjectServiceInterface extends BaseCrudService {
+  getTags (getProjectTags: GetProjectTags): Promise<ProjectTagsResponse[]>
+}
+
+export const ProjectService: ProjectServiceInterface = {
+  getTags: async function (param: GetProjectTags): Promise<ProjectTagsResponse[]> {
+    return WebClient.get<BaseResponse<ProjectTagsResponse[]>>('/v1/projects/tags?' + Qs.stringify(param))
+      .then(value => {
+        return value.data.data
+      })
+  },
+  doPost: async function <ProjectCreateRequest, BaseResponse> (createRequest: ProjectCreateRequest): Promise<BaseResponse> {
     return WebClient.post<ProjectCreateRequest, AxiosResponse<BaseResponse>>('/v1/projects', createRequest)
       .then(value => {
         return value.data

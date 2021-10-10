@@ -53,6 +53,7 @@ export default defineComponent({
   mixins: [BasePagingComponent],
   data () {
     return {
+      service: UserService,
       values: []as UserCardsResponse[],
       parameter: {
         page: 1,
@@ -63,9 +64,6 @@ export default defineComponent({
     }
   },
   components: { UserSortingDropDown, FormInputSearch, PaginationContainer, PageContainer },
-  beforeMount () {
-    this.service = UserService
-  },
   mounted () {
     this.getAll()
     this.getCount()

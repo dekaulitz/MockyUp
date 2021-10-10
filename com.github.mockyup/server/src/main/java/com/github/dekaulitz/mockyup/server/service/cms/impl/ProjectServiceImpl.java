@@ -1,13 +1,14 @@
 package com.github.dekaulitz.mockyup.server.service.cms.impl;
 
+import com.github.dekaulitz.mockyup.server.db.aggregation.ProjectAggregation;
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
-import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectQuery;
-import com.github.dekaulitz.mockyup.server.db.query.UserQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
+import com.github.dekaulitz.mockyup.server.model.dto.ProjectTagsModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
+import com.github.dekaulitz.mockyup.server.model.param.GetProjectTagsParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
 import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectService;
@@ -48,7 +49,7 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
       AuthProfileModel authProfileModel)
       throws ServiceException {
     ProjectEntity projectEntity = this.getById(id, ProjectEntity.class);
-    if(projectEntity== null){
+    if (projectEntity == null) {
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
     modelMapper.map(updateProjectRequest, projectEntity);
@@ -67,8 +68,13 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
   public long getCount(GetProjectParam getProjectParam) {
     ProjectQuery query = new ProjectQuery();
     query.buildQuery(getProjectParam);
-    return mongoTemplate.count(query.getQuery(), ProjectEntity.class);
+    return this.getMongoTemplate().count(query.getQuery(), ProjectEntity.class);
   }
 
-
+  @Override
+  public List<ProjectTagsModel> getProjectTags(
+      GetProjectTagsParam getProjectTagsParam) {
+    return this.getMongoTemplate().aggregate(ProjectAggregation.getTaggingAggregation(getProjectTagsParam), "projects",
+        ProjectTagsModel.class).getMappedResults();
+  }
 }

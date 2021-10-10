@@ -1,17 +1,43 @@
 import { defineComponent } from 'vue'
+import { BaseCrudService, BaseResponse } from '@/plugins/webclient/base/BaseService'
 import { AlertInterface, AlertType } from '@/shared/alert'
-import { BaseResponse } from '@/plugins/webclient/base/BaseService'
 import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
 import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
+import BaseComponent from '@/components/base/BaseComponent'
 
 export default defineComponent({
   name: 'BaseComponent',
+  mixins: [BaseComponent],
   data () {
     return {
-      alertAttributes: {} as AlertInterface
+      service: {} as BaseCrudService,
+      value: {} as never,
+      payloadRequest: {} as never,
+      responsePost: {} as never,
+      directionAfterSubmit: {} as never
     }
   },
   methods: {
+    getByDetail (id: string) {
+      return this.service.getById(id)
+        .then(value => {
+          this.value = value
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
+    },
+    createNewData () {
+      return this.service.doPost(this.payloadRequest)
+        .then(value => {
+          this.responsePost = value
+          this.$router.push(this.directionAfterSubmit)
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
+    },
+    closeAlert (isShow: boolean) {
+      this.alertAttributes.show = isShow
+    },
     validateResponse (error: any) {
       if (!error.status) {
         console.log(error)
@@ -37,6 +63,7 @@ export default defineComponent({
           }
         }
       } else if (statusCode >= 500) {
+
       }
     }
   }

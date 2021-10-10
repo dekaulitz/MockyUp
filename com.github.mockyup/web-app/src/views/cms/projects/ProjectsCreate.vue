@@ -2,6 +2,11 @@
   <page-container>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new project</h1>
+      <div class="page-controller ms-auto">
+        <form-button class="btn btn-primary btn-md" @click.stop.prevent="createNewProject"
+                     :form-button-attribute="formButtonAttributes">Submit new project
+        </form-button>
+      </div>
     </div>
     <div class="row mt-3">
       <div class="col-9">
@@ -9,31 +14,28 @@
           <form-container>
             <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
                              @showAlert:alert="closeAlert"/>
-            <form-label for="projectName" class="label-bold">Project name</form-label>
             <form-input id="projectName"
                         v-model="projectNameInputAttribute.value"
                         :input-attributes="projectNameInputAttribute"
                         :event-submitted="projectNameInputAttribute.formSubmitted"
             />
-            <form-label for="ProjectDescription" class="label-bold mt-3">Project Description</form-label>
-            <text-editor v-model="projectDescriptionInputAttribute.value" :get-content="projectDescriptionInputAttribute.formSubmitted"/>
-            <select class="form-select" multiple aria-label="multiple select example" v-model="projectTagsInputAttribute.value">
-              <option selected>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-
-            <div class="d-md-flex justify-content-md-end">
-              <form-button class="mt-2 w-md" @click.stop.prevent="createNewProject"
-                           :form-button-attribute="formButtonAttributes">Create new project
-              </form-button>
-            </div>
+            <text-editor class="mt-3" v-model="projectDescriptionInputAttribute.value"
+                         :get-content="projectDescriptionInputAttribute.formSubmitted"/>
           </form-container>
         </form-group>
       </div>
       <div class="col-3">
-        something
+        <card-container>
+          <card-body>
+            <h5 class="page-title holder">Additional information</h5>
+            <label class="text-break label-bold ">Project tags</label>
+            <div class="text-start">
+              <a class="me-2 project-tag" v-for="(tag, index ) in Array.from(projectTags)" :key="index"
+                 :href="tag">{{ projectTag(tag,index) }}</a>
+            </div>
+            <input-searching-tags @update:projectTags="getProjectTag"/>
+          </card-body>
+        </card-container>
       </div>
     </div>
   </page-container>
@@ -44,26 +46,30 @@ import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
 import { ProjectService } from '@/plugins/webclient/service/CmsService'
-import BaseComponent from '@/components/base/BaseComponent'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
 import FormContainer from '@/shared/form/FormContainer.vue'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
-import FormLabel from '@/shared/form/FormLabel.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
 import { ProjectCreateRequest } from '@/plugins/webclient/model/Projects'
-// import TextInput from '@/shared/form/TextInput.vue'
-import AceEditor from '@/shared/editor/CodeEditor.vue'
 import TextEditor from '@/shared/editor/TextEditor.vue'
+import Projects from '@/views/projects/Projects.vue'
+import InputSearchingTags from '@/components/projects/InputSearchingTags.vue'
+import BaseViewComponent from '@/components/base/BaseViewComponent'
 
 export default defineComponent({
   name: 'Projects',
-  mixins: [BaseComponent],
+  mixins: [BaseViewComponent],
   data () {
     return {
+      service: ProjectService,
+      directionAfterSubmit: {
+        name: 'Projects'
+      },
+      projectTags: new Set(),
       projectNameInputAttribute: {
         type: 'text',
         placeHolder: 'Project Name',
@@ -84,10 +90,6 @@ export default defineComponent({
         type: 'text',
         isValid: false
       } as InputAttribute,
-      projectTagsInputAttribute: {
-        type: 'text',
-        value: []
-      } as InputAttribute,
       formButtonAttributes: {
         isLoading: false,
         usingLoader: true
@@ -95,22 +97,18 @@ export default defineComponent({
     }
   },
   components: {
+    InputSearchingTags,
+    CardBody,
+    CardContainer,
     TextEditor,
     // AceEditor,
     // TextInput,
     FormButton,
     FormInput,
-    FormLabel,
     AlertContainer,
     FormContainer,
     FormGroup,
     PageContainer
-  },
-  beforeMount () {
-    this.service = ProjectService
-    this.directionAfterSubmit = {
-      name: 'Projects'
-    }
   },
   methods: {
     createNewProject (): void {
@@ -119,19 +117,27 @@ export default defineComponent({
       this.payloadRequest = {
         projectName: this.projectNameInputAttribute.value,
         projectDescription: this.projectDescriptionInputAttribute.value,
-        projectTags: this.projectTagsInputAttribute.value
-      }as ProjectCreateRequest
-      console.log(this.payloadRequest)
+        projectTags: Array.from(this.projectTags)
+      } as ProjectCreateRequest
       if (!this.projectNameInputAttribute.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
         this.createNewData()
+      }
+    },
+    getProjectTag (tag: string): void {
+      this.projectTags.add(tag)
+    },
+    projectTag (tag:string, index: number): string {
+      if (index !== this.projectTags.size - 1) {
+        return `${tag},`
+      } else {
+        return tag
       }
     }
   }
 })
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>

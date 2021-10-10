@@ -17,6 +17,7 @@ public class ApplicationConstants {
   public final static String COUNT = "/count";
   public final static String PROJECTS = "/projects";
   public final static String PROJECT_CONTRACTS = "/project-contracts";
+  public final static String TAGS = "/tags";
 
   private ApplicationConstants() {
   }

@@ -6,8 +6,10 @@ import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
+import com.github.dekaulitz.mockyup.server.model.dto.ProjectTagsModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
+import com.github.dekaulitz.mockyup.server.model.param.GetProjectTagsParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
@@ -84,6 +86,10 @@ public class CmsFacade extends WithAuthService {
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
     return projectEntity;
+  }
+
+  public List<ProjectTagsModel> getProjectTag(GetProjectTagsParam getProjectTagsParam) {
+    return projectService.getProjectTags(getProjectTagsParam);
   }
 
   public ProjectEntity updateProject(String id, UpdateProjectRequest updateProjectRequest)

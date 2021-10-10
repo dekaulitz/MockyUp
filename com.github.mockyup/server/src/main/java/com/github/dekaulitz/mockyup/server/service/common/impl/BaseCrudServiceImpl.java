@@ -71,4 +71,8 @@ public abstract class BaseCrudServiceImpl<T extends BaseMongo> implements
   public Boolean isExists(Query query, Class<T> entityClass) {
     return mongoTemplate.exists(query, entityClass);
   }
+
+  public MongoTemplate getMongoTemplate() {
+    return mongoTemplate;
+  }
 }
