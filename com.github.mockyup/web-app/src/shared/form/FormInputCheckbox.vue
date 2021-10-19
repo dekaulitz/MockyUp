@@ -1,10 +1,10 @@
 <template>
   <input v-bind="$attrs" class="form-check-input"
          :id="id" :type="inputAttributes.type"
-         @input="$emit('update:modelValue', $event.target.value);validateAttributes(inputAttributes)"
+         :checked="isChecked"
+         @input="onChange($event);validateAttributes(inputAttributes)"
          :placeholder="inputAttributes.placeHolder" :class="isValidate">
   <div class="form-text">{{ inputAttributes.hint }}</div>
-  {{}}
   <div class="valid-feedback">
     {{ successMessage }}
   </div>
@@ -41,6 +41,14 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    checked: {
+      type: Boolean,
+      default: false
+    },
+    value: { type: String },
+    modelValue: { default: '' },
+    trueValue: { default: true },
+    falseValue: { default: false },
     inputAttributes: { type: Object as PropType<InputAttribute> }
   },
   computed: {
@@ -51,6 +59,13 @@ export default defineComponent({
         return 'is-valid'
       }
       return ''
+    },
+    isChecked () {
+      if (this.modelValue instanceof Array) {
+        return this.modelValue.includes(this.value)
+      }
+      // Note that `true-value` and `false-value` are camelCase in the JS
+      return this.modelValue === this.trueValue
     }
   },
   methods: {
@@ -63,6 +78,21 @@ export default defineComponent({
         this.hasError = false
         this.errorMessage = ''
         this.successMessage = formInputAction.validMessage
+      }
+    },
+    onChange (event:Event) {
+      const target = event.target as HTMLInputElement
+      const isChecked = target.checked
+      if (this.modelValue instanceof Array) {
+        const newValue = [...this.modelValue]
+        if (isChecked) {
+          newValue.push(this.value)
+        } else {
+          newValue.splice(newValue.indexOf(this.value), 1)
+        }
+        this.$emit('update:modelValue', newValue)
+      } else {
+        this.$emit('update:modelValue', isChecked ? this.trueValue : this.falseValue)
       }
     }
   },

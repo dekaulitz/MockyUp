@@ -25,6 +25,7 @@ export interface InputAttribute {
   validations?: InputValidationInterface[]
   errorMessage?: string
   value?: any
+  values?: string[]
   formSubmitted: boolean
 }
 

@@ -17,7 +17,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -28,15 +27,13 @@ public class UserServiceImpl extends
     BaseCrudServiceImpl<UserEntity> implements UserService {
 
   @Autowired
-  private MongoTemplate mongoTemplate;
-  @Autowired
   private ModelMapper modelMapper;
 
   @Override
   public UserEntity getUserByUsernameOrEmail(String usernameOrEmail) throws ServiceException {
     UserQuery userQuery = new UserQuery();
-    userQuery.usernameOrEmail(usernameOrEmail);
-    UserEntity userEntity = mongoTemplate.findOne(userQuery.getQuery(), UserEntity.class);
+    userQuery.authUsernameOrEmail(usernameOrEmail);
+    UserEntity userEntity = getMongoTemplate().findOne(userQuery.getQuery(), UserEntity.class);
     if (userEntity == null) {
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
@@ -78,7 +75,7 @@ public class UserServiceImpl extends
   public long getCount(GetUserParam getUserParam) {
     UserQuery userQuery = new UserQuery();
     userQuery.buildQuery(getUserParam);
-    return mongoTemplate.count(userQuery.getQuery(), UserEntity.class);
+    return getMongoTemplate().count(userQuery.getQuery(), UserEntity.class);
   }
 
   public UserEntity createUser(CreateUserRequest createUserRequest,
@@ -89,7 +86,6 @@ public class UserServiceImpl extends
     if (CollectionUtils.isNotEmpty(userExists)) {
       throw new ServiceException(ResponseCode.DUPLICATE_DATA_ENTRY);
     }
-
     UserEntity userEntity = modelMapper.map(createUserRequest, UserEntity.class);
     userEntity.setPassword(HashingHelper.hashing(userEntity.getPassword()));
     userEntity.setCreatedByUserId(authProfileModel.getId());

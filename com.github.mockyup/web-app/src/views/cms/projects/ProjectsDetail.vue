@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BaseComponent from '@/shared/base/BaseComponent'
 import { ProjectService } from '@/plugins/webclient/service/CmsService'
 import PageContainer from '@/pages/PageContainer.vue'
 import { ProjectResponse } from '@/plugins/webclient/model/Projects'

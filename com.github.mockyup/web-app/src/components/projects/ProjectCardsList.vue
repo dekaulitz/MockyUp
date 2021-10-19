@@ -66,9 +66,11 @@ import DropdownButton from '@/shared/dropdown/DropdownButton.vue'
 import DropdownContentContainer from '@/shared/dropdown/DropdownContentContainer.vue'
 import DropdownContentItemContainer from '@/shared/dropdown/DropdownContentItemContainer.vue'
 import ContentItemLink from '@/shared/dropdown/ContentItemLink.vue'
+import BaseViewComponent from '@/shared/base/BaseViewComponent'
 
 export default defineComponent({
   name: 'ProjectCardList',
+  mixins: [BaseViewComponent],
   components: {
     ContentItemLink,
     DropdownContentItemContainer,
@@ -94,6 +96,9 @@ export default defineComponent({
           this.showProjectPlaceHolder = false
           this.projectCards = value.data
         }
+      }).catch(reason => {
+        console.log('break aja')
+        this.validateResponse(reason)
       })
   }
 })

@@ -12,7 +12,7 @@ public class UserQuery extends BaseQuery<GetUserParam> {
   public void buildQuery(GetUserParam getUserParam) {
     this.email(getUserParam.getEmail());
     this.username(getUserParam.getUsername());
-    this.usernameOrEmailIs(getUserParam.getUserNameOrEmail());
+    this.usernameOrEmail(getUserParam.getUserNameOrEmail());
     this.setPageable(getUserParam);
   }
 
@@ -28,7 +28,7 @@ public class UserQuery extends BaseQuery<GetUserParam> {
     }
   }
 
-  public void usernameOrEmail(String usernameOrEmail) {
+  public void authUsernameOrEmail(String usernameOrEmail) {
     if (StringUtils.isNotBlank(usernameOrEmail)) {
       this.criteriaSet.add(new Criteria().orOperator(Criteria.where("username").is(usernameOrEmail),
           Criteria.where("email").is(usernameOrEmail)));
@@ -42,10 +42,10 @@ public class UserQuery extends BaseQuery<GetUserParam> {
     }
   }
 
-  public void usernameOrEmailIs(String usernameOrEmail) {
+  public void usernameOrEmail(String usernameOrEmail) {
     if (StringUtils.isNotBlank(usernameOrEmail)) {
-      this.criteriaSet.add(new Criteria().orOperator(Criteria.where("username").is(usernameOrEmail),
-          Criteria.where("email").is(usernameOrEmail)));
+      this.criteriaSet.add(new Criteria().orOperator(Criteria.where("username").regex(".*" + usernameOrEmail + ".*", "i"),
+          Criteria.where("email").regex(".*" + usernameOrEmail + ".*", "i")));
     }
   }
 }

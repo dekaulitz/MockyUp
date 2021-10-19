@@ -53,6 +53,7 @@ export default defineComponent({
     onTagInput () {
       if (this.inputTag !== '') {
         this.$emit('update:projectTags', this.inputTag)
+        this.projectTagResponses = []
         this.inputTag = ''
       }
     },

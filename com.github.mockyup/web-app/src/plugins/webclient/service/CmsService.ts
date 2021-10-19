@@ -11,8 +11,11 @@ import {
 } from '@/plugins/webclient/model/Projects'
 
 export const UserService: BaseCrudService = {
-  doPost<T = never, R = never> (t: T): Promise<R> {
-    return Promise.resolve(undefined)
+  doPost: async function <UserCreateRequest, BaseResponse> (createRequest: UserCreateRequest): Promise<BaseResponse> {
+    return WebClient.post<UserCreateRequest, AxiosResponse<BaseResponse>>('/v1/users', createRequest)
+      .then(value => {
+        return value.data
+      })
   },
   doUpdate<T = never, R = never> (t: T, id:string): Promise<R> {
     return Promise.resolve(undefined)

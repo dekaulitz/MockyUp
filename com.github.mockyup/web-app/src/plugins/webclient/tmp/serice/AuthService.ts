@@ -16,7 +16,7 @@ export const AuthLoginService: AuthService = {
   doLogin: async function (authLogin: AuthLogin): Promise<AuthResponse> {
     return WebClient.post<AuthLogin, AxiosResponse<BaseResponse<AuthResponse>>>('/v1/login', authLogin)
       .then(value => {
-        return StorageService.setData<AuthResponse>(StorageKeyType.AUTH_PROFILE, value.data.data)
+        return value.data.data
       })
   },
   logout: async function (): Promise<BaseResponse> {

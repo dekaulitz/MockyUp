@@ -12,6 +12,9 @@ export default defineComponent({
     }
   },
   methods: {
+    closeAlert (isShow: boolean) {
+      this.alertAttributes.show = isShow
+    },
     validateResponse (error: any) {
       if (!error.status) {
         console.log(error)

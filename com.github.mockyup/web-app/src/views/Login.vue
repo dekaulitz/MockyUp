@@ -81,6 +81,9 @@ import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import BaseComponent from '@/shared/base/BaseComponent'
+import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
+import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
+import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
 export default defineComponent({
   mixins: [FormHelper, BaseComponent],
   data () {
@@ -134,6 +137,7 @@ export default defineComponent({
           password: password,
           rememberMe: rememberMe
         }).then(value => {
+          StorageService.setData<AuthResponse>(StorageKeyType.AUTH_PROFILE, value)
           this.formButtonAttributes.isLoading = false
           this.$router.push('/')
         }).catch(error => {

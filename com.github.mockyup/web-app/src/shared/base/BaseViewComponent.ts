@@ -41,9 +41,6 @@ export default defineComponent({
         }).catch(reason => {
           this.validateResponse(reason)
         })
-    },
-    closeAlert (isShow: boolean) {
-      this.alertAttributes.show = isShow
     }
   }
 })

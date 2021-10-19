@@ -12,9 +12,9 @@ import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 import com.github.dekaulitz.mockyup.server.service.auth.api.JwtService;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,14 +41,11 @@ public class JwtServiceImpl implements JwtService {
       throw new UnauthorizedException(ResponseCode.USER_DISABLED);
     }
     String jti = UUID.randomUUID().toString();
-    Calendar date = Calendar.getInstance();
-    long t = date.getTimeInMillis();
     if (rememberMe) {
-      expiredTime = expiredTime * 1000;
+      expiredTime = expiredTime * 7;
     }
-    date.add(Calendar.DATE, 1);
-    Date canDoRefreshTime = new Date(t + 60 * refreshTime);
-    Date tokenExpireTime = new Date(date.getTimeInMillis());
+    Date canDoRefreshTime = DateUtils.addMilliseconds(new Date(), Math.toIntExact(refreshTime));
+    Date tokenExpireTime = DateUtils.addMilliseconds(new Date(), Math.toIntExact(expiredTime));
     //@TODO i think it should more than this that we can keep user data on token
     String token = buildToken(jti, canDoRefreshTime, tokenExpireTime);
     AuthProfileModel authProfileModel = new AuthProfileModel();

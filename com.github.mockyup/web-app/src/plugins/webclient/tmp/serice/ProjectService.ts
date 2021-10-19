@@ -24,8 +24,6 @@ const ProjectService: ProjectService = {
     return WebClient.get<BaseResponse<ProjectCardInterface>>('/v1/projects')
       .then(value => {
         return value.data
-      }).catch((reason: BaseResponse) => {
-        return reason
       })
   },
   getProjectById: async function (id: string): Promise<BaseResponse<ProjectInterface>> {

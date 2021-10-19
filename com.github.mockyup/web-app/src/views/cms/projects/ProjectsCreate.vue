@@ -4,7 +4,7 @@
       <h1 class="page-title">Create new project</h1>
       <div class="page-controller ms-auto">
         <form-button class="btn btn-primary btn-md" @click.stop.prevent="createNewProject"
-                     :form-button-attribute="formButtonAttributes">Submit new project
+                     :form-button-attribute="formButtonAttributes">Submit New Project
         </form-button>
       </div>
     </div>
@@ -30,8 +30,14 @@
             <h5 class="page-title holder">Additional information</h5>
             <label class="text-break label-bold ">Project tags</label>
             <div class="text-start">
-              <a class="me-2 project-tag" v-for="(tag, index ) in Array.from(projectTags)" :key="index"
-                 :href="tag">{{ projectTag(tag,index) }}</a>
+              <div class="d-inline-flex" v-for="(tag, index ) in Array.from(projectTags)" :key="index">
+                <delete-on-hover :value="tag" @update:deleteOnHover="removeTag">
+                  <template #content>
+                    <a class="me-2 project-tag"
+                       :href="tag">{{ projectTag(tag, index) }}</a>
+                  </template>
+                </delete-on-hover>
+              </div>
             </div>
             <input-searching-tags @update:projectTags="getProjectTag"/>
           </card-body>
@@ -56,9 +62,9 @@ import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/f
 import FormButton from '@/shared/form/FormButton.vue'
 import { ProjectCreateRequest } from '@/plugins/webclient/model/Projects'
 import TextEditor from '@/shared/editor/TextEditor.vue'
-import Projects from '@/views/projects/Projects.vue'
 import InputSearchingTags from '@/components/projects/InputSearchingTags.vue'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'
+import DeleteOnHover from '@/components/form/DeleteOnHover.vue'
 
 export default defineComponent({
   name: 'ProjectsCreate',
@@ -97,6 +103,7 @@ export default defineComponent({
     }
   },
   components: {
+    DeleteOnHover,
     InputSearchingTags,
     CardBody,
     CardContainer,
@@ -128,12 +135,15 @@ export default defineComponent({
     getProjectTag (tag: string): void {
       this.projectTags.add(tag)
     },
-    projectTag (tag:string, index: number): string {
+    projectTag (tag: string, index: number): string {
       if (index !== this.projectTags.size - 1) {
         return `${tag},`
       } else {
         return tag
       }
+    },
+    removeTag (tag:string) {
+      this.projectTags.delete(tag)
     }
   }
 })

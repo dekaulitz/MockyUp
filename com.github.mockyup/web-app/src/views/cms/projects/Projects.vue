@@ -36,10 +36,6 @@
             name:'ProjectsDetail',
             params:{id:project.id}}"
             ><span class="bi bi-book"></span></router-link>
-            <router-link class="btn btn-warning p-0 px-2 me-2" :to="{
-            name:'ProjectsDetail',
-            params:{id:project.id}}"
-            ><span class="bi bi-pencil-fill"></span></router-link>
             <button class="btn btn-danger p-0 px-2"><span class="bi bi-trash-fill"></span></button>
           </div>
         </td>

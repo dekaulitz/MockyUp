@@ -52,7 +52,9 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
     if (projectEntity == null) {
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
-    modelMapper.map(updateProjectRequest, projectEntity);
+    projectEntity.setProjectName(updateProjectRequest.getProjectName());
+    projectEntity.setProjectDescription(updateProjectRequest.getProjectDescription());
+    projectEntity.setProjectTags(updateProjectRequest.getProjectTags());
     projectEntity.setUpdatedByUserId(authProfileModel.getId());
     return this.save(projectEntity);
   }
