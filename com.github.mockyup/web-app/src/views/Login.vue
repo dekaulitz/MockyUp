@@ -77,13 +77,13 @@ import {
 import FormButton from '@/shared/form/FormButton.vue'
 import FormHelper from '@/shared/form/FormHelper'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
-import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
+import AuthService from '@/service/webclient/service/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import BaseComponent from '@/shared/base/BaseComponent'
-import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
-import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
+import { StorageService } from '@/service/webclient/service/CommonService'
+import { AuthResponse } from '@/service/webclient/model/ResponseModel'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 export default defineComponent({
   mixins: [FormHelper, BaseComponent],
   data () {

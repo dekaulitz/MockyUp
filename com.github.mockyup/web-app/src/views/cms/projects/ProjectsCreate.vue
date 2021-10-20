@@ -30,7 +30,8 @@
             <h5 class="page-title holder">Additional information</h5>
             <label class="text-break label-bold ">Project tags</label>
             <div class="text-start">
-              <div class="d-inline-flex" v-for="(tag, index ) in Array.from(projectTags)" :key="index">
+              <div class="d-inline-flex" v-for="(tag, index ) in Array.from(projectTags)"
+                   :key="index">
                 <delete-on-hover :value="tag" @update:deleteOnHover="removeTag">
                   <template #content>
                     <a class="me-2 project-tag"
@@ -51,7 +52,7 @@
 import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
-import { ProjectService } from '@/plugins/webclient/service/CmsService'
+import { ProjectService } from '@/service/webclient/service/ProjectService'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
@@ -60,7 +61,7 @@ import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
-import { ProjectCreateRequest } from '@/plugins/webclient/model/Projects'
+import { ProjectCreateRequest } from '@/service/webclient/model/Projects'
 import TextEditor from '@/shared/editor/TextEditor.vue'
 import InputSearchingTags from '@/components/projects/InputSearchingTags.vue'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'
@@ -142,7 +143,7 @@ export default defineComponent({
         return tag
       }
     },
-    removeTag (tag:string) {
+    removeTag (tag: string) {
       this.projectTags.delete(tag)
     }
   }

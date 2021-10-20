@@ -1,4 +1,4 @@
-import { PageableParam } from '@/plugins/webclient/model/RequestModel'
+import { PageableParam } from '@/service/webclient/model/RequestModel'
 
 export interface GetProjectParam extends PageableParam {
   projectName?: string

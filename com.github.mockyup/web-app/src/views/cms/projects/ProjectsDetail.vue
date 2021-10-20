@@ -10,8 +10,8 @@
       <span class="text-secondary additional-info fw-bold" v-if="data.projectTags">{{data.projectTags.join(',')}}</span>
     </div>
     <div class="ms-auto button-container">
-      <button type="button" class="btn btn-primary btn-sm"><span class="fas fa-plus-circle"></span> New contract
-      </button>
+      <router-link :to="{name:'ContractsCreate'}" class="btn btn-primary btn-sm"><span class="fas fa-plus-circle"></span> New contract
+      </router-link>
       <router-link :to="{name:'ProjectsEdit', params:{id:$route.params.id}}" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Edit
       </router-link>
     </div>
@@ -27,9 +27,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { ProjectService } from '@/plugins/webclient/service/CmsService'
+import { ProjectService } from '@/service/webclient/service/ProjectService'
 import PageContainer from '@/pages/PageContainer.vue'
-import { ProjectResponse } from '@/plugins/webclient/model/Projects'
+import { ProjectResponse } from '@/service/webclient/model/Projects'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'

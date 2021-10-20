@@ -1,4 +1,4 @@
-import { ContractProjectInfo } from '@/plugins/webclient/model/openapi/embeddable/OpenApiEmbedded'
+import { ContractProjectInfo } from '@/service/webclient/model/openapi/embeddable/OpenApiEmbedded'
 
 export interface BaseResponse<T = any> {
   statusCode: number

@@ -24,7 +24,7 @@
 import { defineComponent, PropType } from 'vue'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
-import { ProjectCardInterface } from '@/plugins/webclient/model/ResponseModel'
+import { ProjectCardInterface } from '@/service/webclient/model/ResponseModel'
 
 export default defineComponent({
   name: 'ProjectCard',

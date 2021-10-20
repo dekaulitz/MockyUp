@@ -1,6 +1,6 @@
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 import axios from 'axios'
-import { BaseResponse } from '@/plugins/webclient/model/ResponseModel'
+import { BaseResponse } from '@/service/webclient/model/ResponseModel'
 
 const host = process.env.NODE_ENV === 'production' ? 'http://localhost:7070' : 'http://localhost:7070'
 export const WebClient = axios.create({

@@ -4,7 +4,7 @@
   border-color: #c4c4c4;
 }
 
-.button-container>button:not(:last-child){
+.button-container>button:not(:last-child),a:not(:last-child){
   margin-right: 5px;
 }
 

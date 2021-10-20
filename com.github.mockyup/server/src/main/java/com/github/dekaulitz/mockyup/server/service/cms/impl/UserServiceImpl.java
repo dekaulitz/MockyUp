@@ -11,6 +11,7 @@ import com.github.dekaulitz.mockyup.server.model.request.user.UpdateUserRequest;
 import com.github.dekaulitz.mockyup.server.service.auth.helper.HashingHelper;
 import com.github.dekaulitz.mockyup.server.service.cms.api.UserService;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -60,7 +61,9 @@ public class UserServiceImpl extends
     if (userEntity == null) {
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
     }
-    modelMapper.map(updateUserRequest, userEntity);
+    userEntity.setAccess(updateUserRequest.getAccess());
+    userEntity.setUsername(updateUserRequest.getUsername());
+    userEntity.setEmail(updateUserRequest.getEmail());
     return this.update(userEntity);
   }
 
@@ -90,7 +93,7 @@ public class UserServiceImpl extends
     userEntity.setPassword(HashingHelper.hashing(userEntity.getPassword()));
     userEntity.setCreatedByUserId(authProfileModel.getId());
     userEntity.setUpdatedByUserId(authProfileModel.getId());
-
+    userEntity.setCreatedDate(new Date());
     return super.save(userEntity);
   }
 }

@@ -1,14 +1,15 @@
 import { defineComponent } from 'vue'
 import { AlertInterface, AlertType } from '@/shared/alert'
-import { BaseResponse } from '@/plugins/webclient/base/BaseService'
-import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
+import { BaseResponse } from '@/service/webclient/base/BaseService'
+import { StorageService } from '@/service/webclient/service/CommonService'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 
 export default defineComponent({
   name: 'BaseComponent',
   data () {
     return {
-      alertAttributes: {} as AlertInterface
+      alertAttributes: { closeable: true } as AlertInterface,
+      showPlaceHolder: true
     }
   },
   methods: {
@@ -17,11 +18,11 @@ export default defineComponent({
     },
     validateResponse (error: any) {
       if (!error.status) {
-        console.log(error)
         this.alertAttributes = {
           show: true,
           alertType: AlertType.ERROR,
-          content: error.message
+          content: error.message,
+          closeable: true
         }
       }
       const statusCode: number = error.response.status

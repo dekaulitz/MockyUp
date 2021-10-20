@@ -1,41 +1,14 @@
-import { BaseResponse } from '@/plugins/webclient/model/ResponseModel'
-import { BaseCrudService } from '@/plugins/webclient/base/BaseService'
-import { WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
-import Qs from 'querystring'
-import { GetUsersParam } from '@/plugins/webclient/model/Users'
-import { AxiosResponse } from 'axios'
+import { BaseCrudService } from '@/service/webclient/base/BaseService'
 import {
   GetProjectParam,
   GetProjectTags,
   ProjectTagsResponse
-} from '@/plugins/webclient/model/Projects'
-
-export const UserService: BaseCrudService = {
-  doPost: async function <UserCreateRequest, BaseResponse> (createRequest: UserCreateRequest): Promise<BaseResponse> {
-    return WebClient.post<UserCreateRequest, AxiosResponse<BaseResponse>>('/v1/users', createRequest)
-      .then(value => {
-        return value.data
-      })
-  },
-  doUpdate<T = never, R = never> (t: T, id:string): Promise<R> {
-    return Promise.resolve(undefined)
-  },
-  getById<T = never> (id: string): Promise<T> {
-    return Promise.resolve(undefined)
-  },
-  getCount: async function (param?: GetUsersParam): Promise<number> {
-    return WebClient.get<BaseResponse<number>>('/v1/users/count?' + Qs.stringify(param))
-      .then(value => {
-        return value.data.data
-      })
-  },
-  getAll: async function <UserCards> (param?: GetUsersParam): Promise<UserCards> {
-    return WebClient.get<BaseResponse<UserCards>>('/v1/users?' + Qs.stringify(param))
-      .then(value => {
-        return value.data.data
-      })
-  }
-}
+} from '@/service/webclient/model/Projects'
+import { WebClient } from '@/service/webclient/service/CommonService'
+import { BaseResponse } from '@/service/webclient/model/ResponseModel'
+import Qs from 'querystring'
+import { AxiosResponse } from 'axios'
+import { GetUsersParam } from '@/service/webclient/model/Users'
 
 export interface ProjectServiceInterface extends BaseCrudService {
   getTags (getProjectTags: GetProjectTags): Promise<ProjectTagsResponse[]>
@@ -72,7 +45,7 @@ export const ProjectService: ProjectServiceInterface = {
         return value.data.data
       })
   },
-  doUpdate: async function <ProjectCreateRequest, BaseResponse> (updateRequest: ProjectCreateRequest, id:string): Promise<BaseResponse> {
+  doUpdate: async function <ProjectCreateRequest, BaseResponse> (updateRequest: ProjectCreateRequest, id: string): Promise<BaseResponse> {
     return WebClient.put<ProjectCreateRequest, AxiosResponse<BaseResponse>>('/v1/projects/' + id, updateRequest)
       .then(value => {
         return value.data

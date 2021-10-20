@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
-import { StorageService, WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
-import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
+import { StorageService } from '@/service/webclient/service/CommonService'
+import { AuthResponse } from '@/service/webclient/model/ResponseModel'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,9 +41,14 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "about" */ '../views/projects/ProjectDetail.vue')
       },
       {
+        path: '/project-detail/:id/contracts/create',
+        name: 'ContractsCreate',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsCreate.vue')
+      },
+      {
         path: '/project-detail/:id/contracts/:contractId',
         name: 'ContractDetail',
-        component: () => import(/* webpackChunkName: "about" */ '../views/contracts/ContractDetail.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsCreate.vue')
       },
       {
         path: '/users',
@@ -59,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/users/:id',
         name: 'UsersDetail',
         component: () => import(/* webpackChunkName: "about" */ '../views/cms/users/UsersDetail.vue')
+      },
+      {
+        path: '/users/:id/edit',
+        name: 'UsersEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/users/UsersEdit.vue')
       },
       {
         path: '/projects',

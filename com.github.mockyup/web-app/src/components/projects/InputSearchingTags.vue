@@ -18,8 +18,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import BaseComponent from '@/shared/base/BaseComponent'
-import { ProjectService } from '@/plugins/webclient/service/CmsService'
-import { GetProjectTags, ProjectTagsResponse } from '@/plugins/webclient/model/Projects'
+import { ProjectService } from '@/service/webclient/service/ProjectService'
+import { GetProjectTags, ProjectTagsResponse } from '@/service/webclient/model/Projects'
 
 export default defineComponent({
   name: 'InputSearchingTags',

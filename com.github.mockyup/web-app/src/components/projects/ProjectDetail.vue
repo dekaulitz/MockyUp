@@ -1,9 +1,9 @@
 <template>
   <div class="page-container">
-    <template v-if="showProjectPlaceHolder">
+    <template v-if="showPlaceHolder">
       <place-holder-container/>
     </template>
-    <div class="holder border-bottom-0" v-if="!showProjectPlaceHolder">
+    <div class="holder border-bottom-0" v-if="!showPlaceHolder">
       <div class="d-flex align-items-center">
         <div class="avatar avatar-md flex-shrink-0">
           <span>{{ $filters.subString(data.projectName, 0, 1).toUpperCase() }}</span>
@@ -15,7 +15,7 @@
       </div>
       <div class="text-secondary mt-1">
         <span v-for="(tag,index) in data.projectTags" :key="index" class="fw-bold">
-          #{{tag}}
+          #{{ tag }}
         </span>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <div v-if="!showContractPlaceHolder">
         <div class="page-title border-bottom mb-2">Contract list</div>
         <div v-for="(contract, index) in contractCards" :key="index">
-         <contract-card :contract-card="contract"/>
+          <contract-card :contract-card="contract"/>
         </div>
       </div>
     </div>
@@ -40,19 +40,19 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProjectService from '@/plugins/webclient/tmp/serice/ProjectService'
-import {
-  ContractCardInterface,
-  ProjectInterface
-} from '@/plugins/webclient/model/ResponseModel'
+import { ContractCardInterface } from '@/service/webclient/model/ResponseModel'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
-import ContractService, { GetContractParam } from '@/plugins/webclient/tmp/serice/ContractService'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import ContractCard from '@/components/cards/ContractCard.vue'
+import BaseViewComponent from '@/shared/base/BaseViewComponent'
+import { ProjectService } from '@/service/webclient/service/ProjectService'
+import { ContractService } from '@/service/webclient/service/ContractService'
+import { ProjectResponse } from '@/service/webclient/model/Projects'
 
 export default defineComponent({
   name: 'ProjectDetail',
+  mixins: [BaseViewComponent],
   components: {
     ContractCard,
     CardBody,
@@ -61,32 +61,26 @@ export default defineComponent({
   },
   data () {
     return {
-      data: {} as ProjectInterface,
-      // contractCards: [] as ContractCardInterface,
       contractCards: [] as ContractCardInterface[],
       showProjectPlaceHolder: true,
-      showContractPlaceHolder: true
+      showContractPlaceHolder: true,
+      service: ProjectService,
+      data: {} as ProjectResponse,
+      contractService: ContractService
     }
   },
-  // components: {
-  //   CardBody,
-  //   CardContainer
-  // },
-  // props: {
-  //   projectCard: { type: Object as PropType<ProjectCardInterface> }
-  // },
   mounted () {
-    ProjectService.getProjectById(this.$route.params.id)
-      .then(baseResponseProject => {
-        const projectDetail = baseResponseProject.data
-        this.data = projectDetail
-        this.showProjectPlaceHolder = false
-        const getContractParam = { projectId: projectDetail.id } as GetContractParam
-        ContractService.getContracts(getContractParam)
-          .then(baseResponseContract => {
-            this.contractCards = baseResponseContract.data
+    this.service.getById(this.$route.params.id)
+      .then(value => {
+        this.data = value
+        this.showPlaceHolder = false
+        this.contractService.getAll()
+          .then(contractRes => {
+            this.contractCards = contractRes
             this.showContractPlaceHolder = false
           })
+      }).catch(reason => {
+        this.validateResponse(reason)
       })
   }
 })

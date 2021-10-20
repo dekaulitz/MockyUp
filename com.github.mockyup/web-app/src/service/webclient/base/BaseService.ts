@@ -1,6 +1,6 @@
-import { AuthResponse, UserCardInterface } from '@/plugins/webclient/model/ResponseModel'
+import { AuthResponse, UserCardInterface } from '@/service/webclient/model/ResponseModel'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { AuthLogin } from '@/plugins/webclient/model/RequestModel'
+import { AuthLogin } from '@/service/webclient/model/RequestModel'
 
 export interface PageableParam {
   page: number

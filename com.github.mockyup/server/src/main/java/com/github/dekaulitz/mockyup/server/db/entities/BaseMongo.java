@@ -33,4 +33,7 @@ public class BaseMongo implements Serializable {
   @DateTimeFormat(pattern = DateTimeConstants.DATE_TIME_FORMAT)
   @JsonDeserialize(using = DateDeserializer.class)
   private Date updatedDate = new Date();
+  @DateTimeFormat(pattern = DateTimeConstants.DATE_TIME_FORMAT)
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date createdDate;
 }

@@ -13,6 +13,7 @@ import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
 import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectService;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
+import java.util.Date;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
     ProjectEntity projectEntity = new ProjectEntity();
     projectEntity.setCreatedByUserId(authProfileModel.getId());
     projectEntity.setUpdatedByUserId(authProfileModel.getId());
+    projectEntity.setCreatedDate(new Date());
     modelMapper.map(createProjectRequest, projectEntity);
     return this.save(projectEntity);
   }
@@ -76,7 +78,8 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
   @Override
   public List<ProjectTagsModel> getProjectTags(
       GetProjectTagsParam getProjectTagsParam) {
-    return this.getMongoTemplate().aggregate(ProjectAggregation.getTaggingAggregation(getProjectTagsParam), "projects",
-        ProjectTagsModel.class).getMappedResults();
+    return this.getMongoTemplate()
+        .aggregate(ProjectAggregation.getTaggingAggregation(getProjectTagsParam), "projects",
+            ProjectTagsModel.class).getMappedResults();
   }
 }

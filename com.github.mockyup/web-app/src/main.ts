@@ -5,10 +5,13 @@ import router from './router'
 import store from './store'
 import 'bootstrap'
 import './assets/styles/app.scss'
-import WebClient from '@/plugins/webclient'
+import WebClient from '@/service/webclient'
 import moment from 'moment'
+import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
 
 const app = createApp(App)
+const accessData = AccessData
+
 app.use(WebClient)
 app.use(store).use(router).mount('#app')
 
@@ -22,6 +25,13 @@ app.config.globalProperties.$filters = {
   localDate (value: string) {
     return moment(value).local().format('MMM Do YY HH:mm:ss')
   },
+  access (access:string):AccessInterface {
+    const translations = accessData
+    if (translations.has(access)) {
+      return translations.get(access)
+    }
+    return undefined
+  },
   subString (value: string, start: number, end: number) {
     if (!value) {
       return ''
@@ -29,7 +39,7 @@ app.config.globalProperties.$filters = {
       return value.substr(start, end)
     }
   },
-  filterUndefined (value: unknown):unknown {
+  filterUndefined (value: unknown): unknown {
     if (!value) {
       return undefined
     } else {

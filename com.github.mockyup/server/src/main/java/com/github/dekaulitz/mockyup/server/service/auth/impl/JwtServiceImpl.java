@@ -27,10 +27,10 @@ public class JwtServiceImpl implements JwtService {
 
   @Value("${com.github.dekaulitz.mockup.auth.secret}")
   private String secret;
-  @Value("${com.github.dekaulitz.mockup.auth.refresh}")
+  @Value("${mock.auth.refresh.time}")
   private Long refreshTime;
-  @Value("${com.github.dekaulitz.mockup.auth.expired}")
-  private Long expiredTime;
+  @Value("${mock.auth.expired.time}")
+  private Long expired;
 
   @Autowired
   private CacheService cacheService;
@@ -41,11 +41,12 @@ public class JwtServiceImpl implements JwtService {
       throw new UnauthorizedException(ResponseCode.USER_DISABLED);
     }
     String jti = UUID.randomUUID().toString();
+    Long expiredTime = expired;
     if (rememberMe) {
-      expiredTime = expiredTime * 7;
+      expiredTime = expiredTime * 100;
     }
     Date canDoRefreshTime = DateUtils.addMilliseconds(new Date(), Math.toIntExact(refreshTime));
-    Date tokenExpireTime = DateUtils.addMilliseconds(new Date(), Math.toIntExact(expiredTime));
+    Date tokenExpireTime = DateUtils.addDays(new Date(), Math.toIntExact(expiredTime));
     //@TODO i think it should more than this that we can keep user data on token
     String token = buildToken(jti, canDoRefreshTime, tokenExpireTime);
     AuthProfileModel authProfileModel = new AuthProfileModel();

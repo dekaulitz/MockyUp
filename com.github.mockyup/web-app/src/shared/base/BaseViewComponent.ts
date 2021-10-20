@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { BaseCrudService } from '@/plugins/webclient/base/BaseService'
+import { BaseCrudService } from '@/service/webclient/base/BaseService'
 import BaseComponent from '@/shared/base/BaseComponent'
 
 export default defineComponent({
@@ -11,8 +11,7 @@ export default defineComponent({
       data: {} as never,
       payloadRequest: {} as never,
       responsePost: {} as never,
-      directionAfterSubmit: {} as never,
-      showPlaceHolder: false
+      directionAfterSubmit: {} as never
     }
   },
   methods: {

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Path } from '@/plugins/webclient/model/openapi/embeddable/OpenApiEmbedded'
+import { Path } from '@/service/webclient/model/openapi/embeddable/OpenApiEmbedded'
 
 export default defineComponent({
   name: 'RequestConfiguration',

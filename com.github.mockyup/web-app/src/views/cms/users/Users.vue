@@ -1,6 +1,6 @@
 <template>
   <page-container>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Users</h1>
       <div class="page-controller ms-auto">
         <router-link class="btn btn-primary" :to="{name:'UsersCreate'}">Create New User
@@ -30,12 +30,12 @@
       <tr v-for="(user,index) in values" :key="index">
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.enabled ? 'active' : 'not active' }}</td>
+        <td>{{ user.enabled ? 'Active' : 'Not Active' }}</td>
         <td>{{ user.updatedDate }}</td>
         <td>
           <div class="d-flex">
             <router-link class="btn btn-primary p-0 px-2 me-2" :to="{
-            name:'ProjectsDetail',
+            name:'UsersDetail',
             params:{id:user.id}}"
             ><span class="bi bi-book"></span></router-link>
             <button class="btn btn-danger p-0 px-2"><span class="bi bi-trash-fill"></span></button>
@@ -54,11 +54,11 @@ import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
 import BasePagingComponent from '@/shared/base/BasePagingComponent'
-import { UserService } from '@/plugins/webclient/service/CmsService'
-import { GetUsersParam, UserCardsResponse } from '@/plugins/webclient/model/Users'
+import { GetUsersParam, UserCardsResponse } from '@/service/webclient/model/Users'
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import UserSortingDropDown from '@/components/sorting/UserSortingDropDown.vue'
+import { UserService } from '@/service/webclient/service/UserService'
 
 export default defineComponent({
   name: 'Users',

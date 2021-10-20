@@ -53,7 +53,6 @@
     </div>
   </nav>
   <div class="container mt-3">
-    <breadcrumb-container class="border-bottom mb-2"/>
     <router-view v-slot="{ Component }">
       <transition appear mode="out-in" name="fade">
         <component :is="Component" />
@@ -66,15 +65,14 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue'
-import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
-import { AuthResponse } from '@/plugins/webclient/model/ResponseModel'
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
-import { StorageService } from '@/plugins/webclient/tmp/serice/CommonService'
-import AuthService from '@/plugins/webclient/tmp/serice/AuthService'
+import { AuthResponse } from '@/service/webclient/model/ResponseModel'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
+import { StorageService } from '@/service/webclient/service/CommonService'
+import AuthService from '@/service/webclient/service/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
 
 export default defineComponent({
-  components: { FooterNavigation, BreadcrumbContainer },
+  components: { FooterNavigation },
   data () {
     return {
       accountUser: {} as AuthResponse

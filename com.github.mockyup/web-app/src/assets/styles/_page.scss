@@ -37,7 +37,12 @@
     width: 50%;
   }
 }
-
+.container-limited {
+  max-width: 1280px;
+}
 .background-none{
   background: none;
+}
+span.fas{
+  margin-right: 0.5rem;
 }

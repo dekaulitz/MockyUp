@@ -11,6 +11,7 @@ import com.github.dekaulitz.mockyup.server.service.cms.api.UserLogLoginService;
 import com.github.dekaulitz.mockyup.server.service.common.api.CacheService;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
 import com.mongodb.client.result.DeleteResult;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -49,6 +50,7 @@ public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEnt
   @Override
   public UserLogLoginEntity save(@Valid @NotNull UserLogLoginEntity userLogLoginEntity)
       throws ServiceException {
+    userLogLoginEntity.setCreatedDate(new Date());
     return mongoTemplate.save(userLogLoginEntity);
   }
 

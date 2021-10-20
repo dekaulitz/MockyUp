@@ -30,7 +30,7 @@ import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import {
   ContractCardInterface
-} from '@/plugins/webclient/model/ResponseModel'
+} from '@/service/webclient/model/ResponseModel'
 
 export default defineComponent({
   name: 'ContractCard',

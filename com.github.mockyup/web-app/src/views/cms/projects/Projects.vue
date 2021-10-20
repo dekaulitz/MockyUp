@@ -4,7 +4,8 @@
       <h1 class="page-title">Projects</h1>
       <div class="page-controller ms-auto">
         <router-link class="btn btn-primary btn-md" :to="{
-            name:'ProjectsCreate'}">Create New Project</router-link>
+            name:'ProjectsCreate'}">Create New Project
+        </router-link>
       </div>
     </div>
     <div class=" d-flex align-items-center mt-2">
@@ -28,7 +29,7 @@
       <tbody>
       <tr v-for="(project,index) in values" :key="index">
         <td>{{ project.projectName }}</td>
-        <td>{{ project.projectTags.join(",") }}</td>
+        <td>{{ project.projectTags.join(',') }}</td>
         <td>{{ project.updatedDate }}</td>
         <td>
           <div class="d-flex">
@@ -42,7 +43,8 @@
       </tr>
       </tbody>
     </table>
-    <pagination-container class="d-flex mt-3 justify-content-end" v-model="parameter.page" :paging-attributes="pagingAttributes" @click="getAllAndCount"/>
+    <pagination-container class="d-flex mt-3 justify-content-end" v-model="parameter.page"
+                          :paging-attributes="pagingAttributes" @click="getAllAndCount"/>
   </page-container>
 </template>
 
@@ -50,12 +52,13 @@
 import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
-import { ProjectService } from '@/plugins/webclient/service/CmsService'
+
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
-import { GetProjectParam, ProjectCardResponse } from '@/plugins/webclient/model/Projects'
+import { GetProjectParam, ProjectCardResponse } from '@/service/webclient/model/Projects'
 import ProjectSortingDropDown from '@/components/sorting/ProjectsSortingDropDown.vue'
 import BasePagingComponent from '@/shared/base/BasePagingComponent'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
+import { ProjectService } from '@/service/webclient/service/ProjectService'
 
 export default defineComponent({
   name: 'Projects',
@@ -63,7 +66,7 @@ export default defineComponent({
   data () {
     return {
       service: ProjectService,
-      values: []as ProjectCardResponse[],
+      values: [] as ProjectCardResponse[],
       parameter: {
         page: 1,
         size: 10,
@@ -71,7 +74,12 @@ export default defineComponent({
       } as GetProjectParam
     }
   },
-  components: { FormInputSearch, ProjectSortingDropDown, PaginationContainer, PageContainer },
+  components: {
+    FormInputSearch,
+    ProjectSortingDropDown,
+    PaginationContainer,
+    PageContainer
+  },
   mounted () {
     this.getAll()
     this.getCount()

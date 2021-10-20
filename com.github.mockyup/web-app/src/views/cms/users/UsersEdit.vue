@@ -3,14 +3,17 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new User</h1>
       <div class="page-controller ms-auto">
-        <form-button class="btn btn-primary w-md" @click.stop.prevent="createNewUser"
-                     :form-button-attribute="formButtonAttributes">Submit New User
+        <form-button class="btn btn-primary w-md" @click.stop.prevent="updateUser"
+                     :form-button-attribute="formButtonAttributes">Update User
         </form-button>
       </div>
     </div>
     <card-container class="mt-3">
       <card-body>
-        <form-group>
+        <div v-if="showPlaceHolder">
+          <place-holder-container/>
+        </div>
+        <form-group v-if="!showPlaceHolder">
           <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
                            @showAlert:alert="closeAlert"/>
           <div class="row">
@@ -27,13 +30,6 @@
                 <form-input class="input-md" id="email" v-model="emailInputAttributes.value"
                             :input-attributes="emailInputAttributes"
                             :event-submitted="emailInputAttributes.formSubmitted"
-                />
-              </form-container>
-              <form-container>
-                <form-label for="password">Password</form-label>
-                <form-input class="input-md" id="password" v-model="passwordInputAttributes.value"
-                            :input-attributes="passwordInputAttributes"
-                            :event-submitted="passwordInputAttributes.formSubmitted"
                 />
               </form-container>
             </div>
@@ -87,7 +83,7 @@
                                      :event-submitted="accessPermissionsInputAttributes.formSubmitted"
                                      value=PROJECTS_READ_WRITE
                 />
-                <form-label>Can Read and Modifier Projects</form-label>
+                <form-label>Can Read and Modified Projects</form-label>
               </form-container>
               <form-container class="form-check">
                 <form-input-checkbox v-model="accessPermissionsInputAttributes.values"
@@ -127,9 +123,11 @@ import FormContainer from '@/shared/form/FormContainer.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
 import FormLabel from '@/shared/form/FormLabel.vue'
 import FormInput from '@/shared/form/FormInput.vue'
-import { UserCreateRequest } from '@/service/webclient/model/Users'
+import { UserDetailResponse, UserUpdateRequest } from '@/service/webclient/model/Users'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
+import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
+import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 
 export default defineComponent({
   name: 'UsersCreate',
@@ -137,7 +135,9 @@ export default defineComponent({
   data () {
     return {
       service: UserService,
-      payloadRequest: {} as UserCreateRequest,
+      payloadRequest: {} as UserUpdateRequest,
+      data: {} as UserDetailResponse,
+      accessList: [] as AccessInterface[],
       directionAfterSubmit: {
         name: 'Users'
       },
@@ -169,22 +169,6 @@ export default defineComponent({
           }
         ]
       } as InputAttribute,
-      passwordInputAttributes: {
-        type: 'password',
-        placeHolder: 'Password',
-        validMessage: 'Looks good !',
-        validations: [
-          {
-            validationType: InputValidationType.REQUIRED,
-            errMessage: 'Please input your password'
-          },
-          {
-            validationType: InputValidationType.Length,
-            minLength: 10,
-            errMessage: 'Minimal 10 characters'
-          }
-        ]
-      } as InputAttribute,
       accessPermissionsInputAttributes: {
         type: 'checkbox',
         validations: [],
@@ -197,6 +181,7 @@ export default defineComponent({
     }
   },
   components: {
+    PlaceHolderContainer,
     FormInputCheckbox,
     AlertContainer,
     FormInput,
@@ -208,28 +193,37 @@ export default defineComponent({
     FormButton,
     PageContainer
   },
+  async mounted () {
+    await this.getByDetail(this.$route.params.id)
+    const accessData = AccessData
+    const user = this.data
+    this.accessPermissionsInputAttributes.values = user.access
+    this.usernameInputAttributes.value = user.username
+    this.emailInputAttributes.value = user.email
+    this.data.access.forEach(access => {
+      if (accessData.has(access)) {
+        this.accessList.push(accessData.get(access))
+      }
+    })
+    this.showPlaceHolder = false
+  },
   methods: {
-    async createNewUser () {
+    updateUser () {
       this.usernameInputAttributes.formSubmitted = true
       this.emailInputAttributes.formSubmitted = true
-      this.passwordInputAttributes.formSubmitted = true
       this.accessPermissionsInputAttributes.formSubmitted = true
       this.formButtonAttributes.isLoading = true
-      if (!this.passwordInputAttributes.isValid || !this.usernameInputAttributes.isValid || !this.emailInputAttributes.isValid) {
+      this.payloadRequest = {
+        username: this.usernameInputAttributes.value,
+        email: this.emailInputAttributes.value,
+        access: this.accessPermissionsInputAttributes.values
+      }
+      if (!this.usernameInputAttributes.isValid || !this.emailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
-        this.payloadRequest = {
-          username: this.usernameInputAttributes.value,
-          password: this.passwordInputAttributes.value,
-          email: this.emailInputAttributes.value,
-          access: this.accessPermissionsInputAttributes.values
-        }
-        await this.createNewData()
         this.formButtonAttributes.isLoading = false
+        this.updateData()
       }
-    },
-    addCheckbox (value: string) {
-      this.accessPermissionsInputAttributes.values.push(value)
     }
   }
 })

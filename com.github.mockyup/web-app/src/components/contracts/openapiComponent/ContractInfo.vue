@@ -64,7 +64,7 @@ import { defineComponent, PropType } from 'vue'
 import {
   ContractProjectInfo,
   OpenApiServer
-} from '@/plugins/webclient/model/openapi/embeddable/OpenApiEmbedded'
+} from '@/service/webclient/model/openapi/embeddable/OpenApiEmbedded'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 

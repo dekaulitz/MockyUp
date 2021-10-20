@@ -1,8 +1,8 @@
 
 import { defineComponent } from 'vue'
-import { PageableParam } from '@/plugins/webclient/model/RequestModel'
+import { PageableParam } from '@/service/webclient/model/RequestModel'
 import { PagingAttributes } from '@/shared/pagination'
-import { BaseCrudService } from '@/plugins/webclient/base/BaseService'
+import { BaseCrudService } from '@/service/webclient/base/BaseService'
 import BaseComponent from '@/shared/base/BaseComponent'
 
 export default defineComponent({
@@ -24,6 +24,7 @@ export default defineComponent({
       this.service.getAll(this.parameter)
         .then(value => {
           this.values = value
+          this.showPlaceHolder = false
         }).catch(reason => {
           this.validateResponse(reason)
         })

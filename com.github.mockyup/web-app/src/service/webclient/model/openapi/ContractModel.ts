@@ -1,7 +1,7 @@
 import {
   ContractProjectInfo, OpenApiComponents, OpenApiServer,
   OpenApiTag, Path
-} from '@/plugins/webclient/model/openapi/embeddable/OpenApiEmbedded'
+} from '@/service/webclient/model/openapi/embeddable/OpenApiEmbedded'
 
 export interface ContractDetail {
   id?: string

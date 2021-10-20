@@ -1,8 +1,8 @@
-import { AuthLogin } from '@/plugins/webclient/model/RequestModel'
-import { AuthResponse, BaseResponse } from '@/plugins/webclient/model/ResponseModel'
-import { StorageService, WebClient } from '@/plugins/webclient/tmp/serice/CommonService'
+import { AuthLogin } from '@/service/webclient/model/RequestModel'
+import { AuthResponse, BaseResponse } from '@/service/webclient/model/ResponseModel'
+import { StorageService, WebClient } from '@/service/webclient/service/CommonService'
 import { AxiosResponse } from 'axios'
-import { StorageKeyType } from '@/plugins/webclient/model/EnumModel'
+import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 
 interface AuthService {
   doLogin (authLogin: AuthLogin): Promise<AuthResponse>

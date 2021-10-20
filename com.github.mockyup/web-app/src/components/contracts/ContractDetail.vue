@@ -46,11 +46,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ContractService from '@/plugins/webclient/tmp/serice/ContractService'
-import { ContractDetail } from '@/plugins/webclient/model/openapi/ContractModel'
+import { ContractDetail } from '@/service/webclient/model/openapi/ContractModel'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 import ContractInfo from '@/components/contracts/openapiComponent/ContractInfo.vue'
 import RequestConfiguration from '@/components/contracts/openapiComponent/RequestConfiguration.vue'
+import { ContractService } from '@/service/webclient/service/ContractService'
 
 export default defineComponent({
   name: 'ContractDetail',
@@ -75,7 +75,7 @@ export default defineComponent({
   //   projectCard: { type: Object as PropType<ProjectCardInterface> }
   // },
   mounted () {
-    ContractService.getContractById(this.$route.params.contractId)
+    ContractService.getById(this.$route.params.contractId)
       .then(value => {
         this.showContractPlaceHolder = false
         this.data = value.data
