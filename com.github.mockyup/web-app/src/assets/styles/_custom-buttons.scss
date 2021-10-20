@@ -1,0 +1,22 @@
+@import "~bootstrap/scss/buttons";
+
+.btn-outline-default{
+  border-color: #c4c4c4;
+}
+
+.button-container>button:not(:last-child),a:not(:last-child){
+  margin-right: 5px;
+}
+
+.btn-md{
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+.w-md{
+  width: 200px;
+}
+
+.w-sm{
+  width: 150px;
+}

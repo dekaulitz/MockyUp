@@ -13,9 +13,8 @@ Describe the changes, what is the impact into the application
 
 ## Mandatory Checklist:
 
-- [ ] Important comments are added to all hard-to-understand areas.
+- [ ] Important comments are adding to all hard-to-understand areas.
 - [ ] Add unit test.
-- [ ] All new and existing tests passed.
 
 ## My changes ...
 
