@@ -17,21 +17,21 @@
             <div class="col-md-8">
               <form-container>
                 <form-label for="username">Username</form-label>
-                <form-input class="input-md" id="username" v-model="usernameInputAttributes.value"
+                <form-input class="input-w-md" id="username" v-model="usernameInputAttributes.value"
                             :input-attributes="usernameInputAttributes"
                             :event-submitted="usernameInputAttributes.formSubmitted"
                 />
               </form-container>
               <form-container>
                 <form-label for="email">Email</form-label>
-                <form-input class="input-md" id="email" v-model="emailInputAttributes.value"
+                <form-input class="input-w-md" id="email" v-model="emailInputAttributes.value"
                             :input-attributes="emailInputAttributes"
                             :event-submitted="emailInputAttributes.formSubmitted"
                 />
               </form-container>
               <form-container>
                 <form-label for="password">Password</form-label>
-                <form-input class="input-md" id="password" v-model="passwordInputAttributes.value"
+                <form-input class="input-w-md" id="password" v-model="passwordInputAttributes.value"
                             :input-attributes="passwordInputAttributes"
                             :event-submitted="passwordInputAttributes.formSubmitted"
                 />

@@ -1,5 +1,5 @@
 <template>
-  <dropdown-container>
+  <dropdown-container v-bind="$attrs">
     <dropdown-button id="sortBy" class="btn btn-outline-default btn-md w-sm text-start d-inline-flex">
       <span>{{ defaultSorting }}</span><span class="ms-auto caret"></span>
     </dropdown-button>

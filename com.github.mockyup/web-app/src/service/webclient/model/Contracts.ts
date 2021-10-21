@@ -8,12 +8,12 @@ import {
 import { PageableParam } from '@/service/webclient/model/RequestModel'
 
 export interface GetContractParam extends PageableParam {
-  userNameOrEmail?: string
+  projectId?: string
 }
 
 export interface ContractCreateRequest {
   projectId: string
-  isPrivate: boolean
+  private: boolean
   spec: any
 }
 
@@ -27,6 +27,7 @@ export interface ContractCard {
 
 export interface ContractDetail {
   id?: string
+  createdDate?:string
   projectId?: string
   private: boolean
   openApiVersion?: string,

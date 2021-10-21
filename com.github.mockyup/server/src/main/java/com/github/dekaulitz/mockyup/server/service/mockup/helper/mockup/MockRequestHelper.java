@@ -32,14 +32,14 @@ public class MockRequestHelper {
       throws ServiceException {
     Map<String, String> headers = mockRequestAttributeModel.getHeaders();
     Map<String, String[]> parameters = mockRequestAttributeModel.getParameters();
-    String id = mockRequestAttributeModel.getContractId();
+    String id = mockRequestAttributeModel.getMockEndpoint();
 
     String path = mockRequestAttributeModel.getRequestPath();
     String body = mockRequestAttributeModel.getBody();
     for (OpenApiPathEmbedded pathInfo : pathInfos) {
       if (null == pathInfo.getOperation() || null == pathInfo.getOperation().getMockup()) {
         throw new ServiceException(ResponseCode.MOCK_NOT_FOUND,
-            " contractId: " + id + " with path: " + path + " method: ");
+            " mockEndpoint: " + id + " with path: " + path + " method: ");
       }
       MockUpRequestEmbedded mockingPath = pathInfo
           .getOperation().getMockup();

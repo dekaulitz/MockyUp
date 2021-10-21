@@ -3,8 +3,8 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new User</h1>
       <div class="page-controller ms-auto">
-        <form-button class="btn btn-primary w-md" @click.stop.prevent="updateUser"
-                     :form-button-attribute="formButtonAttributes">Update User
+        <form-button class="btn btn-primary w-md btn-md" @click.stop.prevent="updateUser"
+                     :form-button-attribute="formButtonAttributes"><span class="fa fa-save"/> Update User
         </form-button>
       </div>
     </div>
@@ -20,14 +20,14 @@
             <div class="col-md-8">
               <form-container>
                 <form-label for="username">Username</form-label>
-                <form-input class="input-md" id="username" v-model="usernameInputAttributes.value"
+                <form-input class="input-w-md" id="username" v-model="usernameInputAttributes.value"
                             :input-attributes="usernameInputAttributes"
                             :event-submitted="usernameInputAttributes.formSubmitted"
                 />
               </form-container>
               <form-container>
                 <form-label for="email">Email</form-label>
-                <form-input class="input-md" id="email" v-model="emailInputAttributes.value"
+                <form-input class="input-w-md" id="email" v-model="emailInputAttributes.value"
                             :input-attributes="emailInputAttributes"
                             :event-submitted="emailInputAttributes.formSubmitted"
                 />

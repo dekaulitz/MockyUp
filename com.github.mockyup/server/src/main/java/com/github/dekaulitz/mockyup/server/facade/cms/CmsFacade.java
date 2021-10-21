@@ -113,6 +113,11 @@ public class CmsFacade extends WithAuthService {
     return projectContractService.getContractCards(getProjectContractParam);
   }
 
+  public long getCount(@Valid GetProjectContractParam getProjectContractParam)
+      throws ServiceException {
+    return projectContractService.getCount(getProjectContractParam);
+  }
+
   public ProjectContractEntity getByContractId(String contractId) throws ServiceException {
     ProjectContractEntity projectContractEntity = projectContractService.getById(contractId,
         ProjectContractEntity.class);
@@ -134,4 +139,6 @@ public class CmsFacade extends WithAuthService {
     return projectContractService.updateContract(id, updateProjectContractRequest,
         authProfileModel);
   }
+
+
 }

@@ -41,7 +41,7 @@ export default defineComponent({
   > .editor-flag {
     display: none;
     position: absolute;
-    right: -1rem;
+    right: -1.25rem;
   }
 
   &:hover {

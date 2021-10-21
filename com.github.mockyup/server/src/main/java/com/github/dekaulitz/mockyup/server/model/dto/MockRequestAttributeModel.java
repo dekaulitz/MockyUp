@@ -20,7 +20,7 @@ import org.apache.http.entity.ContentType;
 public class MockRequestAttributeModel extends BaseModel {
 
   @NotBlank
-  private String contractId;
+  private String mockEndpoint;
   @NotBlank
   private String requestPath;
   private Map<String, String> headers;

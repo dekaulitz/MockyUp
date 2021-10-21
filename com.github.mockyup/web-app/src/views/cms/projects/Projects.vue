@@ -4,14 +4,16 @@
       <h1 class="page-title">Projects</h1>
       <div class="page-controller ms-auto">
         <router-link class="btn btn-primary btn-md" :to="{
-            name:'ProjectsCreate'}">Create New Project
+            name:'ProjectsCreate'}"><span class="fas fa-plus"/> New Project
         </router-link>
       </div>
     </div>
     <div class=" d-flex align-items-center mt-2">
       <div class="me-auto d-flex">
-        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.projectName"/>
-        <button class="btn btn-primary btn-md w-sm" @click="searching">Search</button>
+        <form-input-search class="me-2 flex-shrink-1 input-w-sm input-md"
+                           v-model="parameter.projectName"/>
+        <button class="btn btn-primary btn-md w-sm" @click="searching"><span class="fas fa-search"/>Search
+        </button>
       </div>
       <div class="ms-auto d-inline-flex">
         <project-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>

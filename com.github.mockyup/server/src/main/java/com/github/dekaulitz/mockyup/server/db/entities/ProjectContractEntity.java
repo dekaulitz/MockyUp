@@ -35,7 +35,8 @@ public class ProjectContractEntity extends BaseMongo implements Serializable {
   @NotNull
   private String projectId;
   private boolean isPrivate;
-
+  @NotNull
+  private String mockEndpoint;
   private String openApiVersion;
   @Valid
   private OpenApiProjectInfoEmbedded info;

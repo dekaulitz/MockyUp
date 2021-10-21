@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.server.model.request.contract;
 
 import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,6 @@ public class UpdateProjectContractRequest extends BaseModel {
 
   private boolean isPrivate;
 
-  private Object spec;
+  private LinkedHashMap<String,Object> spec;
 
 }

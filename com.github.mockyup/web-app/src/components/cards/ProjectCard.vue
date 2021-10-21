@@ -6,15 +6,17 @@
       </div>
       <div class="flex-row ms-2 project-card-description">
         <div>
-          <router-link :to="'/project-detail/'+projectCard.id" class="card-title">{{ projectCard.projectName }}</router-link>
+          <router-link :to="'/project-detail/'+projectCard.id" class="card-title">
+            {{ projectCard.projectName }}
+          </router-link>
         </div>
-        <span class="card-subtitle">{{ projectCard.projectDescription.substr(0, 50) }}..</span>
+        <small class="card-subtitle">Project ID {{ projectCard.id }}</small>
       </div>
       <div class="justify-content-start">
         <span class="fw-normal">{{ projectCard.projectTags.join(', ') }}</span>
       </div>
       <div class="ms-auto">
-       Last update {{ $filters.localDate(projectCard.updatedDate) }}
+        Last update {{ $filters.localDate(projectCard.updatedDate) }}
       </div>
     </card-body>
   </card-container>

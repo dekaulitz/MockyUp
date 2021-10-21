@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "about" */ '../views/projects/Projects.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/dashboard/ProjectsDashboard.vue')
       },
       {
         path: '/project-detail/:id',
@@ -48,7 +48,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/project-detail/:id/contracts/:contractId',
         name: 'ContractDetail',
-        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsCreate.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractDetail.vue')
+      },
+      {
+        path: '/project-detail/:id/contracts/:contractId/swagger-ui',
+        name: 'SwaggerUI',
+        component: () => import(/* webpackChunkName: "about" */ '../components/contracts/SwaggerUI.vue')
       },
       {
         path: '/users',

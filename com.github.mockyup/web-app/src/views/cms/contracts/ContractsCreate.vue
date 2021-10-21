@@ -3,26 +3,25 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create New Contract</h1>
       <div class="page-controller ms-auto">
-        <div class="d-inline-flex align-content-center  justify-content-center">
-          <div class="me-3 ">
-            <form-container class="form-check d-inline-flex pt-2">
-              <form-input-checkbox v-model="isPrivateFormAttribute.value"
-                                   :input-attributes="isPrivateFormAttribute"
-                                   :event-submitted="isPrivateFormAttribute.formSubmitted"
-                                   value=true
-              />
-              <form-label class="ms-2"><span class="fas fa-lock"/>Private Project</form-label>
-            </form-container>
-          </div>
-          <form-button class="btn btn-primary btn-md" @click.stop.prevent="createNewContracts"
-                       :form-button-attribute="formButtonAttributes">Submit New Contract
+        <div class="d-inline-flex align-items-center  justify-content-center">
+          <form-container class="form-check d-inline-flex me-3">
+            <form-input-checkbox class="" v-model="isPrivateFormAttribute.value"
+                                 :input-attributes="isPrivateFormAttribute"
+                                 :event-submitted="isPrivateFormAttribute.formSubmitted"
+                                 value=true
+            />
+            <form-label class="ms-2 mb-0"><span class="fas fa-lock"/>Private Project</form-label>
+          </form-container>
+          <form-button class="btn btn-primary btn-md " @click.stop.prevent="createNewContracts"
+                       :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/> Submit New Contract
           </form-button>
         </div>
       </div>
     </div>
     <div class="mt-3">
       <div class="row">
-        <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes" @showAlert:alert="closeAlert"/>
+        <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
+                         @showAlert:alert="closeAlert"/>
         <div class="col-md-6">
           <div class="d-flex holder">
             <h5 class="page-title ">OpenApi Spec (json)</h5>
@@ -97,7 +96,7 @@ export default defineComponent({
     createNewContracts () {
       this.isPrivateFormAttribute.formSubmitted = true
       this.payloadRequest = {
-        isPrivate: this.isPrivateFormAttribute.value,
+        private: this.isPrivateFormAttribute.value,
         projectId: this.$route.params.id,
         spec: JSON.parse(this.contract)
       } as ContractCreateRequest

@@ -22,7 +22,7 @@
     <div class="page-body mt-3 mb-3">
       <card-container class="mb-3">
         <card-body>
-          <div class="text-secondary mb-3">{{ data.projectDescription }}</div>
+          <p  class="text-secondary mb-3" v-html="data.projectDescription"></p>
         </card-body>
       </card-container>
       <template v-if="showContractPlaceHolder">
@@ -49,6 +49,7 @@ import BaseViewComponent from '@/shared/base/BaseViewComponent'
 import { ProjectService } from '@/service/webclient/service/ProjectService'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import { ProjectResponse } from '@/service/webclient/model/Projects'
+import { GetContractParam } from '@/service/webclient/model/Contracts'
 
 export default defineComponent({
   name: 'ProjectDetail',
@@ -66,7 +67,13 @@ export default defineComponent({
       showContractPlaceHolder: true,
       service: ProjectService,
       data: {} as ProjectResponse,
-      contractService: ContractService
+      contractService: ContractService,
+      getContractParam: {
+        page: 1,
+        size: 10,
+        sort: 'id:desc',
+        projectId: this.$route.params.id
+      } as GetContractParam
     }
   },
   mounted () {
@@ -74,7 +81,7 @@ export default defineComponent({
       .then(value => {
         this.data = value
         this.showPlaceHolder = false
-        this.contractService.getAll()
+        this.contractService.getAll(this.getContractParam)
           .then(contractRes => {
             this.contractCards = contractRes
             this.showContractPlaceHolder = false

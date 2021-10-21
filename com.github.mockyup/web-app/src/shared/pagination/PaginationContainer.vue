@@ -2,7 +2,7 @@
   <nav aria-label="Page navigation">
     <ul class="pagination">
       <li class="page-item">
-        <button class="page-link" aria-label="Previous" v-on:click="$emit('update:modelValue',
+        <button class="page-link btn-md" aria-label="Previous" v-on:click="$emit('update:modelValue',
          setCurrentPage(currentPage-1))">
           <span aria-hidden="true">&laquo;</span>
         </button>
@@ -15,14 +15,14 @@
           </span>
         </template>
         <template v-else>
-          <button class="page-link active"
+          <button class="page-link active btn-md"
                   v-on:click="$emit('update:modelValue',setCurrentPage(value))">
             {{ value }}
           </button>
         </template>
       </li>
       <li class="page-item">
-        <button class="page-link" aria-label="Next" v-on:click="$emit('update:modelValue',
+        <button class="page-link btn-md" aria-label="Next" v-on:click="$emit('update:modelValue',
          setCurrentPage(currentPage+1))">
           <span aria-hidden="true">&raquo;</span>
         </button>

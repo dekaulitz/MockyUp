@@ -4,9 +4,21 @@ import { BaseResponse } from '@/service/webclient/model/ResponseModel'
 import { AxiosResponse } from 'axios'
 import { WebClient } from '@/service/webclient/service/CommonService'
 import Qs from 'querystring'
-import { GetContractParam } from '@/service/webclient/model/Contracts'
+import { ContractDetail, GetContractParam } from '@/service/webclient/model/Contracts'
 
-export const ContractService: BaseCrudService = {
+export interface ContractServiceInterface extends BaseCrudService{
+  getAll<T = never>(parameter?:never): Promise<T>;
+
+  getCount(parameter?:never): Promise<number>;
+
+  getById<ContractDetail>(id:string): Promise<ContractDetail>;
+
+  doPost<T = never, R = never> (t:T): Promise<R>
+
+  doUpdate<T = never, R = never> (t:T, id:string): Promise<R>
+}
+
+export const ContractService :ContractServiceInterface = {
   doPost: async function <ContractCreateRequest, BaseResponse> (createRequest: ContractCreateRequest): Promise<BaseResponse> {
     return WebClient.post<ContractCreateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts', createRequest)
       .then(value => {

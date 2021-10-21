@@ -3,14 +3,14 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Users</h1>
       <div class="page-controller ms-auto">
-        <router-link class="btn btn-primary" :to="{name:'UsersCreate'}">Create New User
+        <router-link class="btn btn-primary btn-md " :to="{name:'UsersCreate'}"><span class="fas fa-plus"/> New User
         </router-link>
       </div>
     </div>
     <div class="holder d-flex align-items-center mb-3">
       <div class="me-auto d-inline-flex">
-        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.userNameOrEmail"/>
-        <button class="btn btn-primary btn-md w-sm" @click="searching">Search</button>
+        <form-input-search class="me-2 flex-shrink-1 input-w-sm input-md" v-model="parameter.userNameOrEmail"/>
+        <button class="btn btn-primary btn-md w-sm" @click="searching"><span class="fas fa-search"/> Search</button>
       </div>
       <div class="ms-auto d-inline-flex">
         <user-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>

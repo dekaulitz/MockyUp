@@ -1,5 +1,7 @@
 package com.github.dekaulitz.mockyup.server.controllers.cms;
 
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.COUNT;
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECTS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECT_CONTRACTS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.V1;
 
@@ -8,6 +10,7 @@ import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.facade.cms.CmsFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
+import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.request.contract.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.model.request.contract.UpdateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.model.response.ResponseModel;
@@ -63,6 +66,13 @@ public class ContractController extends BaseController {
         ResponseModel.initSuccessResponse(
             this.cmsFacade.updateContract(id, updateProjectContractRequest),
             mandatoryModel));
+  }
+  @PreAuthorize("hasAnyAuthority('PROJECTS_READ_WRITE','PROJECTS_READ')")
+  @GetMapping(value = PROJECT_CONTRACTS + COUNT, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> getCount(@ModelAttribute MandatoryModel mandatoryModel,
+      @Valid GetProjectContractParam getProjectContractParam) throws ServiceException {
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(this.cmsFacade.getCount(getProjectContractParam), mandatoryModel));
   }
 
   @PreAuthorize("hasAnyAuthority('PROJECT_CONTRACTS_READ','PROJECT_CONTRACTS_READ_WRITE')")

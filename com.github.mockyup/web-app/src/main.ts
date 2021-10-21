@@ -32,6 +32,9 @@ app.config.globalProperties.$filters = {
     }
     return undefined
   },
+  capitalizeFirstLetter (value:string) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  },
   subString (value: string, start: number, end: number) {
     if (!value) {
       return ''
