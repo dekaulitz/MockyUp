@@ -1,6 +1,6 @@
 import {
   ContractProjectInfo,
-  OpenApiComponents,
+  Component,
   OpenApiServer,
   OpenApiTag,
   Path
@@ -12,6 +12,11 @@ export interface GetContractParam extends PageableParam {
 }
 
 export interface ContractCreateRequest {
+  projectId: string
+  private: boolean
+  spec: any
+}
+export interface ContractUpdateRequest {
   projectId: string
   private: boolean
   spec: any
@@ -36,6 +41,6 @@ export interface ContractDetail {
   security?: Map<string, string[]>
   paths?: Path[]
   tags?: OpenApiTag[]
-  components?: OpenApiComponents
+  components?: Component
   rawSpecs?: string
 }

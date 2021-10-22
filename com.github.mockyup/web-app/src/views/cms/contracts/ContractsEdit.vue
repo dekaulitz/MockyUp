@@ -1,7 +1,7 @@
 <template>
   <contract-page-container>
     <div class="d-flex align-items-center holder mt-2">
-      <h1 class="page-title">Create New Contract</h1>
+      <h1 class="page-title">Update Contract</h1>
       <div class="page-controller ms-auto">
         <div class="d-inline-flex align-items-center  justify-content-center">
           <form-container class="form-check d-inline-flex me-3">
@@ -12,8 +12,9 @@
             />
             <form-label class="ms-2 mb-0"><span class="fas fa-lock"/>Private Project</form-label>
           </form-container>
-          <form-button class="btn btn-primary btn-md " @click.stop.prevent="createNewContracts"
-                       :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/> Submit New Contract
+          <form-button class="btn btn-primary btn-md w-md" @click.stop.prevent="updateContract"
+                       :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/>
+            Update Contract
           </form-button>
         </div>
       </div>
@@ -25,10 +26,9 @@
         <div class="col-md-6">
           <div class="d-flex holder">
             <h5 class="page-title ">OpenApi Spec (json)</h5>
-            <form-button class="btn btn-primary btn-sm ms-auto" @click="initTemplateContract"
-                         :form-button-attribute="formButtonAttributes"><span class="fas fa-copy"/>
+            <button class="btn btn-primary btn-sm ms-auto" @click="initTemplateContract"><span class="fas fa-copy"/>
               Init Template Contract
-            </form-button>
+            </button>
           </div>
           <v-ace-editor v-model:value="contract" id="code-editor" lang="json" theme="github"/>
         </div>
@@ -56,7 +56,7 @@ import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import FormLabel from '@/shared/form/FormLabel.vue'
 import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
-import { ContractCreateRequest } from '@/service/webclient/model/Contracts'
+import { ContractDetail, ContractUpdateRequest } from '@/service/webclient/model/Contracts'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 
 export default defineComponent({
@@ -68,9 +68,11 @@ export default defineComponent({
       contract: '{\n' +
         '    \n' +
         '}',
+      data: {} as ContractDetail,
       directionAfterSubmit: {
-        name: 'ProjectsDetail',
-        id: this.$route.params.id
+        name: 'ContractDetail',
+        id: this.$route.params.id,
+        contractId: this.$route.params.contractId
       },
       isPrivateFormAttribute: {
         type: 'checkbox',
@@ -92,16 +94,33 @@ export default defineComponent({
     ContractPageContainer,
     FormButton
   },
+  mounted () {
+    this.service.getById(this.$route.params.contractId)
+      .then(value => {
+        this.data = value
+        this.isPrivateFormAttribute.value = this.data.private
+        this.contract = JSON.stringify(JSON.parse(this.data.rawSpecs), null, '\t')
+      }).catch(reason => {
+        this.validateResponse(reason)
+      })
+  },
   methods: {
-    createNewContracts () {
+    async updateContract () {
       this.isPrivateFormAttribute.formSubmitted = true
+      this.formButtonAttributes.isLoading = true
       this.payloadRequest = {
         private: this.isPrivateFormAttribute.value,
         projectId: this.$route.params.id,
         spec: JSON.parse(this.contract)
-      } as ContractCreateRequest
-      this.formButtonAttributes.isLoading = false
-      this.createNewData()
+      } as ContractUpdateRequest
+      this.service.doUpdate(this.payloadRequest, this.$route.params.contractId)
+        .then(value => {
+          this.formButtonAttributes.isLoading = false
+          this.$router.push(this.directionAfterSubmit)
+        }).catch(reason => {
+          this.formButtonAttributes.isLoading = false
+          this.validateResponse(reason)
+        })
     },
     initTemplateContract () {
       this.contract = JSON.stringify(defaultContract, null, '\t')

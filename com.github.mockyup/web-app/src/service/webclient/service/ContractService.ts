@@ -4,7 +4,11 @@ import { BaseResponse } from '@/service/webclient/model/ResponseModel'
 import { AxiosResponse } from 'axios'
 import { WebClient } from '@/service/webclient/service/CommonService'
 import Qs from 'querystring'
-import { ContractDetail, GetContractParam } from '@/service/webclient/model/Contracts'
+import {
+  ContractDetail,
+  ContractUpdateRequest,
+  GetContractParam
+} from '@/service/webclient/model/Contracts'
 
 export interface ContractServiceInterface extends BaseCrudService{
   getAll<T = never>(parameter?:never): Promise<T>;
@@ -25,8 +29,11 @@ export const ContractService :ContractServiceInterface = {
         return value.data
       })
   },
-  doUpdate<T = never, R = never> (t: T, id: string): Promise<R> {
-    return Promise.resolve(undefined)
+  doUpdate: async function <ContractUpdateRequest, BaseResponse> (updateRequest: ContractUpdateRequest, id:string): Promise<BaseResponse> {
+    return WebClient.put<ContractUpdateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts/' + id, updateRequest)
+      .then(value => {
+        return value.data
+      })
   },
   getAll<ContractCard> (param: GetContractParam): Promise<ContractCard> {
     return WebClient.get<BaseResponse<ContractCard>>('/v1/project-contracts?' + Qs.stringify(param))

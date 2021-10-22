@@ -63,7 +63,7 @@ export interface Schema {
   required?: string[]
   type?: string
   not?: Schema
-  properties?: Map<string, Schema>
+  properties?: unknown
   additionalProperties?: unknown
   description?: string
   format?: string
@@ -96,6 +96,30 @@ export interface RequestBody {
   extensions?: Map<string, unknown>
   $ref?: string
 }
+export interface Headers{
+  description?:string
+  $ref?:string
+  required?:string
+  deprecated?:string
+  style?:string
+  explode?:boolean
+  schema?:Schema
+  examples?:Map<string,unknown>
+  example?:unknown
+  content?:Content[]
+  extensions?:Map<string,unknown>
+}
+
+export interface Response{
+  statusCode?:number
+  name?:string
+  description?:string
+  headers?:Map<string,Headers>
+  content?:Content[]
+  links?:Map<string,unknown>
+  extensions?:Map<string,unknown>
+  $ref?:string
+}
 
 export interface Parameter {
   name?: string
@@ -123,7 +147,7 @@ export interface Operation {
   operationId?: string
   parameters?: Parameter[]
   requestBody?: RequestBody
-  responses?: unknown
+  responses?: Response
   callbacks?: unknown
   deprecated?: boolean
   security?: unknown
@@ -142,7 +166,7 @@ export interface Path {
   $ref?: string
 }
 
-export interface OpenApiComponents {
+export interface Component {
   schemas?: Map<string, Schema>
   responses?: unknown[]
   parameters?: Map<string, unknown>

@@ -22,8 +22,9 @@
           class="btn btn-primary btn-sm"><span
           class="fas fa-fire"></span>Swagger UI
         </router-link>
-        <router-link :to="{name:'ProjectsEdit', params:{id:$route.params.id}}"
-                     class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Edit
+        <router-link
+          :to="{name:'ContractEdit', params:{id:$route.params.id,contractId:$route.params.contractId}}"
+          class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Edit
         </router-link>
       </div>
     </div>
@@ -43,13 +44,7 @@
         {{ data.security }}
       </template>
       <template v-if="data.paths">
-        <request-configuration :paths="data.paths"/>
-      </template>
-      <template v-if="data.components">
-        <h4>Components</h4>
-        <ul>
-          <li v-for="(component,index) in data.components" :key="index">{{ component }}</li>
-        </ul>
+        <request-configuration :paths="data.paths" :components="data.components"/>
       </template>
     </div>
   </page-container>

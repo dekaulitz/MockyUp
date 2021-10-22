@@ -51,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractDetail.vue')
       },
       {
+        path: '/project-detail/:id/contracts/:contractId/edit',
+        name: 'ContractEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsEdit.vue')
+      },
+      {
         path: '/project-detail/:id/contracts/:contractId/swagger-ui',
         name: 'SwaggerUI',
         component: () => import(/* webpackChunkName: "about" */ '../components/contracts/SwaggerUI.vue')

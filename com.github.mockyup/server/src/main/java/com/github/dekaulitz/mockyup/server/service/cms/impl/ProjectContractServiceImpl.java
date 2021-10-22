@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -85,11 +86,16 @@ public class ProjectContractServiceImpl extends
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
           "project not found id: " + updateProjectContractRequest.getProjectId());
     }
-    ProjectContractEntity projectContractEntity = new ProjectContractEntity();
+    ProjectContractEntity projectContractEntity = this.getById(id, ProjectContractEntity.class);
+    if (projectContractEntity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "contract not found id: " + id);
+    }
+    projectContractEntity.setPrivate(updateProjectContractRequest.isPrivate());
     projectContractEntity.setUpdatedByUserId(authProfileModel.getId());
     initProjectContract(projectContractEntity, updateProjectContractRequest.getProjectId(),
         updateProjectContractRequest.getSpec());
-    return this.save(projectContractEntity);
+    return this.update(projectContractEntity);
   }
 
   @Override
@@ -114,26 +120,40 @@ public class ProjectContractServiceImpl extends
       throws ServiceException {
     try {
       LinkedHashMap<String, Object> server = new LinkedHashMap<>();
-      String mockEndpoint = UUID.randomUUID().toString();
+      String mockEndpoint =
+          StringUtils.isBlank(projectContractEntity.getMockEndpoint()) ? UUID.randomUUID()
+              .toString() : projectContractEntity.getMockEndpoint();
       server.put("url", serverHost + ApplicationConstants.MOCK_REQUEST_PREFIX + mockEndpoint
           + ApplicationConstants.MOCK_REQUEST_ID_PREFIX);
       server.put("description", "Mockup host");
+      boolean mockupDefined = false;
       if (spec.containsKey("servers")) {
         List<LinkedHashMap<String, Object>> servers = JsonMapper.mapper()
             .convertValue(spec.get("servers"),
                 new TypeReference<List<LinkedHashMap<String, Object>>>() {
                 });
-        servers.add(server);
-        spec.put("servers", servers);
+        for (LinkedHashMap<String, Object> stringObjectLinkedHashMap : servers) {
+          if (stringObjectLinkedHashMap.containsKey("url")) {
+            String url = (String) stringObjectLinkedHashMap.get("url");
+            if (url.contains(mockEndpoint)) {
+              mockupDefined = true;
+              break;
+            }
+          }
+        }
+        if (!mockupDefined) {
+          servers.add(server);
+          spec.put("servers", servers);
+        }
       } else {
         spec.put("servers", Collections.singletonList(server));
       }
+      projectContractEntity.setMockEndpoint(mockEndpoint);
       SwaggerParseResult result = new OpenAPIParser().readContents(
           JsonMapper.mapper().writeValueAsString(spec), null,
           null);
       OpenAPI openApi = result.getOpenAPI();
       projectContractEntity.setProjectId(projectId);
-      projectContractEntity.setMockEndpoint(mockEndpoint);
       projectContractEntity.setOpenApiVersion(openApi.getOpenapi());
       projectContractEntity
           .setRawSpecs(
