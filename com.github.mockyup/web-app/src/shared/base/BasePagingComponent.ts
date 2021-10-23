@@ -11,7 +11,7 @@ export default defineComponent({
   data () {
     return {
       parameter: {} as PageableParam,
-      values: [] as never,
+      data: [] as never,
       pagingAttributes: {
         pageSize: 10,
         totalData: 0
@@ -23,8 +23,7 @@ export default defineComponent({
     getAll () {
       this.service.getAll(this.parameter)
         .then(value => {
-          this.values = value
-          this.showPlaceHolder = false
+          this.data = value
         }).catch(reason => {
           this.validateResponse(reason)
         })
@@ -33,6 +32,14 @@ export default defineComponent({
       this.service.getCount(this.parameter)
         .then(value => {
           this.pagingAttributes.totalData = value
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
+    },
+    deleteById (id:string) {
+      this.service.deleteById(id)
+        .then(value => {
+          this.getAllAndCount()
         }).catch(reason => {
           this.validateResponse(reason)
         })

@@ -115,6 +115,17 @@ public class ProjectContractServiceImpl extends
   }
 
 
+  @Override
+  public void deleteById(String id) throws ServiceException {
+    ProjectContractEntity entity = getMongoTemplate().findById(id, ProjectContractEntity.class);
+    if (entity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "project contract not found id: " + id);
+    }
+    this.delete(entity);
+  }
+
+
   private void initProjectContract(ProjectContractEntity projectContractEntity,
       String projectId, LinkedHashMap<String, Object> spec)
       throws ServiceException {

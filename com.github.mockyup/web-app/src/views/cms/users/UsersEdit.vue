@@ -13,10 +13,10 @@
     </div>
     <card-container class="mt-3">
       <card-body>
-        <div v-if="showPlaceHolder">
+        <div v-if="placeHolderActive">
           <place-holder-container/>
         </div>
-        <form-group v-if="!showPlaceHolder">
+        <form-group v-if="!placeHolderActive">
           <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
                            @showAlert:alert="closeAlert"/>
           <div class="row">
@@ -36,26 +36,7 @@
                 />
               </form-container>
             </div>
-            <div class="col-md-3">
-              <form-label>Access Permissions:</form-label>
-              <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value=MOCKS_READ
-                />
-                <form-label>Can Read Mocks</form-label>
-              </form-container>
-              <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ_WRITE"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value="MOCKS_READ_WRITE"
-                />
-                <form-label>Can Read and Modified Mocks</form-label>
-              </form-container>
+            <div class="col-md-4">
               <form-container class="form-check">
                 <form-input-checkbox v-model="accessPermissionsInputAttributes.values"
                                      :input-attributes="accessPermissionsInputAttributes"
@@ -200,7 +181,7 @@ export default defineComponent({
     PageContainer
   },
   async mounted () {
-    await this.getByDetail(this.$route.params.id)
+    await this.getDetail(this.$route.params.id)
     this.breadCrumbAttributes = [
       {
         label: 'User',
@@ -230,15 +211,15 @@ export default defineComponent({
         this.accessList.push(accessData.get(access))
       }
     })
-    this.showPlaceHolder = false
+    this.placeHolderActive = false
   },
   methods: {
-    updateUser () {
+    async updateUser () {
       this.usernameInputAttributes.formSubmitted = true
       this.emailInputAttributes.formSubmitted = true
       this.accessPermissionsInputAttributes.formSubmitted = true
       this.formButtonAttributes.isLoading = true
-      this.payloadRequest = {
+      this.request = {
         username: this.usernameInputAttributes.value,
         email: this.emailInputAttributes.value,
         access: this.accessPermissionsInputAttributes.values
@@ -246,8 +227,8 @@ export default defineComponent({
       if (!this.usernameInputAttributes.isValid || !this.emailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
+        await this.doUpdate()
         this.formButtonAttributes.isLoading = false
-        this.updateData()
       }
     }
   }

@@ -40,7 +40,7 @@
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="yourProjects" role="tabpanel"
            aria-labelledby="home-tab">
-        <project-card v-for="(project,index) in values" :key="index" class="mb-2"
+        <project-card v-for="(project,index) in data" :key="index" class="mb-2"
                       :project-card="project"></project-card>
       </div>
       <!--      <div class="tab-pane fade" id="allProjects" role="tabpanel"-->
@@ -80,8 +80,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    this.getAll()
-    this.getCount()
+    this.getAllAndCount()
   },
   methods: {
     searching () {

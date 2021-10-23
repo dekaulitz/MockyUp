@@ -1,7 +1,5 @@
 package com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi;
 
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ;
-import static com.github.dekaulitz.mockyup.server.model.constants.Role.MOCKS_READ_WRITE;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.PROJECTS_READ_WRITE;
 import static com.github.dekaulitz.mockyup.server.model.constants.Role.USERS_READ;
@@ -52,7 +50,7 @@ class OpenApiCommonHelperTest {
   @Test
   void something2() {
     Set<Role> accessRole = new HashSet<>(Arrays
-        .asList(MOCKS_READ, MOCKS_READ_WRITE, USERS_READ, USERS_READ_WRITE, PROJECTS_READ,
+        .asList( USERS_READ, USERS_READ_WRITE, PROJECTS_READ,
             PROJECTS_READ_WRITE));
     List<String> roles = accessRole.stream().map(role -> role.toString())
         .collect(Collectors.toList());

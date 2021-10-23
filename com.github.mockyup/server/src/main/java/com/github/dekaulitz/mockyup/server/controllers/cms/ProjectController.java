@@ -3,16 +3,14 @@ package com.github.dekaulitz.mockyup.server.controllers.cms;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.COUNT;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECTS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.TAGS;
-import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.USERS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.V1;
 
 import com.github.dekaulitz.mockyup.server.controllers.BaseController;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.facade.cms.CmsFacade;
+import com.github.dekaulitz.mockyup.server.facade.ProjectsFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectParam;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectTagsParam;
-import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.response.ResponseModel;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectController extends BaseController {
 
   @Autowired
-  private CmsFacade cmsFacade;
+  private ProjectsFacade projectsFacade;
 
   @PreAuthorize("hasAuthority('PROJECTS_READ_WRITE')")
   @PostMapping(value = PROJECTS, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +43,7 @@ public class ProjectController extends BaseController {
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.createProject(createProjectRequest),
+        ResponseModel.initSuccessResponse(this.projectsFacade.createProject(createProjectRequest),
             mandatoryModel));
   }
 
@@ -55,9 +54,21 @@ public class ProjectController extends BaseController {
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.updateProject(id, updateProjectRequest),
+        ResponseModel.initSuccessResponse(this.projectsFacade.updateProject(id, updateProjectRequest),
             mandatoryModel));
   }
+
+  @PreAuthorize("hasAuthority('PROJECTS_READ_WRITE')")
+  @DeleteMapping(value = PROJECTS + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ResponseModel> deleteProject(@PathVariable String id,
+      @ModelAttribute MandatoryModel mandatoryModel)
+      throws ServiceException {
+    this.projectsFacade.getProjectService().deleteById(id);
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(null,
+            mandatoryModel));
+  }
+
 
   @PreAuthorize("hasAnyAuthority('PROJECTS_READ_WRITE','PROJECTS_READ')")
   @GetMapping(value = PROJECTS + TAGS, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +76,7 @@ public class ProjectController extends BaseController {
       @ModelAttribute MandatoryModel mandatoryModel,@Valid GetProjectTagsParam getProjectTagsParam)
       throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.getProjectTag(getProjectTagsParam),
+        ResponseModel.initSuccessResponse(this.projectsFacade.getProjectTag(getProjectTagsParam),
             mandatoryModel));
   }
 
@@ -75,7 +86,7 @@ public class ProjectController extends BaseController {
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.getProjectDetail(id),
+        ResponseModel.initSuccessResponse(this.projectsFacade.getProjectDetail(id),
             mandatoryModel));
   }
 
@@ -84,7 +95,7 @@ public class ProjectController extends BaseController {
   public ResponseEntity<Object> getCount(@ModelAttribute MandatoryModel mandatoryModel,
       @Valid GetProjectParam getProjectParam) throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.getCount(getProjectParam), mandatoryModel));
+        ResponseModel.initSuccessResponse(this.projectsFacade.getCount(getProjectParam), mandatoryModel));
   }
 
   @PreAuthorize("hasAnyAuthority('PROJECTS_READ_WRITE','PROJECTS_READ')")
@@ -92,7 +103,7 @@ public class ProjectController extends BaseController {
   public ResponseEntity<Object> getAll(@ModelAttribute MandatoryModel mandatoryModel,
       @Valid GetProjectParam getProjectParam) throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.allProjects(getProjectParam),
+        ResponseModel.initSuccessResponse(this.projectsFacade.allProjects(getProjectParam),
             mandatoryModel));
   }
 }

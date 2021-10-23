@@ -10,7 +10,7 @@ import 'swagger-ui/dist/swagger-ui.css'
 import SwaggerUI from 'swagger-ui/dist/swagger-ui-es-bundle-core'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'
 import { ContractService } from '@/service/webclient/service/ContractService'
-import { ContractDetail } from '@/service/webclient/model/Contracts'
+import { ContractDetailResponse } from '@/service/webclient/model/Contracts'
 
 export default defineComponent({
   name: 'SwaggerUI',
@@ -20,7 +20,7 @@ export default defineComponent({
   },
   data () {
     return {
-      spec: {} as ContractDetail,
+      spec: {} as ContractDetailResponse,
       contractService: ContractService
     }
   },

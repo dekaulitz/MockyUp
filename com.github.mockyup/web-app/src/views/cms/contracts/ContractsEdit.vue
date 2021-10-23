@@ -59,7 +59,7 @@ import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import FormLabel from '@/shared/form/FormLabel.vue'
 import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
-import { ContractDetail, ContractUpdateRequest } from '@/service/webclient/model/Contracts'
+import { ContractDetailResponse, ContractUpdateRequest } from '@/service/webclient/model/Contracts'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
@@ -73,7 +73,7 @@ export default defineComponent({
       contract: '{\n' +
         '    \n' +
         '}',
-      data: {} as ContractDetail,
+      data: {} as ContractDetailResponse,
       directionAfterSubmit: {
         name: 'ContractDetail',
         id: this.$route.params.id,

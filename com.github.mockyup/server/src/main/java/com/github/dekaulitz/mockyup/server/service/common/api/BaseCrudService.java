@@ -13,6 +13,8 @@ public interface BaseCrudService<T extends BaseMongo> {
 
   void delete(T t) throws ServiceException;
 
+  void deleteById(String id) throws ServiceException;
+
   List<T> getAll(Query query, Class<T> entityClass);
 
   T update(String id, T t) throws ServiceException;

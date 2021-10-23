@@ -1,53 +1,65 @@
-import { BaseCrudService } from '@/service/webclient/base/BaseService'
 import { BaseResponse } from '@/service/webclient/model/ResponseModel'
 
 import { AxiosResponse } from 'axios'
 import { WebClient } from '@/service/webclient/service/CommonService'
-import Qs from 'querystring'
 import {
-  ContractDetail,
+  ContractCardResponse,
+  ContractCreateRequest, ContractDetailResponse,
   ContractUpdateRequest,
   GetContractParam
 } from '@/service/webclient/model/Contracts'
+import Qs from 'querystring'
+import { BaseCrudService } from '@/service/webclient/base/BaseService'
 
 export interface ContractServiceInterface extends BaseCrudService{
-  getAll<T = never>(parameter?:never): Promise<T>;
+  doPost (request: ContractCreateRequest): Promise<BaseResponse>
 
-  getCount(parameter?:never): Promise<number>;
+  doUpdate (request: ContractUpdateRequest, id: string): Promise<BaseResponse>
 
-  getById<ContractDetail>(id:string): Promise<ContractDetail>;
+  getById (id: string): Promise<ContractDetailResponse>
 
-  doPost<T = never, R = never> (t:T): Promise<R>
+  getCount (param?: GetContractParam): Promise<number>
 
-  doUpdate<T = never, R = never> (t:T, id:string): Promise<R>
+  getAll (param?: GetContractParam): Promise<ContractCardResponse[]>
+
+  deleteById (id: string): Promise<BaseResponse>
 }
 
-export const ContractService :ContractServiceInterface = {
-  doPost: async function <ContractCreateRequest, BaseResponse> (createRequest: ContractCreateRequest): Promise<BaseResponse> {
-    return WebClient.post<ContractCreateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts', createRequest)
+export const ContractService: ContractServiceInterface = {
+  deleteById (id: string): Promise<BaseResponse> {
+    return WebClient.delete<BaseResponse, AxiosResponse<BaseResponse>>('/v1/project-contracts/' + id)
       .then(value => {
         return value.data
       })
   },
-  doUpdate: async function <ContractUpdateRequest, BaseResponse> (updateRequest: ContractUpdateRequest, id:string): Promise<BaseResponse> {
-    return WebClient.put<ContractUpdateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts/' + id, updateRequest)
+  doPost (request: ContractCreateRequest): Promise<BaseResponse> {
+    return WebClient.post<ContractCreateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts', request)
       .then(value => {
         return value.data
       })
   },
-  getAll<ContractCard> (param: GetContractParam): Promise<ContractCard> {
-    return WebClient.get<BaseResponse<ContractCard>>('/v1/project-contracts?' + Qs.stringify(param))
+  doUpdate (request: ContractUpdateRequest, id: string): Promise<BaseResponse> {
+    return WebClient.put<ContractUpdateRequest, AxiosResponse<BaseResponse>>('/v1/project-contracts/' + id, request)
+      .then(value => {
+        return value.data
+      })
+  },
+  getAll (param?: GetContractParam): Promise<ContractCardResponse[]> {
+    return WebClient.get<BaseResponse<ContractCardResponse[]>>('/v1/project-contracts?' + Qs.stringify(param))
       .then(value => {
         return value.data.data
       })
   },
-  getById<ContractDetail> (id: string): Promise<ContractDetail> {
-    return WebClient.get<BaseResponse<ContractDetail>>('/v1/project-contracts/' + id)
+  getById (id: string): Promise<ContractDetailResponse> {
+    return WebClient.get<BaseResponse<ContractDetailResponse>>('/v1/project-contracts/' + id)
       .then(value => {
         return value.data.data
       })
   },
-  getCount (parameter?: never): Promise<number> {
-    return Promise.resolve(0)
+  getCount (param?: GetContractParam): Promise<number> {
+    return WebClient.get<BaseResponse<number>>('/v1/project-contracts?' + Qs.stringify(param))
+      .then(value => {
+        return value.data.data
+      })
   }
 }

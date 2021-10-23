@@ -2,6 +2,7 @@ package com.github.dekaulitz.mockyup.server.service.common.impl;
 
 import com.github.dekaulitz.mockyup.server.db.entities.BaseMongo;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.common.api.BaseCrudService;
 import java.util.List;
 import javax.validation.Valid;
@@ -29,12 +30,12 @@ public abstract class BaseCrudServiceImpl<T extends BaseMongo> implements
   @Override
   @Nullable
   public T getById(String id, Class<T> entityClass) throws ServiceException {
-    return mongoTemplate.findById(new ObjectId(id), entityClass);
+    return mongoTemplate.findById(id, entityClass);
   }
 
   @Override
   public void delete(T t) throws ServiceException {
-
+    mongoTemplate.remove(t);
   }
 
   public List<T> getAll(Query query, Class<T> entityClass) {

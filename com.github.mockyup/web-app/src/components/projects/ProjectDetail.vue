@@ -1,9 +1,9 @@
 <template>
   <div class="page-container">
-    <template v-if="showPlaceHolder">
+    <template v-if="placeHolderActive">
       <place-holder-container/>
     </template>
-    <div class="holder border-bottom-0" v-if="!showPlaceHolder">
+    <div class="holder border-bottom-0" v-if="!placeHolderActive">
       <div class="d-flex align-items-center">
         <div class="avatar avatar-md flex-shrink-0">
           <span>{{ $filters.subString(data.projectName, 0, 1).toUpperCase() }}</span>

@@ -9,10 +9,10 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
+          <li class="nav-item" v-if="hasAccessPermissions('PROJECTS_READ_WRITE','PROJECTS_READ')">
             <router-link class="nav-link text-white" aria-current="page" to="/projects">Management Projects</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"  v-if="hasAccessPermissions('USERS_READ','USERS_READ_WRITE')">
             <router-link class="nav-link text-white" aria-current="page" to="/users">Management Users</router-link>
           </li>
         </ul>
@@ -70,9 +70,11 @@ import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 import { StorageService } from '@/service/webclient/service/CommonService'
 import AuthService from '@/service/webclient/service/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   components: { FooterNavigation },
+  mixins: [BaseAccessMixins],
   data () {
     return {
       accountUser: {} as AuthResponse

@@ -42,24 +42,6 @@
             <div class="col-md-3">
               <form-label>Access Permissions:</form-label>
               <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value=MOCKS_READ
-                />
-                <form-label>Can Read Mocks</form-label>
-              </form-container>
-              <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ_WRITE"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value="MOCKS_READ_WRITE"
-                />
-                <form-label>Can Read and Modified Mocks</form-label>
-              </form-container>
-              <form-container class="form-check">
                 <form-input-checkbox v-model="accessPermissionsInputAttributes.values"
                                      :input-attributes="accessPermissionsInputAttributes"
                                      :event-submitted="accessPermissionsInputAttributes.formSubmitted"
@@ -141,7 +123,7 @@ export default defineComponent({
   data () {
     return {
       service: UserService,
-      payloadRequest: {} as UserCreateRequest,
+      request: {} as UserCreateRequest,
       directionAfterSubmit: {
         name: 'Users'
       },
@@ -231,6 +213,7 @@ export default defineComponent({
   },
   methods: {
     async createNewUser () {
+      this.formButtonAttributes.isLoading = true
       this.usernameInputAttributes.formSubmitted = true
       this.emailInputAttributes.formSubmitted = true
       this.passwordInputAttributes.formSubmitted = true
@@ -239,15 +222,15 @@ export default defineComponent({
       if (!this.passwordInputAttributes.isValid || !this.usernameInputAttributes.isValid || !this.emailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
-        this.payloadRequest = {
+        this.request = {
           username: this.usernameInputAttributes.value,
           password: this.passwordInputAttributes.value,
           email: this.emailInputAttributes.value,
           access: this.accessPermissionsInputAttributes.values,
-          isAccountNonLocked: true,
-          isEnabled: true
-        }
-        await this.createNewData()
+          accountNonLocked: true,
+          enabled: true
+        } as UserCreateRequest
+        await this.doPost()
         this.formButtonAttributes.isLoading = false
       }
     },

@@ -40,6 +40,10 @@ public class CreateUserRequest extends BaseModel {
   @Valid
   private Set<Role> access;
 
+  private boolean isAccountNonLocked;
+
+  private boolean isEnabled;
+
   @Valid
   private Set<UserAccessProjectEmbedded> accessProjects = new HashSet<>();
 }

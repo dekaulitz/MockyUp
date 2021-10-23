@@ -18,7 +18,6 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,6 @@ import org.springframework.stereotype.Service;
 public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> implements
     ProjectService {
 
-  @Autowired
-  private MongoTemplate mongoTemplate;
   @Autowired
   private ModelMapper modelMapper;
 
@@ -81,5 +78,15 @@ public class ProjectServiceImpl extends BaseCrudServiceImpl<ProjectEntity> imple
     return this.getMongoTemplate()
         .aggregate(ProjectAggregation.getTaggingAggregation(getProjectTagsParam), "projects",
             ProjectTagsModel.class).getMappedResults();
+  }
+
+  @Override
+  public void deleteById(String id) throws ServiceException {
+    ProjectEntity entity = getById(id, ProjectEntity.class);
+    if (entity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "project not found id: " + id);
+    }
+    this.delete(entity);
   }
 }

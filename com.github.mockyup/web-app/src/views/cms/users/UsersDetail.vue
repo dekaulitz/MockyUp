@@ -12,7 +12,7 @@
       </div>
       <div class="ms-auto">
         <router-link :to="{name:'UsersEdit', params:{id:$route.params.id}}"
-                     class="btn btn-primary btn-sm w-sm"><span class="fas fa-edit"></span> Edit
+                     class="btn btn-primary btn-sm w-sm" v-if="hasAccessPermissions('USERS_READ_WRITE')"><span class="fas fa-edit"></span> Edit
         </router-link>
       </div>
     </div>
@@ -75,10 +75,11 @@ import CardBody from '@/shared/card/CardBody.vue'
 import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   name: 'UsersCreate',
-  mixins: [BaseViewComponent, BreadhCrumbMixins],
+  mixins: [BaseViewComponent, BreadhCrumbMixins, BaseAccessMixins],
   data () {
     return {
       service: UserService,
@@ -93,7 +94,7 @@ export default defineComponent({
     PageContainer
   },
   async mounted () {
-    await this.getByDetail(this.$route.params.id)
+    await this.getDetail(this.$route.params.id)
     this.breadCrumbAttributes = [
       {
         label: 'Users',

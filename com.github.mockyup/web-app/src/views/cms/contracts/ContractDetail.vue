@@ -21,12 +21,12 @@
       <div class="ms-auto button-container">
         <router-link
           :to="{name:'SwaggerUI',params:{id:$route.params.id,contractId:$route.params.contractId}}"
-          class="btn btn-primary btn-sm"><span
+          class="btn btn-primary btn-sm" v-if="hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE','PROJECT_CONTRACTS_READ')"><span
           class="fas fa-fire"></span>Swagger UI
         </router-link>
         <router-link
           :to="{name:'ContractEdit', params:{id:$route.params.id,contractId:$route.params.contractId}}"
-          class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Edit
+          class="btn btn-primary btn-sm" v-if="hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE')"><span class="fas fa-edit"></span> Edit
         </router-link>
       </div>
     </div>
@@ -57,23 +57,24 @@ import { defineComponent } from 'vue'
 import BaseViewComponent from '@/shared/base/BaseViewComponent'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import PageContainer from '@/pages/PageContainer.vue'
-import { ContractDetail } from '@/service/webclient/model/Contracts'
+import { ContractDetailResponse } from '@/service/webclient/model/Contracts'
 import ServerInformation from '@/components/contracts/ServerInformation.vue'
 import RequestConfiguration from '@/components/contracts/RequestConfigration.vue'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   name: 'ContractsCreate',
-  mixins: [BaseViewComponent, BreadhCrumbMixins],
+  mixins: [BaseViewComponent, BreadhCrumbMixins, BaseAccessMixins],
   data () {
     return {
       service: ContractService,
-      data: {} as ContractDetail
+      data: {} as ContractDetailResponse
     }
   },
   mounted () {
-    this.getByDetail(this.$route.params.contractId)
+    this.getDetail(this.$route.params.contractId)
     this.breadCrumbAttributes = [
       {
         label: 'Project',

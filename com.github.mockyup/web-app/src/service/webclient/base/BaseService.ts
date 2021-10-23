@@ -1,7 +1,3 @@
-import { AuthResponse, UserCardInterface } from '@/service/webclient/model/ResponseModel'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { AuthLogin } from '@/service/webclient/model/RequestModel'
-
 export interface PageableParam {
   page: number
   size: number
@@ -17,14 +13,16 @@ export interface BaseResponse<T = never> {
   requestTime: number
 }
 
-export interface BaseCrudService{
-  getAll<T = never>(parameter?:never): Promise<T>;
+export interface BaseCrudService {
+  getAll (parameter?: any): Promise<any[]>
 
-  getCount(parameter?:never): Promise<number>;
+  getCount (parameter?: never): Promise<any>
 
-  getById<T = never>(id:string): Promise<T>;
+  getById (id: string): Promise<any>
 
-  doPost<T = never, R = never> (t:T): Promise<R>
+  doPost (t: never): Promise<any>
 
-  doUpdate<T = never, R = never> (t:T, id:string): Promise<R>
+  doUpdate (t: any, id: string): Promise<any>
+
+  deleteById (id: string): Promise<any>
 }

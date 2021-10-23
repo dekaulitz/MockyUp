@@ -22,7 +22,7 @@ export interface ContractUpdateRequest {
   spec: any
 }
 
-export interface ContractCard {
+export interface ContractCardResponse {
   id?: string
   projectId?: string
   private: boolean
@@ -30,7 +30,7 @@ export interface ContractCard {
   info?: ContractProjectInfo
 }
 
-export interface ContractDetail {
+export interface ContractDetailResponse {
   id?: string
   createdDate?:string
   projectId?: string
