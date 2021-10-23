@@ -31,6 +31,9 @@ export const OpenApiHelper = {
       if (Array.isArray(properties[name]) && properties[name].length === 0) {
         delete properties[name]
       }
+      if (typeof properties[name] === 'object' && name !== 'schema' && name !== 'properties' && properties[name] !== null && properties[name] !== undefined) {
+        properties[name] = this.cleansingNullAttributes(properties[name], component)
+      }
       if (name === 'schema' && (properties[name] !== undefined && properties[name] !== null)) {
         properties.schema = this.cleansingNullAttributes(properties[name], component)
       }
@@ -58,6 +61,9 @@ export const OpenApiHelper = {
             properties[propName].properties = this.cleansingNullProperties(childProperties.properties, component)
             delete properties[propName][name]
           }
+        }
+        if (name === 'xml' && (properties[propName][name] !== undefined && properties[propName][name] !== null)) {
+          properties[propName] = this.cleansingNullProperties(properties[propName], component)
         }
       }
     }

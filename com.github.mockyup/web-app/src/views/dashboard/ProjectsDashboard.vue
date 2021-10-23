@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <page-container>
+    <breadcrumb-container class="border-bottom mb-2"/>
     <div class="d-flex align-items-center holder mt-1">
       <h3 class="page-title">Projects</h3>
       <div class="page-controller ms-auto">
@@ -18,13 +19,13 @@
               class="badge bg-secondary">{{ pagingAttributes.totalData }}</span>
             </button>
           </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                    data-bs-target="#allProjects"
-                    type="button" role="tab" aria-controls="allProjects" aria-selected="false">
-              Profile
-            </button>
-          </li>
+          <!--          <li class="nav-item" role="presentation">-->
+          <!--            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"-->
+          <!--                    data-bs-target="#allProjects"-->
+          <!--                    type="button" role="tab" aria-controls="allProjects" aria-selected="false">-->
+          <!--              Profile-->
+          <!--            </button>-->
+          <!--          </li>-->
         </ul>
       </div>
       <div class="ms-auto d-flex">
@@ -42,14 +43,14 @@
         <project-card v-for="(project,index) in values" :key="index" class="mb-2"
                       :project-card="project"></project-card>
       </div>
-      <div class="tab-pane fade" id="allProjects" role="tabpanel"
-           aria-labelledby="home-tab">
-        {{ values }}
-      </div>
+      <!--      <div class="tab-pane fade" id="allProjects" role="tabpanel"-->
+      <!--           aria-labelledby="home-tab">-->
+      <!--        {{ values }}-->
+      <!--      </div>-->
     </div>
     <pagination-container class="d-flex mt-3 justify-content-end" v-model="parameter.page"
                           :paging-attributes="pagingAttributes" @click="getAllAndCount"/>
-  </div>
+  </page-container>
 </template>
 
 <script lang="ts">
@@ -61,10 +62,13 @@ import { ProjectService } from '@/service/webclient/service/ProjectService'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import ProjectSortingDropDown from '@/components/sorting/ProjectsSortingDropDown.vue'
 import ProjectCard from '@/components/cards/ProjectCard.vue'
+import PageContainer from '@/pages/PageContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 
 export default defineComponent({
   name: 'ProjectDashboard',
-  mixins: [BasePagingComponent],
+  mixins: [BasePagingComponent, BreadhCrumbMixins],
   data () {
     return {
       parameter: {
@@ -86,6 +90,8 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
+    PageContainer,
     ProjectCard,
     ProjectSortingDropDown,
     FormInputSearch,

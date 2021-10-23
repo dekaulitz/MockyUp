@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Users</h1>
       <div class="page-controller ms-auto">
@@ -59,10 +61,12 @@ import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import UserSortingDropDown from '@/components/sorting/UserSortingDropDown.vue'
 import { UserService } from '@/service/webclient/service/UserService'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'Users',
-  mixins: [BasePagingComponent],
+  mixins: [BasePagingComponent, BreadhCrumbMixins],
   data () {
     return {
       service: UserService,
@@ -76,6 +80,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     UserSortingDropDown,
     FormInputSearch,
     PaginationContainer,
@@ -84,6 +89,15 @@ export default defineComponent({
   mounted () {
     this.getAll()
     this.getCount()
+    this.breadCrumbAttributes = [
+      {
+        label: 'Users',
+        routerLink: {
+          name: 'Users'
+        },
+        isActive: true
+      }
+    ]
   },
   methods: {
     searching () {

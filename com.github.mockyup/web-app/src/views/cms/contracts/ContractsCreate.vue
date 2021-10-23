@@ -1,5 +1,7 @@
 <template>
   <contract-page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create New Contract</h1>
       <div class="page-controller ms-auto">
@@ -58,10 +60,12 @@ import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import { ContractCreateRequest } from '@/service/webclient/model/Contracts'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'ContractsCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: ContractService,
@@ -83,6 +87,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     AlertContainer,
     FormLabel,
     FormInputCheckbox,
@@ -91,6 +96,25 @@ export default defineComponent({
     VAceEditor,
     ContractPageContainer,
     FormButton
+  },
+  mounted () {
+    this.breadCrumbAttributes = [
+      {
+        label: 'Project',
+        routerLink: {
+          name: 'ProjectsDetail',
+          id: this.$route.params.id
+        },
+        isActive: false
+      },
+      {
+        label: 'Create',
+        routerLink: {
+          name: 'ProjectsCreate'
+        },
+        isActive: true
+      }
+    ]
   },
   methods: {
     createNewContracts () {

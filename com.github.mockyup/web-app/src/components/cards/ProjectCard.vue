@@ -6,7 +6,10 @@
       </div>
       <div class="flex-row ms-2 project-card-description">
         <div>
-          <router-link :to="'/project-detail/'+projectCard.id" class="card-title">
+          <router-link  :to="{
+            name:'ProjectsDetail',
+            params:{id:projectCard.id}}"
+          >
             {{ projectCard.projectName }}
           </router-link>
         </div>

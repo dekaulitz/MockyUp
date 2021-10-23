@@ -1,10 +1,13 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
-      <h1 class="page-title">Create new User</h1>
+      <h1 class="page-title">Edit User</h1>
       <div class="page-controller ms-auto">
         <form-button class="btn btn-primary w-md btn-md" @click.stop.prevent="updateUser"
-                     :form-button-attribute="formButtonAttributes"><span class="fa fa-save"/> Update User
+                     :form-button-attribute="formButtonAttributes"><span class="fa fa-save"/> Update
+          User
         </form-button>
       </div>
     </div>
@@ -128,10 +131,12 @@ import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
-  name: 'UsersCreate',
-  mixins: [BaseViewComponent],
+  name: 'UsersEdit',
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: UserService,
@@ -181,6 +186,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     PlaceHolderContainer,
     FormInputCheckbox,
     AlertContainer,
@@ -195,6 +201,25 @@ export default defineComponent({
   },
   async mounted () {
     await this.getByDetail(this.$route.params.id)
+    this.breadCrumbAttributes = [
+      {
+        label: 'User',
+        routerLink: {
+          name: 'UsersDetail',
+          id: this.data.id
+        },
+        isActive: false
+      },
+      {
+        label: 'Edit',
+        routerLink: {
+          name: 'UsersEdit',
+          id: this.data.id
+        },
+        isActive: true
+      }
+    ]
+
     const accessData = AccessData
     const user = this.data
     this.accessPermissionsInputAttributes.values = user.access

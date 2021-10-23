@@ -11,7 +11,7 @@
         <label class="label-bold">Description</label>
         <p class="mt-2" v-html="path.operation.description"></p>
         <div>
-          <parameters :parameters="path.operation.parameters" v-if="path.operation.parameters"/>
+          <parameters :parameters="path.operation.parameters" :components="components" v-if="path.operation.parameters"/>
           <div class="request-body mt-2">
             <template v-if="path.operation.requestBody">
               <label class="label-bold">Request Body</label>

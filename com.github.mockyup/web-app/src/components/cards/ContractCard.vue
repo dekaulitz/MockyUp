@@ -15,7 +15,7 @@
             {{contractCard.info.title}}</router-link>
           <span class="fas fa-lock ms-1" v-if="contractCard.private"/>
         </div>
-        <span class="card-subtitle">{{contractCard.info.description}}</span>
+        <span class="card-subtitle">{{$filters.subString(contractCard.info.description,0,50)}}</span>
       </div>
       <div class="ms-auto">
        Last update {{ $filters.localDate(contractCard.updatedDate) }}

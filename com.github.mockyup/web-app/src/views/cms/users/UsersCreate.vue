@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new User</h1>
       <div class="page-controller ms-auto">
@@ -130,10 +132,12 @@ import FormInput from '@/shared/form/FormInput.vue'
 import { UserCreateRequest } from '@/service/webclient/model/Users'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'UsersCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: UserService,
@@ -193,10 +197,27 @@ export default defineComponent({
       formButtonAttributes: {
         isLoading: false,
         usingLoader: true
-      } as ButtonAttribute
+      } as ButtonAttribute,
+      breadCrumbAttributes: [
+        {
+          label: 'Users',
+          routerLink: {
+            name: 'Users'
+          },
+          isActive: false
+        },
+        {
+          label: 'Create',
+          routerLink: {
+            name: 'UsersCreate'
+          },
+          isActive: true
+        }
+      ]
     }
   },
   components: {
+    BreadcrumbContainer,
     FormInputCheckbox,
     AlertContainer,
     FormInput,
@@ -222,7 +243,9 @@ export default defineComponent({
           username: this.usernameInputAttributes.value,
           password: this.passwordInputAttributes.value,
           email: this.emailInputAttributes.value,
-          access: this.accessPermissionsInputAttributes.values
+          access: this.accessPermissionsInputAttributes.values,
+          isAccountNonLocked: true,
+          isEnabled: true
         }
         await this.createNewData()
         this.formButtonAttributes.isLoading = false

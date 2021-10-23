@@ -35,7 +35,7 @@ export default defineComponent({
     components: { type: Object }
   },
   methods: {
-    getSchemaRef (schema:Schema): unknown {
+    getSchemaRef (schema:any): unknown {
       if (schema.$ref === null || schema.$ref === undefined) {
         return JSON.stringify(OpenApiHelper.cleansingNullAttributes(schema, this.components), null, '\t')
       }

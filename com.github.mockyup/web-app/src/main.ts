@@ -25,14 +25,14 @@ app.config.globalProperties.$filters = {
   localDate (value: string) {
     return moment(value).local().format('MMM Do YY HH:mm:ss')
   },
-  access (access:string):AccessInterface {
+  access (access: string): AccessInterface {
     const translations = accessData
     if (translations.has(access)) {
       return translations.get(access)
     }
     return undefined
   },
-  capitalizeFirstLetter (value:string) {
+  capitalizeFirstLetter (value: string) {
     return value.charAt(0).toUpperCase() + value.slice(1)
   },
   subString (value: string, start: number, end: number) {

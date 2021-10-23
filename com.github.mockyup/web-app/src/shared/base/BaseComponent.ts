@@ -39,6 +39,13 @@ export default defineComponent({
             content: responseData.message,
             closeable: true
           }
+        } else if (appsStatusCode === 4033) {
+          this.alertAttributes = {
+            show: true,
+            alertType: AlertType.WARNING,
+            content: responseData.error.message.message,
+            closeable: true
+          }
         }
       } else if (statusCode >= 500) {
       }

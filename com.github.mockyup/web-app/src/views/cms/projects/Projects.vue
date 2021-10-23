@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Projects</h1>
       <div class="page-controller ms-auto">
@@ -61,10 +63,12 @@ import ProjectSortingDropDown from '@/components/sorting/ProjectsSortingDropDown
 import BasePagingComponent from '@/shared/base/BasePagingComponent'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import { ProjectService } from '@/service/webclient/service/ProjectService'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 
 export default defineComponent({
   name: 'Projects',
-  mixins: [BasePagingComponent],
+  mixins: [BasePagingComponent, BreadhCrumbMixins],
   data () {
     return {
       service: ProjectService,
@@ -77,6 +81,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     FormInputSearch,
     ProjectSortingDropDown,
     PaginationContainer,
@@ -85,6 +90,13 @@ export default defineComponent({
   mounted () {
     this.getAll()
     this.getCount()
+    this.breadCrumbAttributes = [
+      {
+        label: 'Projects',
+        routerLink: { name: 'Projects' },
+        isActive: true
+      }
+    ]
   },
   methods: {
     searching () {

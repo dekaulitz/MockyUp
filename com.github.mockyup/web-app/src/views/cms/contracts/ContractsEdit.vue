@@ -1,5 +1,7 @@
 <template>
   <contract-page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Update Contract</h1>
       <div class="page-controller ms-auto">
@@ -26,7 +28,8 @@
         <div class="col-md-6">
           <div class="d-flex holder">
             <h5 class="page-title ">OpenApi Spec (json)</h5>
-            <button class="btn btn-primary btn-sm ms-auto" @click="initTemplateContract"><span class="fas fa-copy"/>
+            <button class="btn btn-primary btn-sm ms-auto" @click="initTemplateContract"><span
+              class="fas fa-copy"/>
               Init Template Contract
             </button>
           </div>
@@ -58,10 +61,12 @@ import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import { ContractDetail, ContractUpdateRequest } from '@/service/webclient/model/Contracts'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'ContractsCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: ContractService,
@@ -85,6 +90,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     AlertContainer,
     FormLabel,
     FormInputCheckbox,
@@ -100,6 +106,34 @@ export default defineComponent({
         this.data = value
         this.isPrivateFormAttribute.value = this.data.private
         this.contract = JSON.stringify(JSON.parse(this.data.rawSpecs), null, '\t')
+        this.breadCrumbAttributes = [
+          {
+            label: 'Project',
+            routerLink: {
+              name: 'ProjectsDetail',
+              id: this.data.projectId
+            },
+            isActive: false
+          },
+          {
+            label: 'Contract',
+            routerLink: {
+              name: 'ContractDetail',
+              id: this.data.projectId,
+              contractId: this.data.id
+            },
+            isActive: false
+          },
+          {
+            label: 'Edit',
+            routerLink: {
+              name: 'ContractEdit',
+              id: this.data.projectId,
+              contractId: this.data.id
+            },
+            isActive: true
+          }
+        ]
       }).catch(reason => {
         this.validateResponse(reason)
       })

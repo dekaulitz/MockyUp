@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder">
       <template v-if="data.info">
         <div class="avatar avatar-md flex-shrink-0 me-3">
@@ -58,10 +60,12 @@ import PageContainer from '@/pages/PageContainer.vue'
 import { ContractDetail } from '@/service/webclient/model/Contracts'
 import ServerInformation from '@/components/contracts/ServerInformation.vue'
 import RequestConfiguration from '@/components/contracts/RequestConfigration.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'ContractsCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: ContractService,
@@ -70,8 +74,28 @@ export default defineComponent({
   },
   mounted () {
     this.getByDetail(this.$route.params.contractId)
+    this.breadCrumbAttributes = [
+      {
+        label: 'Project',
+        routerLink: {
+          name: 'ProjectsDetail',
+          id: this.data.projectId
+        },
+        isActive: false
+      },
+      {
+        label: 'Contract Detail',
+        routerLink: {
+          name: 'ContractDetail',
+          id: this.data.projectId,
+          contractId: this.data.id
+        },
+        isActive: true
+      }
+    ]
   },
   components: {
+    BreadcrumbContainer,
     RequestConfiguration,
     ServerInformation,
     PageContainer

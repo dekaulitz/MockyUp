@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center">
       <div class="avatar avatar-md flex-shrink-0 me-3">
         <h1>{{ $filters.subString(data.username, 0, 1) }}</h1>
@@ -71,10 +73,12 @@ import { UserDetailResponse } from '@/service/webclient/model/Users'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'UsersCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: UserService,
@@ -83,12 +87,30 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     CardBody,
     CardContainer,
     PageContainer
   },
   async mounted () {
     await this.getByDetail(this.$route.params.id)
+    this.breadCrumbAttributes = [
+      {
+        label: 'Users',
+        routerLink: {
+          name: 'Users'
+        },
+        isActive: false
+      },
+      {
+        label: 'User Detail',
+        routerLink: {
+          name: 'UsersDetail',
+          id: this.data.id
+        },
+        isActive: false
+      }
+    ]
     const accessData = AccessData
     this.data.access.forEach(access => {
       if (accessData.has(access)) {
