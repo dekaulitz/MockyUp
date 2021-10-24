@@ -1,14 +1,14 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/mockup/com.github.mockyup/server
+    working_directory: ~/mockup
     docker:
       - image: circleci/openjdk:8-jdk-stretch
     steps:
       - checkout
       - restore_cache:
           key: mockup-{{ checksum "pom.xml" }}
-      - run: echo pwd && mvn dependency:go-offline
+      - run: cd /com.github.mockyup/server && mvn dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
