@@ -1,0 +1,22 @@
+@import "~bootstrap/scss/forms";
+
+.form-control, .search form {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem;
+  //border: 1px solid  #303030;
+  //border-radius: 0.25rem;
+  //color: #303030;
+  //background-color: #fff;
+}
+
+.input-sm{
+  width: 280px !important;
+}
+
+.input-md{
+  width: 680px !important;
+}
+
+.label-bold {
+  font-weight: 600;
+}

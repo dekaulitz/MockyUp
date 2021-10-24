@@ -1,0 +1,9 @@
+@import "~bootstrap/scss/tables";
+.table-hover{
+  tbody>tr{
+    cursor: pointer;
+    &:hover{
+      background-color: rgba(209,209,240,0.2) !important;
+    }
+  }
+}

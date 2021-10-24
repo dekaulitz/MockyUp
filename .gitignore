@@ -1,6 +1,6 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
+!com.github.mockyup/server/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
 
@@ -26,7 +26,7 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-logs/
+com.github.mockyup/server/logs/
 
 ### VS Code ###
 .vscode/

@@ -1,0 +1,161 @@
+{
+  "PAGE_NOT_FOUND": {
+    "httpCode": 404,
+    "statusCode": 4041,
+    "description": "PAGE_NOT_FOUND",
+    "messages": [
+      {
+        "lang": "ID",
+        "message": "You lost, please check your request"
+      },
+      {
+        "lang": "EN",
+        "message": "You lost, please check your request"
+      }
+    ]
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "httpCode": 500,
+    "statusCode": 5001,
+    "description": "INTERNAL_SERVER_ERROR :",
+    "messages": [
+      {
+        "lang": "ID",
+        "message": "INTERNAL_SERVER_ERROR"
+      },
+      {
+        "lang": "EN",
+        "message": "INTERNAL_SERVER_ERROR"
+      }
+    ]
+  },
+  "BAD_REQUEST": {
+    "httpCode": 400,
+    "statusCode": 4001,
+    "description": "BAD_REQUEST",
+    "messages": [
+      {
+        "lang": "ID",
+        "message": "BAD_REQUEST"
+      },
+      {
+        "lang": "EN",
+        "message": "BAD_REQUEST"
+      }
+    ]
+  },
+  "INVALID_USER_LOGIN": {
+    "httpCode": 401,
+    "statusCode": 4011,
+    "description": "Invalid username and password",
+    "messages": [
+      {
+        "lang": "ID",
+        "message": "Invalid username and password"
+      },
+      {
+        "lang": "EN",
+        "message": "Invalid username and password"
+      }
+    ]
+  },
+  "REFRESH_TOKEN_REQUIRED": {
+    "httpCode": 401,
+    "statusCode": 4013,
+    "description": "Refreshing token required",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Refresh token required"
+      }
+    ]
+  },
+  "UNAUTHORIZED_ACCESS": {
+    "httpCode": 403,
+    "statusCode": 4031,
+    "description": "UNAUTHORIZED_ACCESS",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "UNAUTHORIZED_ACCESS"
+      }
+    ]
+  },
+  "TOKEN_NOT_VALID": {
+    "httpCode": 403,
+    "statusCode": 4032,
+    "description": "Token not valid",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Token not valid, login required"
+      }
+    ]
+  },
+  "USER_DISABLED": {
+    "httpCode": 403,
+    "statusCode": 4033,
+    "description": "User locked or disabled",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "User locked or disabled, contact your admin"
+      }
+    ]
+  },
+  "DATA_NOT_FOUND": {
+    "httpCode": 200,
+    "statusCode": 2001,
+    "description": "Data not found",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Data not found"
+      }
+    ]
+  },
+  "INVALID_MOCK_CONTRACT": {
+    "httpCode": 400,
+    "statusCode": 4001,
+    "description": "INVALID_MOCK_CONTRACT",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "INVALID_MOCK_CONTRACT"
+      }
+    ]
+  },
+  "MOCK_NOT_FOUND": {
+    "httpCode": 400,
+    "statusCode": 4002,
+    "description": "Mock not found",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "MOCK_NOT_FOUND"
+      }
+    ]
+  },
+  "UNSUPPORTED_MOCK_TYPE": {
+    "httpCode": 400,
+    "statusCode": 4003,
+    "description": "Unsupported mocking type",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "UNSUPPORTED_MOCK_TYPE"
+      }
+    ]
+  },
+  "DUPLICATE_DATA_ENTRY": {
+    "httpCode": 400,
+    "statusCode": 4004,
+    "description": "Data already exists",
+    "messages": [
+      {
+        "lang": "EN",
+        "message": "Data already exists"
+      }
+    ]
+  }
+}
