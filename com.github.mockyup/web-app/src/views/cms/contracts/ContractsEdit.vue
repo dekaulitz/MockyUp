@@ -23,8 +23,6 @@
     </div>
     <div class="mt-3">
       <div class="row">
-        <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
-                         @showAlert:alert="closeAlert"/>
         <div class="col-md-6">
           <div class="d-flex holder">
             <h5 class="page-title ">OpenApi Spec (json)</h5>
@@ -60,7 +58,6 @@ import FormLabel from '@/shared/form/FormLabel.vue'
 import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import { ContractDetailResponse, ContractUpdateRequest } from '@/service/webclient/model/Contracts'
-import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
@@ -91,7 +88,6 @@ export default defineComponent({
   },
   components: {
     BreadcrumbContainer,
-    AlertContainer,
     FormLabel,
     FormInputCheckbox,
     FormContainer,

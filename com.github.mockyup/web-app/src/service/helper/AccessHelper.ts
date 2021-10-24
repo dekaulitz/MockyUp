@@ -20,8 +20,15 @@ export type accessType =
 //   PROJECT_CONTRACTS_READ = 'PROJECT_CONTRACTS_READ',
 // }
 
-export const hasAccessMenu = (access: string[], accessMenu: accessType): boolean => {
-  return access.indexOf(accessMenu) > -1
+export const hasAccessMenu = (access: string[], ...accessMenus: accessType[]): boolean => {
+  let hasAccess = false
+  // return userAccess.access.indexOf(accessMenu) > -1
+  for (const accessMenu of accessMenus) {
+    if (access.indexOf(accessMenu) > -1) {
+      hasAccess = true
+    }
+  }
+  return hasAccess
 }
 
 export const AccessData: Map<string, AccessInterface> = new Map<string, AccessInterface>()

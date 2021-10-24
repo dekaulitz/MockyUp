@@ -25,7 +25,7 @@
               <card-body>
                 <form-group>
                   <form-container>
-                    <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes" @showAlert:alert="closeAlert"/>
+                    <alert-container/>
                     <form-label for="username">Username</form-label>
                     <form-input id="username" v-model="userNameOrEmailInputAttributes.value"
                                 :input-attributes="userNameOrEmailInputAttributes"
@@ -140,6 +140,7 @@ export default defineComponent({
           StorageService.setData<AuthResponse>(StorageKeyType.AUTH_PROFILE, value)
           this.formButtonAttributes.isLoading = false
           this.$router.push('/')
+          this.$store.dispatch('authStore/setAuthProfile', value)
         }).catch(error => {
           this.formButtonAttributes.isLoading = false
           this.validateResponse(error)

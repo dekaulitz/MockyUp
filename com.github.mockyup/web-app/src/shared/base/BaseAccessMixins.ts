@@ -8,8 +8,11 @@ export default defineComponent({
   name: 'BaseAccessMixins',
   methods: {
     hasAccessPermissions (...accessMenus: accessType[]): boolean {
-      const userAccess = StorageService.getData<AuthResponse>(StorageKeyType.AUTH_PROFILE)
       let hasAccess = false
+      const userAccess = StorageService.getData<AuthResponse>(StorageKeyType.AUTH_PROFILE)
+      if (userAccess === null) {
+        return hasAccess
+      }
       // return userAccess.access.indexOf(accessMenu) > -1
       for (const accessMenu of accessMenus) {
         if ((userAccess.access.indexOf(accessMenu) > -1)) {
