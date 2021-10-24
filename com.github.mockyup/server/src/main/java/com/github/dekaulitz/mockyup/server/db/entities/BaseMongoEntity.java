@@ -6,13 +6,9 @@ import com.fasterxml.jackson.databind.deser.std.DateDeserializers.DateDeserializ
 import com.github.dekaulitz.mockyup.server.model.constants.DateTimeConstants;
 import java.io.Serializable;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
@@ -23,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @FieldNameConstants
 @Getter
 @Setter
-public class BaseMongo implements Serializable {
+public class BaseMongoEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 

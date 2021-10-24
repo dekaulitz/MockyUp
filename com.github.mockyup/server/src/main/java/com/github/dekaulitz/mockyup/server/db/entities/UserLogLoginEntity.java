@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class UserLogLoginEntity extends BaseMongo implements Serializable {
+public class UserLogLoginEntity extends BaseMongoEntity implements Serializable {
 
   private String jti;
   private String userId;

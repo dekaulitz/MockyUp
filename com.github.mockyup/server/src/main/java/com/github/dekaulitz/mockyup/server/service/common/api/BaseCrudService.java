@@ -1,11 +1,11 @@
 package com.github.dekaulitz.mockyup.server.service.common.api;
 
-import com.github.dekaulitz.mockyup.server.db.entities.BaseMongo;
+import com.github.dekaulitz.mockyup.server.db.entities.BaseMongoEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import java.util.List;
 import org.springframework.data.mongodb.core.query.Query;
 
-public interface BaseCrudService<T extends BaseMongo> {
+public interface BaseCrudService<T extends BaseMongoEntity> {
 
   T getById(String id, Class<T> entityClass) throws ServiceException;
 

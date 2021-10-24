@@ -1,14 +1,12 @@
 package com.github.dekaulitz.mockyup.server.service.common.impl;
 
-import com.github.dekaulitz.mockyup.server.db.entities.BaseMongo;
+import com.github.dekaulitz.mockyup.server.db.entities.BaseMongoEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.service.common.api.BaseCrudService;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Service("baseCrud")
 @Slf4j
-public abstract class BaseCrudServiceImpl<T extends BaseMongo> implements
+public abstract class BaseCrudServiceImpl<T extends BaseMongoEntity> implements
     BaseCrudService<T> {
 
   @Autowired

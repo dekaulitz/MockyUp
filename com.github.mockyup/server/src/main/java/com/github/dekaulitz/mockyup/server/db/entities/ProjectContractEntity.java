@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class ProjectContractEntity extends BaseMongo implements Serializable {
+public class ProjectContractEntity extends BaseMongoEntity implements Serializable {
 
   public static final String COLLECTION_NAME = "projectContracts";
   @NotNull
