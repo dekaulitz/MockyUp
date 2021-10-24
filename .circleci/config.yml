@@ -14,7 +14,7 @@ jobs:
             - ~/.m2
           key: mockup-{{ checksum "pom.xml" }}
       - run:
-          command: cd com.github.mockyup/server && mvn package
+          command: cd /com.github.mockyup/server && mvn package
           environment:
             SERVER_PORT: 7070
             LOG_LEVEL: info
