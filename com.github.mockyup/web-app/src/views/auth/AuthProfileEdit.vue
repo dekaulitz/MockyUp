@@ -17,8 +17,6 @@
           <place-holder-container/>
         </div>
         <form-group v-if="!placeHolderActive">
-          <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
-                           @showAlert:alert="closeAlert"/>
           <div class="row">
             <div class="col-md-8">
               <form-container>
@@ -63,7 +61,6 @@ import FormContainer from '@/shared/form/FormContainer.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
 import FormLabel from '@/shared/form/FormLabel.vue'
 import FormInput from '@/shared/form/FormInput.vue'
-import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import { AccessInterface } from '@/service/helper/AccessHelper'
 import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
@@ -140,7 +137,6 @@ export default defineComponent({
   components: {
     BreadcrumbContainer,
     PlaceHolderContainer,
-    AlertContainer,
     FormInput,
     FormLabel,
     FormGroup,
@@ -193,6 +189,7 @@ export default defineComponent({
         this.service.doUpdateProfile(this.request)
           .then(value => {
             StorageService.setData<AuthResponse>(StorageKeyType.AUTH_PROFILE, value)
+            this.$store.dispatch('authStore/setAuthProfile', value)
           }).catch(reason => {
             this.validateResponse(reason)
           }).finally(() => {

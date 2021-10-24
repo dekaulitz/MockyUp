@@ -12,8 +12,6 @@
       <div class="col-9">
         <form-group>
           <form-container>
-            <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
-                             @showAlert:alert="closeAlert"/>
             <form-input id="projectName"
                         v-model="projectNameInputAttribute.value"
                         :input-attributes="projectNameInputAttribute"
@@ -57,7 +55,6 @@ import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
 import FormContainer from '@/shared/form/FormContainer.vue'
-import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
@@ -113,7 +110,6 @@ export default defineComponent({
     // TextInput,
     FormButton,
     FormInput,
-    AlertContainer,
     FormContainer,
     FormGroup,
     PageContainer

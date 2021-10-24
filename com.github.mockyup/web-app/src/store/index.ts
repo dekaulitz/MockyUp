@@ -1,12 +1,10 @@
 import { createStore } from 'vuex'
+import { AuthStore } from '@/store/AuthStore'
+import { AlertStore } from '@/shared/alert/AlertStore'
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
+    ...AuthStore,
+    ...AlertStore
   }
 })
