@@ -9,19 +9,19 @@ export interface UserCreateRequest {
   email?: string
   password?: string
   access?: string[]
-  isAccountNonLocked?: boolean
-  isEnabled?: boolean
+  accountNonLocked?: boolean
+  enabled?: boolean
 }
 
 export interface UserUpdateRequest {
   username?: string
   email?: string
   access?: string[]
-  isAccountNonLocked?: boolean
-  isEnabled?: boolean
+  accountNonLocked?: boolean
+  enabled?: boolean
 }
 
-export interface UserCardsResponse {
+export interface UserCardResponse {
   id?: string
   updatedByUserId?: string
   createdByUserId?: string

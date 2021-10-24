@@ -9,3 +9,9 @@ export interface AuthLogin {
   password: string
   rememberMe: boolean
 }
+
+export interface UpdateProfileAuthRequest {
+  username: string
+  email: string
+  password?: string
+}

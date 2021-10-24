@@ -49,7 +49,7 @@
         </dropdown-container>
       </div>
     </div>
-    <template v-if="showPlaceHolder">
+    <template v-if="placeHolderActive">
       <place-holder-container/>
     </template>
     <div v-for="(projectCard, index) in values" :key="index" class="list-item">

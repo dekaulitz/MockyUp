@@ -9,10 +9,10 @@
       </div>
     </div>
     <div class="row mt-3">
-      <div v-if="showPlaceHolder">
+      <div v-if="placeHolderActive">
         <place-holder-container/>
       </div>
-        <div class="col-9" v-if="!showPlaceHolder">
+        <div class="col-9" v-if="!placeHolderActive">
           <form-group>
             <form-container>
               <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
@@ -79,7 +79,7 @@ export default defineComponent({
     return {
       data: {} as ProjectResponse,
       service: ProjectService,
-      showPlaceHolder: true,
+      placeHolderActive: true,
       directionAfterSubmit: {
         name: 'Projects'
       },
@@ -127,17 +127,17 @@ export default defineComponent({
     PageContainer
   },
   async mounted () {
-    await this.getByDetail(this.$route.params.id)
+    await this.getDetail(this.$route.params.id)
     this.projectNameInputAttribute.value = this.data.projectName
     this.projectDescriptionInputAttribute.value = this.data.projectDescription
     this.projectTags = new Set(this.data.projectTags)
-    this.showPlaceHolder = false
+    this.placeHolderActive = false
   },
   methods: {
-    updateProject (): void {
+    async updateProject () {
       this.projectNameInputAttribute.formSubmitted = true
       this.projectDescriptionInputAttribute.formSubmitted = true
-      this.payloadRequest = {
+      this.request = {
         projectName: this.projectNameInputAttribute.value,
         projectDescription: this.projectDescriptionInputAttribute.value,
         projectTags: Array.from(this.projectTags)
@@ -146,7 +146,8 @@ export default defineComponent({
         this.formButtonAttributes.isLoading = false
       }
       if (this.projectNameInputAttribute.isValid) {
-        this.updateData()
+        await this.doUpdate()
+        this.formButtonAttributes.isLoading = false
       }
     },
     getProjectTag (tag: string): void {

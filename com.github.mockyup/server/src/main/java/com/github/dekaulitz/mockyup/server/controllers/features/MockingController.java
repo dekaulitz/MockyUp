@@ -71,7 +71,7 @@ public class MockingController {
         .stream()
         .collect(Collectors.toMap(name -> name, servletRequest::getHeader));
     Map<String, String[]> parameters = servletRequest.getParameterMap();
-    return MockRequestAttributeModel.builder().headers(headers).contractId(paths[0])
+    return MockRequestAttributeModel.builder().headers(headers).mockEndpoint(paths[0])
         .requestPath(paths[1]).requestMethod(servletRequest.getMethod())
         .parameters(parameters).contentType(servletRequest.getContentType()).build();
   }

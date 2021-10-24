@@ -64,6 +64,7 @@ public class UserServiceImpl extends
     userEntity.setAccess(updateUserRequest.getAccess());
     userEntity.setUsername(updateUserRequest.getUsername());
     userEntity.setEmail(updateUserRequest.getEmail());
+    userEntity.setUpdatedDate(new Date());
     return this.update(userEntity);
   }
 
@@ -95,5 +96,15 @@ public class UserServiceImpl extends
     userEntity.setUpdatedByUserId(authProfileModel.getId());
     userEntity.setCreatedDate(new Date());
     return super.save(userEntity);
+  }
+
+  @Override
+  public void deleteById(String id) throws ServiceException {
+    UserEntity entity = getMongoTemplate().findById(id, UserEntity.class);
+    if (entity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "user not found id: " + id);
+    }
+    this.delete(entity);
   }
 }

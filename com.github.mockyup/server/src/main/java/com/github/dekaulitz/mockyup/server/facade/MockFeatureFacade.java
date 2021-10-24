@@ -1,7 +1,9 @@
 package com.github.dekaulitz.mockyup.server.facade;
 
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
+import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestAttributeModel;
 import com.github.dekaulitz.mockyup.server.model.dto.MockRequestModel;
 import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectContractService;
@@ -22,8 +24,13 @@ public class MockFeatureFacade {
 
   public MockRequestModel getMockingRequest(MockRequestAttributeModel mockRequestAttributeModel)
       throws ServiceException {
-    ProjectContractEntity contract = projectContractService.getById(
-        mockRequestAttributeModel.getContractId(), ProjectContractEntity.class);
+    ProjectContractQuery projectContractQuery = new ProjectContractQuery();
+    projectContractQuery.contractEndpoint(mockRequestAttributeModel.getMockEndpoint());
+    ProjectContractEntity contract = projectContractService.findOne(projectContractQuery.getQuery(),
+        ProjectContractEntity.class);
+    if (contract == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND);
+    }
     return mockingService.mockingRequest(mockRequestAttributeModel, contract);
   }
 }

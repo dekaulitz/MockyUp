@@ -5,9 +5,8 @@ import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationCon
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.V1;
 
 import com.github.dekaulitz.mockyup.server.controllers.BaseController;
-import com.github.dekaulitz.mockyup.server.db.entities.UserEntity;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
-import com.github.dekaulitz.mockyup.server.facade.cms.CmsFacade;
+import com.github.dekaulitz.mockyup.server.facade.UsersFacade;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserParam;
 import com.github.dekaulitz.mockyup.server.model.request.user.CreateUserRequest;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,15 +32,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsersController extends BaseController {
 
   @Autowired
-  private CmsFacade cmsFacade;
+  private UsersFacade usersFacade;
 
   @PreAuthorize("hasAuthority('USERS_READ_WRITE')")
   @PostMapping(value = USERS, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest createUserRequest,
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
-    UserEntity userEntity = this.cmsFacade.createUser(createUserRequest);
-    return ResponseEntity.ok(ResponseModel.initSuccessResponse(userEntity, mandatoryModel));
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(this.usersFacade.createUser(createUserRequest),
+            mandatoryModel));
   }
 
   @PreAuthorize("hasAuthority('USERS_READ_WRITE')")
@@ -49,8 +50,19 @@ public class UsersController extends BaseController {
       @RequestBody @Valid UpdateUserRequest updateUserRequest,
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
-    UserEntity userEntity = this.cmsFacade.updateUser(id, updateUserRequest);
-    return ResponseEntity.ok(ResponseModel.initSuccessResponse(userEntity, mandatoryModel));
+
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(this.usersFacade.updateUser(id, updateUserRequest),
+            mandatoryModel));
+  }
+
+  @PreAuthorize("hasAuthority('USERS_READ_WRITE')")
+  @DeleteMapping(value = USERS + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> updateUser(@PathVariable String id,
+      @ModelAttribute MandatoryModel mandatoryModel)
+      throws ServiceException {
+    this.usersFacade.getUserService().deleteById(id);
+    return ResponseEntity.ok(ResponseModel.initSuccessResponse(null, mandatoryModel));
   }
 
 
@@ -59,7 +71,7 @@ public class UsersController extends BaseController {
   public ResponseEntity<Object> getAll(@ModelAttribute MandatoryModel mandatoryModel,
       @Valid GetUserParam getUserParam) throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.allUsers(getUserParam), mandatoryModel));
+        ResponseModel.initSuccessResponse(this.usersFacade.allUsers(getUserParam), mandatoryModel));
   }
 
   @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
@@ -67,7 +79,7 @@ public class UsersController extends BaseController {
   public ResponseEntity<Object> getCount(@ModelAttribute MandatoryModel mandatoryModel,
       @Valid GetUserParam getUserParam) throws ServiceException {
     return ResponseEntity.ok(
-        ResponseModel.initSuccessResponse(this.cmsFacade.getCount(getUserParam), mandatoryModel));
+        ResponseModel.initSuccessResponse(this.usersFacade.getCount(getUserParam), mandatoryModel));
   }
 
   @PreAuthorize("hasAnyAuthority('USERS_READ_WRITE','USERS_READ')")
@@ -75,7 +87,8 @@ public class UsersController extends BaseController {
   public ResponseEntity<Object> getUserById(@PathVariable String id,
       @ModelAttribute MandatoryModel mandatoryModel)
       throws ServiceException {
-    UserEntity userEntity = this.cmsFacade.getUserDetail(id);
-    return ResponseEntity.ok(ResponseModel.initSuccessResponse(userEntity, mandatoryModel));
+
+    return ResponseEntity.ok(
+        ResponseModel.initSuccessResponse(this.usersFacade.getUserDetail(id), mandatoryModel));
   }
 }

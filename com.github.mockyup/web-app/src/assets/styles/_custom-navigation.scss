@@ -1,25 +1,30 @@
 @import "~bootstrap/scss/nav";
 @import "~bootstrap/scss/navbar";
 
-$navigation-padding:5px !important;
-$navigation-border-radius:5px;
-.navbar-brand{
+$navigation-padding: 5px !important;
+$navigation-border-radius: 5px;
+.navbar-brand {
   font-size: 16px;
   padding: $navigation-padding;
   @include border-radius($navigation-border-radius);
-  &:hover{
-    background-color: rgba(209,209,240,0.2);
+
+  &:hover {
+    background-color: rgba(209, 209, 240, 0.2);
   }
 }
-.nav-item{
+
+.nav-item {
   font-size: 16px;
-  .nav-link{
+
+  .nav-link {
     @include border-radius($navigation-border-radius);
-    &:hover,&:focus-within{
-      background-color: rgba(209,209,240,0.2);
+
+    &:hover, &:focus-within {
+      background-color: rgba(209, 209, 240, 0.2);
     }
   }
-  .dropdown-item{
+
+  .dropdown-item {
     font-weight: 400;
     position: relative;
     padding: 8px 12px;
@@ -31,3 +36,40 @@ $navigation-border-radius:5px;
     width: 100%;
   }
 }
+
+.tab-list {
+  border: none;
+  > .nav-item:not(:last-child){
+    margin-right: 5px;
+  }
+  > .nav-item, .nav-link {
+    border: none !important;
+    &.active, .show {
+      background-color: rgba(209, 209, 240, 0.2);
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -17px;
+        left: 0;
+        right: 0;
+        height: 0.5em;
+        border-top: 1px solid #290661 !important;
+      }
+    }
+
+    &:hover {
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -17px;
+        left: 0;
+        right: 0;
+        height: 0.5em;
+        border-top: 1px solid #290661 !important;
+      }
+    }
+  }
+}
+

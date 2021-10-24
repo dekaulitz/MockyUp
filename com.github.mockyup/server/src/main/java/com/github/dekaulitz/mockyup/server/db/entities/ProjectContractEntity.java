@@ -28,14 +28,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(callSuper = true)
-public class ProjectContractEntity extends BaseMongo implements Serializable {
+public class ProjectContractEntity extends BaseMongoEntity implements Serializable {
 
   public static final String COLLECTION_NAME = "projectContracts";
-  private static final Long serialVersionUID = 1L;
   @NotNull
   private String projectId;
   private boolean isPrivate;
-
+  @NotNull
+  private String mockEndpoint;
   private String openApiVersion;
   @Valid
   private OpenApiProjectInfoEmbedded info;

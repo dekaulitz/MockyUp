@@ -1,28 +1,29 @@
 <template>
   <contract-page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create New Contract</h1>
       <div class="page-controller ms-auto">
-        <div class="d-inline-flex align-content-center  justify-content-center">
-          <div class="me-3 ">
-            <form-container class="form-check d-inline-flex pt-2">
-              <form-input-checkbox v-model="isPrivateFormAttribute.value"
-                                   :input-attributes="isPrivateFormAttribute"
-                                   :event-submitted="isPrivateFormAttribute.formSubmitted"
-                                   value=true
-              />
-              <form-label class="ms-2"><span class="fas fa-lock"/>Private Project</form-label>
-            </form-container>
-          </div>
-          <form-button class="btn btn-primary btn-md" @click.stop.prevent="createNewContracts"
-                       :form-button-attribute="formButtonAttributes">Submit New Contract
+        <div class="d-inline-flex align-items-center  justify-content-center">
+          <form-container class="form-check d-inline-flex me-3">
+            <form-input-checkbox class="" v-model="isPrivateFormAttribute.value"
+                                 :input-attributes="isPrivateFormAttribute"
+                                 :event-submitted="isPrivateFormAttribute.formSubmitted"
+                                 value=true
+            />
+            <form-label class="ms-2 mb-0"><span class="fas fa-lock"/>Private Project</form-label>
+          </form-container>
+          <form-button class="btn btn-primary btn-md " @click.stop.prevent="createNewContracts"
+                       :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/> Submit New Contract
           </form-button>
         </div>
       </div>
     </div>
     <div class="mt-3">
       <div class="row">
-        <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes" @showAlert:alert="closeAlert"/>
+        <alert-container v-if="alertAttributes.show" :alert-attributes="alertAttributes"
+                         @showAlert:alert="closeAlert"/>
         <div class="col-md-6">
           <div class="d-flex holder">
             <h5 class="page-title ">OpenApi Spec (json)</h5>
@@ -55,14 +56,16 @@ import SwaggerComponent from '@/components/swagger/SwaggerComponent.vue'
 import FormContainer from '@/shared/form/FormContainer.vue'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
 import FormLabel from '@/shared/form/FormLabel.vue'
-import { defaultContract } from '@/service/helper/ContractService'
+import { defaultContract } from '@/service/helper/ContractHelper'
 import { ContractService } from '@/service/webclient/service/ContractService'
 import { ContractCreateRequest } from '@/service/webclient/model/Contracts'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'ContractsCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: ContractService,
@@ -84,6 +87,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     AlertContainer,
     FormLabel,
     FormInputCheckbox,
@@ -93,11 +97,30 @@ export default defineComponent({
     ContractPageContainer,
     FormButton
   },
+  mounted () {
+    this.breadCrumbAttributes = [
+      {
+        label: 'Project',
+        routerLink: {
+          name: 'ProjectsDetail',
+          id: this.$route.params.id
+        },
+        isActive: false
+      },
+      {
+        label: 'Create',
+        routerLink: {
+          name: 'ProjectsCreate'
+        },
+        isActive: true
+      }
+    ]
+  },
   methods: {
     createNewContracts () {
       this.isPrivateFormAttribute.formSubmitted = true
       this.payloadRequest = {
-        isPrivate: this.isPrivateFormAttribute.value,
+        private: this.isPrivateFormAttribute.value,
         projectId: this.$route.params.id,
         spec: JSON.parse(this.contract)
       } as ContractCreateRequest

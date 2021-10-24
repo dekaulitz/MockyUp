@@ -3,15 +3,28 @@ export interface AccessInterface {
   description: string
 }
 
+export type accessType =
+  'USERS_READ'
+  | 'USERS_READ_WRITE'
+  | 'PROJECTS_READ'
+  | 'PROJECTS_READ_WRITE'
+  | 'PROJECT_CONTRACTS_READ_WRITE'
+  | 'PROJECT_CONTRACTS_READ'
+
+// export enum AccessMenu {
+//   USERS_READ = 'USERS_READ',
+//   USERS_READ_WRITE = 'USERS_READ_WRITE',
+//   PROJECTS_READ = 'PROJECTS_READ',
+//   PROJECTS_READ_WRITE = 'PROJECTS_READ_WRITE',
+//   PROJECT_CONTRACTS_READ_WRITE = 'PROJECT_CONTRACTS_READ_WRITE',
+//   PROJECT_CONTRACTS_READ = 'PROJECT_CONTRACTS_READ',
+// }
+
+export const hasAccessMenu = (access: string[], accessMenu: accessType): boolean => {
+  return access.indexOf(accessMenu) > -1
+}
+
 export const AccessData: Map<string, AccessInterface> = new Map<string, AccessInterface>()
-AccessData.set('MOCKS_READ', {
-  label: 'Read Mocks',
-  description: 'Can read mocks'
-})
-AccessData.set('MOCKS_READ_WRITE', {
-  label: 'Read and Write Mocks',
-  description: 'Can read and modified mocks'
-})
 AccessData.set('USERS_READ', {
   label: 'Read Users',
   description: 'Can read users'

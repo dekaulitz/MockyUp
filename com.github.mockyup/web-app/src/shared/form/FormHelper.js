@@ -7,6 +7,9 @@ export default defineComponent({
         },
         checkingValidation(inputAttribute) {
             const value = inputAttribute.value;
+            if (inputAttribute.validations === undefined) {
+                return;
+            }
             for (const validation of inputAttribute.validations) {
                 if (validation.validationType === InputValidationType.REQUIRED && (value === '' || value === undefined)) {
                     inputAttribute.isValid = false;
@@ -21,12 +24,12 @@ export default defineComponent({
                     }
                 }
                 else if (validation.validationType === InputValidationType.Length) {
-                    if (validation.minLength != null && value < validation.minLength) {
+                    if (validation.minLength != null && value.length < validation.minLength) {
                         inputAttribute.isValid = false;
                         inputAttribute.errorMessage = validation.errMessage;
                         break;
                     }
-                    else if (validation.maxLength != null && value > validation.maxLength) {
+                    else if (validation.maxLength != null && value.length > validation.maxLength) {
                         inputAttribute.isValid = false;
                         inputAttribute.errorMessage = validation.errMessage;
                         break;

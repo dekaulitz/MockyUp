@@ -24,4 +24,5 @@ public interface ProjectContractService extends BaseCrudService<ProjectContractE
   List<ContractCardResponseModel> getContractCards(GetProjectContractParam getProjectContractParam);
 
 
+  long getCount(GetProjectContractParam getProjectContractParam);
 }

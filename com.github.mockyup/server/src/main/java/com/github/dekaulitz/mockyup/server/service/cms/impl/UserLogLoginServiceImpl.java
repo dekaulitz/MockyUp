@@ -4,6 +4,7 @@ import com.github.dekaulitz.mockyup.server.db.entities.UserLogLoginEntity;
 import com.github.dekaulitz.mockyup.server.db.query.UserLogLoginQuery;
 import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.CacheConstants;
+import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
 import com.github.dekaulitz.mockyup.server.model.dto.MandatoryModel;
 import com.github.dekaulitz.mockyup.server.model.param.GetUserLogLoginParam;
@@ -73,6 +74,16 @@ public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEnt
     UserLogLoginQuery userLogLoginQuery = new UserLogLoginQuery();
     userLogLoginQuery.jtiOrUserId(jtIOrUserId);
     return mongoTemplate.findAndRemove(userLogLoginQuery.getQuery(), UserLogLoginEntity.class);
+  }
+
+  @Override
+  public void deleteById(String id) throws ServiceException {
+    UserLogLoginEntity entity = getById(id, UserLogLoginEntity.class);
+    if (entity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "user log not found id: " + id);
+    }
+    delete(entity);
   }
 
   @Override

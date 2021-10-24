@@ -1,5 +1,6 @@
 package com.github.dekaulitz.mockyup.server.service.cms.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectContractEntity;
 import com.github.dekaulitz.mockyup.server.db.entities.ProjectEntity;
 import com.github.dekaulitz.mockyup.server.db.query.ProjectContractQuery;
@@ -7,7 +8,6 @@ import com.github.dekaulitz.mockyup.server.errors.ServiceException;
 import com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants;
 import com.github.dekaulitz.mockyup.server.model.constants.ResponseCode;
 import com.github.dekaulitz.mockyup.server.model.dto.AuthProfileModel;
-import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiServerEmbedded;
 import com.github.dekaulitz.mockyup.server.model.param.GetProjectContractParam;
 import com.github.dekaulitz.mockyup.server.model.request.contract.CreateProjectContractRequest;
 import com.github.dekaulitz.mockyup.server.model.request.contract.UpdateProjectContractRequest;
@@ -17,21 +17,22 @@ import com.github.dekaulitz.mockyup.server.service.cms.api.ProjectService;
 import com.github.dekaulitz.mockyup.server.service.common.impl.BaseCrudServiceImpl;
 import com.github.dekaulitz.mockyup.server.service.mockup.helper.openapi.OpenApiTransformerHelper;
 import com.github.dekaulitz.mockyup.server.utils.JsonMapper;
-import com.mongodb.client.result.UpdateResult;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
-import javax.validation.Valid;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.data.mongodb.core.query.UpdateDefinition;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Service;
 public class ProjectContractServiceImpl extends
     BaseCrudServiceImpl<ProjectContractEntity> implements
     ProjectContractService {
+
   @Value("${com.github.dekaulitz.mockyup.host}")
   private String serverHost;
   @Autowired
@@ -64,21 +66,12 @@ public class ProjectContractServiceImpl extends
     }
     ProjectContractEntity projectContractEntity = new ProjectContractEntity();
     projectContractEntity.setCreatedByUserId(authProfileModel.getId());
+    projectContractEntity.setCreatedDate(new Date());
     projectContractEntity.setUpdatedByUserId(authProfileModel.getId());
+    projectContractEntity.setPrivate(createProjectContractRequest.isPrivate());
     initProjectContract(projectContractEntity, createProjectContractRequest.getProjectId(),
         createProjectContractRequest.getSpec());
-    ProjectContractEntity contractSaved = this.save(projectContractEntity);
-
-    OpenApiServerEmbedded serverMockup = new OpenApiServerEmbedded();
-    serverMockup.setUrl(serverHost+ ApplicationConstants.MOCK_REQUEST_PREFIX+contractSaved.getId()+ApplicationConstants.MOCK_REQUEST_ID_PREFIX);
-    serverMockup.setDescription("Mockup host");
-    // injecting mocking environment
-    ProjectContractQuery projectContractQuery = new ProjectContractQuery();
-    projectContractQuery.id(contractSaved.getId());
-    Update update = new Update();
-    update.push("servers").value(serverMockup);
-    return mongoTemplate.findAndModify(projectContractQuery.getQuery(), update,
-        ProjectContractEntity.class);
+    return this.save(projectContractEntity);
   }
 
   @Override
@@ -93,11 +86,16 @@ public class ProjectContractServiceImpl extends
       throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
           "project not found id: " + updateProjectContractRequest.getProjectId());
     }
-    ProjectContractEntity projectContractEntity = new ProjectContractEntity();
+    ProjectContractEntity projectContractEntity = this.getById(id, ProjectContractEntity.class);
+    if (projectContractEntity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "contract not found id: " + id);
+    }
+    projectContractEntity.setPrivate(updateProjectContractRequest.isPrivate());
     projectContractEntity.setUpdatedByUserId(authProfileModel.getId());
     initProjectContract(projectContractEntity, updateProjectContractRequest.getProjectId(),
         updateProjectContractRequest.getSpec());
-    return this.save(projectContractEntity);
+    return this.update(projectContractEntity);
   }
 
   @Override
@@ -109,13 +107,60 @@ public class ProjectContractServiceImpl extends
         ContractCardResponseModel.class, ProjectContractEntity.COLLECTION_NAME);
   }
 
+  @Override
+  public long getCount(GetProjectContractParam getProjectContractParam) {
+    ProjectContractQuery projectContractQuery = new ProjectContractQuery();
+    projectContractQuery.buildQuery(getProjectContractParam);
+    return this.getMongoTemplate().count(projectContractQuery.getQuery(), ProjectEntity.class);
+  }
+
+
+  @Override
+  public void deleteById(String id) throws ServiceException {
+    ProjectContractEntity entity = getMongoTemplate().findById(id, ProjectContractEntity.class);
+    if (entity == null) {
+      throw new ServiceException(ResponseCode.DATA_NOT_FOUND,
+          "project contract not found id: " + id);
+    }
+    this.delete(entity);
+  }
+
 
   private void initProjectContract(ProjectContractEntity projectContractEntity,
-      String projectId, Object spec)
+      String projectId, LinkedHashMap<String, Object> spec)
       throws ServiceException {
     try {
-      SwaggerParseResult result;
-      result = new OpenAPIParser().readContents(
+      LinkedHashMap<String, Object> server = new LinkedHashMap<>();
+      String mockEndpoint =
+          StringUtils.isBlank(projectContractEntity.getMockEndpoint()) ? UUID.randomUUID()
+              .toString() : projectContractEntity.getMockEndpoint();
+      server.put("url", serverHost + ApplicationConstants.MOCK_REQUEST_PREFIX + mockEndpoint
+          + ApplicationConstants.MOCK_REQUEST_ID_PREFIX);
+      server.put("description", "Mockup host");
+      boolean mockupDefined = false;
+      if (spec.containsKey("servers")) {
+        List<LinkedHashMap<String, Object>> servers = JsonMapper.mapper()
+            .convertValue(spec.get("servers"),
+                new TypeReference<List<LinkedHashMap<String, Object>>>() {
+                });
+        for (LinkedHashMap<String, Object> stringObjectLinkedHashMap : servers) {
+          if (stringObjectLinkedHashMap.containsKey("url")) {
+            String url = (String) stringObjectLinkedHashMap.get("url");
+            if (url.contains(mockEndpoint)) {
+              mockupDefined = true;
+              break;
+            }
+          }
+        }
+        if (!mockupDefined) {
+          servers.add(server);
+          spec.put("servers", servers);
+        }
+      } else {
+        spec.put("servers", Collections.singletonList(server));
+      }
+      projectContractEntity.setMockEndpoint(mockEndpoint);
+      SwaggerParseResult result = new OpenAPIParser().readContents(
           JsonMapper.mapper().writeValueAsString(spec), null,
           null);
       OpenAPI openApi = result.getOpenAPI();

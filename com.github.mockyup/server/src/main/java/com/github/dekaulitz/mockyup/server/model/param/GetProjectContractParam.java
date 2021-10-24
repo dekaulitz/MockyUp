@@ -19,5 +19,6 @@ public class GetProjectContractParam extends PageableParam {
   private String[] ids;
   private String id;
   private String projectId;
+  private String mockEndpoint;
 
 }

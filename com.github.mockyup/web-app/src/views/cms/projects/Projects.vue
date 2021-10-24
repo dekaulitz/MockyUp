@@ -1,17 +1,21 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Projects</h1>
-      <div class="page-controller ms-auto">
+      <div class="page-controller ms-auto" v-if="hasAccessPermissions('USERS_READ_WRITE')">
         <router-link class="btn btn-primary btn-md" :to="{
-            name:'ProjectsCreate'}">Create New Project
+            name:'ProjectsCreate'}"><span class="fas fa-plus"/> New Project
         </router-link>
       </div>
     </div>
     <div class=" d-flex align-items-center mt-2">
       <div class="me-auto d-flex">
-        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.projectName"/>
-        <button class="btn btn-primary btn-md w-sm" @click="searching">Search</button>
+        <form-input-search class="me-2 flex-shrink-1 input-w-sm input-md"
+                           v-model="parameter.projectName"/>
+        <button class="btn btn-primary btn-md w-sm" @click="getDatas"><span class="fas fa-search"/>Search
+        </button>
       </div>
       <div class="ms-auto d-inline-flex">
         <project-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>
@@ -27,7 +31,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(project,index) in values" :key="index">
+      <tr v-for="(project,index) in data" :key="index">
         <td>{{ project.projectName }}</td>
         <td>{{ project.projectTags.join(',') }}</td>
         <td>{{ project.updatedDate }}</td>
@@ -37,7 +41,9 @@
             name:'ProjectsDetail',
             params:{id:project.id}}"
             ><span class="bi bi-book"></span></router-link>
-            <button class="btn btn-danger p-0 px-2"><span class="bi bi-trash-fill"></span></button>
+            <button class="btn btn-danger p-0 px-2" @click="deleteById(project.id)"
+                    v-if="hasAccessPermissions('PROJECTS_READ_WRITE')"><span
+              class="bi bi-trash-fill"></span></button>
           </div>
         </td>
       </tr>
@@ -59,33 +65,43 @@ import ProjectSortingDropDown from '@/components/sorting/ProjectsSortingDropDown
 import BasePagingComponent from '@/shared/base/BasePagingComponent'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import { ProjectService } from '@/service/webclient/service/ProjectService'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   name: 'Projects',
-  mixins: [BasePagingComponent],
+  mixins: [BasePagingComponent, BreadhCrumbMixins, BaseAccessMixins],
   data () {
     return {
       service: ProjectService,
-      values: [] as ProjectCardResponse[],
+      data: [] as ProjectCardResponse[],
       parameter: {
         page: 1,
         size: 10,
         sort: 'id:desc'
-      } as GetProjectParam
+      } as GetProjectParam,
+      breadCrumbAttributes: [
+        {
+          label: 'Projects',
+          routerLink: { name: 'Projects' },
+          isActive: true
+        }
+      ]
     }
   },
   components: {
+    BreadcrumbContainer,
     FormInputSearch,
     ProjectSortingDropDown,
     PaginationContainer,
     PageContainer
   },
   mounted () {
-    this.getAll()
-    this.getCount()
+    this.getDatas()
   },
   methods: {
-    searching () {
+    getDatas () {
       this.getAllAndCount()
     }
   }

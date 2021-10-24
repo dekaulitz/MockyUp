@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseTabComponent.js","sourceRoot":"","sources":["BaseTabComponent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,KAAK,CAAA;AAErC,eAAe,eAAe,CAAC;IAC7B,IAAI,EAAE,eAAe;IACrB,IAAI;QACF,OAAO,EAAE,CAAA;IACX,CAAC;IACD,OAAO,EAAE,EAAE;CACZ,CAAC,CAAA"}

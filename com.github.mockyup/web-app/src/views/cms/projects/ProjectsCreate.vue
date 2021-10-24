@@ -119,10 +119,10 @@ export default defineComponent({
     PageContainer
   },
   methods: {
-    createNewProject (): void {
+    async createNewProject () {
       this.projectNameInputAttribute.formSubmitted = true
       this.projectDescriptionInputAttribute.formSubmitted = true
-      this.payloadRequest = {
+      this.request = {
         projectName: this.projectNameInputAttribute.value,
         projectDescription: this.projectDescriptionInputAttribute.value,
         projectTags: Array.from(this.projectTags)
@@ -130,7 +130,8 @@ export default defineComponent({
       if (!this.projectNameInputAttribute.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
-        this.createNewData()
+        await this.doPost()
+        this.formButtonAttributes.isLoading = false
       }
     },
     getProjectTag (tag: string): void {

@@ -69,7 +69,6 @@ export default defineComponent({
         // // this.contentData = markRaw(editor)
         this.$_instance = editor
         this.setUpEditor()
-        console.log(Array.from(editor.ui.componentFactory.names()))
       })
       .catch(error => {
         console.error(error)

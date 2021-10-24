@@ -32,6 +32,12 @@ export interface ProjectCreateRequest {
   projectTags?: string[]
 }
 
+export interface ProjectUpdateRequest {
+  projectName: string
+  projectDescription: string
+  projectTags?: string[]
+}
+
 export interface ProjectTagsResponse {
   tag: string
   totalProjects: number

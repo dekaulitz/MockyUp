@@ -1,6 +1,6 @@
 import {
   ContractProjectInfo,
-  OpenApiComponents,
+  Component,
   OpenApiServer,
   OpenApiTag,
   Path
@@ -8,16 +8,21 @@ import {
 import { PageableParam } from '@/service/webclient/model/RequestModel'
 
 export interface GetContractParam extends PageableParam {
-  userNameOrEmail?: string
+  projectId?: string
 }
 
 export interface ContractCreateRequest {
   projectId: string
-  isPrivate: boolean
+  private: boolean
+  spec: any
+}
+export interface ContractUpdateRequest {
+  projectId: string
+  private: boolean
   spec: any
 }
 
-export interface ContractCard {
+export interface ContractCardResponse {
   id?: string
   projectId?: string
   private: boolean
@@ -25,8 +30,9 @@ export interface ContractCard {
   info?: ContractProjectInfo
 }
 
-export interface ContractDetail {
+export interface ContractDetailResponse {
   id?: string
+  createdDate?:string
   projectId?: string
   private: boolean
   openApiVersion?: string,
@@ -35,6 +41,6 @@ export interface ContractDetail {
   security?: Map<string, string[]>
   paths?: Path[]
   tags?: OpenApiTag[]
-  components?: OpenApiComponents
+  components?: Component
   rawSpecs?: string
 }

@@ -45,7 +45,7 @@ public class MockingServiceImpl implements MockingService {
         .collect(Collectors.toList());
     if (CollectionUtils.isEmpty(pathInfos)) {
       throw new ServiceException(ResponseCode.MOCK_NOT_FOUND,
-          " contractId: " + mockRequestAttributeModel.getContractId() + " with path: "
+          " mockEndpoint: " + mockRequestAttributeModel.getMockEndpoint() + " with path: "
               + mockRequestAttributeModel.getRequestPath() + " method: "
               + pathHttpMethod);
     }

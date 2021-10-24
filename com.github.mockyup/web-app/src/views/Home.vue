@@ -9,38 +9,40 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
+          <li class="nav-item" v-if="hasAccessPermissions('PROJECTS_READ_WRITE','PROJECTS_READ')">
             <router-link class="nav-link text-white" aria-current="page" to="/projects">Management Projects</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"  v-if="hasAccessPermissions('USERS_READ','USERS_READ_WRITE')">
             <router-link class="nav-link text-white" aria-current="page" to="/users">Management Users</router-link>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-             <span class="fas fa-cogs ms-2"></span> Configuration
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
+<!--          <li class="nav-item dropdown">-->
+<!--            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"-->
+<!--               data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--             <span class="fas fa-cogs ms-2"></span> Configuration-->
+<!--            </a>-->
+<!--            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+<!--              <li><a class="dropdown-item" href="#">Action</a></li>-->
+<!--              <li><a class="dropdown-item" href="#">Another action</a></li>-->
+<!--              <li>-->
+<!--                <hr class="dropdown-divider">-->
+<!--              </li>-->
+<!--              <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+<!--            </ul>-->
+<!--          </li>-->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown1" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
               <span class="fas fa-user"></span> {{ accountUser.username }}
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown1">
-              <li><a class="dropdown-item " href="#">
-                @{{ accountUser.username }}
-              </a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li class="nav-item">
+                <router-link class="dropdown-item " aria-current="page" :to="{name:'AuthProfile'}">
+                  <div class="label-bold">@{{ accountUser.username }}</div>
+                </router-link>
+              </li>
+<!--              <li><a class="dropdown-item" href="#">Another action</a></li>-->
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -70,9 +72,11 @@ import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 import { StorageService } from '@/service/webclient/service/CommonService'
 import AuthService from '@/service/webclient/service/AuthService'
 import FooterNavigation from '@/components/FooterNavigation.vue'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   components: { FooterNavigation },
+  mixins: [BaseAccessMixins],
   data () {
     return {
       accountUser: {} as AuthResponse

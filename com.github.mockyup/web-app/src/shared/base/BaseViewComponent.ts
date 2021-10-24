@@ -8,14 +8,14 @@ export default defineComponent({
   data () {
     return {
       service: {} as BaseCrudService,
-      data: {} as never,
-      payloadRequest: {} as never,
-      responsePost: {} as never,
-      directionAfterSubmit: {} as never
+      data: {} as unknown,
+      request: {} as unknown,
+      response: {} as unknown,
+      directionAfterSubmit: {} as unknown
     }
   },
   methods: {
-    async getByDetail (id: string) {
+    getDetail (id: string) {
       return this.service.getById(id)
         .then(value => {
           this.data = value
@@ -23,19 +23,28 @@ export default defineComponent({
           this.validateResponse(reason)
         })
     },
-    createNewData () {
-      return this.service.doPost(this.payloadRequest)
+    doDelete (id:string) {
+      return this.service.deleteById(id)
         .then(value => {
-          this.responsePost = value
+          this.data = value
           this.$router.push(this.directionAfterSubmit)
         }).catch(reason => {
           this.validateResponse(reason)
         })
     },
-    updateData () {
-      return this.service.doUpdate(this.payloadRequest, this.$route.params.id)
+    doPost () {
+      return this.service.doPost(this.request)
         .then(value => {
-          this.responsePost = value
+          this.data = value
+          this.$router.push(this.directionAfterSubmit)
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
+    },
+    doUpdate () {
+      return this.service.doUpdate(this.request, this.$route.params.id)
+        .then(value => {
+          this.data = value
           this.$router.push(this.directionAfterSubmit)
         }).catch(reason => {
           this.validateResponse(reason)

@@ -16,7 +16,15 @@ public class ProjectContractQuery extends BaseQuery<GetProjectContractParam> {
     this.idIn(getProjectContractParam.getIds());
     this.id(getProjectContractParam.getId());
     this.projectId(getProjectContractParam.getProjectId());
+    this.contractEndpoint(getProjectContractParam.getMockEndpoint());
     this.setPageable(getProjectContractParam);
+  }
+
+  public ProjectContractQuery contractEndpoint(String mockEndpoint) {
+    if(StringUtils.isNotBlank(mockEndpoint)){
+      this.criteriaSet.add(Criteria.where("mockEndpoint").is(mockEndpoint));
+    }
+    return this;
   }
 
   public ProjectContractQuery idIn(String[] idArray) {

@@ -1,19 +1,21 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Users</h1>
       <div class="page-controller ms-auto">
-        <router-link class="btn btn-primary" :to="{name:'UsersCreate'}">Create New User
+        <router-link class="btn btn-primary btn-md " :to="{name:'UsersCreate'}" v-if="hasAccessPermissions('USERS_READ_WRITE')"><span class="fas fa-plus"/> New User
         </router-link>
       </div>
     </div>
     <div class="holder d-flex align-items-center mb-3">
       <div class="me-auto d-inline-flex">
-        <form-input-search class="me-2 flex-shrink-1 input-sm" v-model="parameter.userNameOrEmail"/>
-        <button class="btn btn-primary btn-md w-sm" @click="searching">Search</button>
+        <form-input-search class="me-2 flex-shrink-1 input-w-sm input-md" v-model="parameter.userNameOrEmail"/>
+        <button class="btn btn-primary btn-md w-sm" @click="getAllAndCount()"><span class="fas fa-search"/> Search</button>
       </div>
       <div class="ms-auto d-inline-flex">
-        <user-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>
+        <user-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount()"/>
       </div>
     </div>
     <table class="table table-hover mt-2">
@@ -27,7 +29,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(user,index) in values" :key="index">
+      <tr v-for="(user,index) in data" :key="index">
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.enabled ? 'Active' : 'Not Active' }}</td>
@@ -38,7 +40,7 @@
             name:'UsersDetail',
             params:{id:user.id}}"
             ><span class="bi bi-book"></span></router-link>
-            <button class="btn btn-danger p-0 px-2"><span class="bi bi-trash-fill"></span></button>
+            <button class="btn btn-danger p-0 px-2" @click="deleteById(user.id)" v-if="hasAccessPermissions('USERS_READ_WRITE')"><span class="bi bi-trash-fill"></span></button>
           </div>
         </td>
       </tr>
@@ -54,19 +56,22 @@ import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
 import BasePagingComponent from '@/shared/base/BasePagingComponent'
-import { GetUsersParam, UserCardsResponse } from '@/service/webclient/model/Users'
+import { GetUsersParam, UserCardResponse } from '@/service/webclient/model/Users'
 import PaginationContainer from '@/shared/pagination/PaginationContainer.vue'
 import FormInputSearch from '@/shared/form/FormInputSearch.vue'
 import UserSortingDropDown from '@/components/sorting/UserSortingDropDown.vue'
 import { UserService } from '@/service/webclient/service/UserService'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
+import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 
 export default defineComponent({
   name: 'Users',
-  mixins: [BasePagingComponent],
+  mixins: [BasePagingComponent, BreadhCrumbMixins, BaseAccessMixins],
   data () {
     return {
       service: UserService,
-      values: [] as UserCardsResponse[],
+      data: [] as UserCardResponse[],
       parameter: {
         page: 1,
         size: 10,
@@ -76,6 +81,7 @@ export default defineComponent({
     }
   },
   components: {
+    BreadcrumbContainer,
     UserSortingDropDown,
     FormInputSearch,
     PaginationContainer,
@@ -84,11 +90,15 @@ export default defineComponent({
   mounted () {
     this.getAll()
     this.getCount()
-  },
-  methods: {
-    searching () {
-      this.getAllAndCount()
-    }
+    this.breadCrumbAttributes = [
+      {
+        label: 'Users',
+        routerLink: {
+          name: 'Users'
+        },
+        isActive: true
+      }
+    ]
   }
 })
 </script>

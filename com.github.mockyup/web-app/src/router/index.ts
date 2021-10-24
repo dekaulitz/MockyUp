@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
         next()
       }
     },
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue')
   },
   {
     path: '/',
@@ -33,12 +33,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "about" */ '../views/projects/Projects.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/dashboard/ProjectsDashboard.vue')
       },
       {
         path: '/project-detail/:id',
         name: 'something',
-        component: () => import(/* webpackChunkName: "about" */ '../views/projects/ProjectDetail.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsDetail.vue')
       },
       {
         path: '/project-detail/:id/contracts/create',
@@ -48,7 +48,17 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/project-detail/:id/contracts/:contractId',
         name: 'ContractDetail',
-        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsCreate.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractDetail.vue')
+      },
+      {
+        path: '/project-detail/:id/contracts/:contractId/edit',
+        name: 'ContractEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/cms/contracts/ContractsEdit.vue')
+      },
+      {
+        path: '/project-detail/:id/contracts/:contractId/swagger-ui',
+        name: 'SwaggerUI',
+        component: () => import(/* webpackChunkName: "about" */ '../components/contracts/SwaggerUI.vue')
       },
       {
         path: '/users',
@@ -89,6 +99,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/projects/:id/edit',
         name: 'ProjectsEdit',
         component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsEdit.vue')
+      },
+      {
+        path: '/profile',
+        name: 'AuthProfile',
+        component: () => import(/* webpackChunkName: "about" */ '../views/auth/AuthProfile.vue')
+      },
+      {
+        path: '/profile/edit',
+        name: 'AuthProfileEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/auth/AuthProfileEdit.vue')
       }
     ]
   },

@@ -1,5 +1,7 @@
 <template>
   <page-container>
+    <breadcrumb-container class="border-bottom mb-2"
+                          :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new User</h1>
       <div class="page-controller ms-auto">
@@ -17,21 +19,21 @@
             <div class="col-md-8">
               <form-container>
                 <form-label for="username">Username</form-label>
-                <form-input class="input-md" id="username" v-model="usernameInputAttributes.value"
+                <form-input class="input-w-md" id="username" v-model="usernameInputAttributes.value"
                             :input-attributes="usernameInputAttributes"
                             :event-submitted="usernameInputAttributes.formSubmitted"
                 />
               </form-container>
               <form-container>
                 <form-label for="email">Email</form-label>
-                <form-input class="input-md" id="email" v-model="emailInputAttributes.value"
+                <form-input class="input-w-md" id="email" v-model="emailInputAttributes.value"
                             :input-attributes="emailInputAttributes"
                             :event-submitted="emailInputAttributes.formSubmitted"
                 />
               </form-container>
               <form-container>
                 <form-label for="password">Password</form-label>
-                <form-input class="input-md" id="password" v-model="passwordInputAttributes.value"
+                <form-input class="input-w-md" id="password" v-model="passwordInputAttributes.value"
                             :input-attributes="passwordInputAttributes"
                             :event-submitted="passwordInputAttributes.formSubmitted"
                 />
@@ -39,24 +41,6 @@
             </div>
             <div class="col-md-3">
               <form-label>Access Permissions:</form-label>
-              <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value=MOCKS_READ
-                />
-                <form-label>Can Read Mocks</form-label>
-              </form-container>
-              <form-container class="form-check">
-                <form-input-checkbox id="MOCKS_READ_WRITE"
-                                     v-model="accessPermissionsInputAttributes.values"
-                                     :input-attributes="accessPermissionsInputAttributes"
-                                     :event-submitted="accessPermissionsInputAttributes.formSubmitted"
-                                     value="MOCKS_READ_WRITE"
-                />
-                <form-label>Can Read and Modified Mocks</form-label>
-              </form-container>
               <form-container class="form-check">
                 <form-input-checkbox v-model="accessPermissionsInputAttributes.values"
                                      :input-attributes="accessPermissionsInputAttributes"
@@ -130,14 +114,16 @@ import FormInput from '@/shared/form/FormInput.vue'
 import { UserCreateRequest } from '@/service/webclient/model/Users'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
+import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 
 export default defineComponent({
   name: 'UsersCreate',
-  mixins: [BaseViewComponent],
+  mixins: [BaseViewComponent, BreadhCrumbMixins],
   data () {
     return {
       service: UserService,
-      payloadRequest: {} as UserCreateRequest,
+      request: {} as UserCreateRequest,
       directionAfterSubmit: {
         name: 'Users'
       },
@@ -193,10 +179,27 @@ export default defineComponent({
       formButtonAttributes: {
         isLoading: false,
         usingLoader: true
-      } as ButtonAttribute
+      } as ButtonAttribute,
+      breadCrumbAttributes: [
+        {
+          label: 'Users',
+          routerLink: {
+            name: 'Users'
+          },
+          isActive: false
+        },
+        {
+          label: 'Create',
+          routerLink: {
+            name: 'UsersCreate'
+          },
+          isActive: true
+        }
+      ]
     }
   },
   components: {
+    BreadcrumbContainer,
     FormInputCheckbox,
     AlertContainer,
     FormInput,
@@ -210,6 +213,7 @@ export default defineComponent({
   },
   methods: {
     async createNewUser () {
+      this.formButtonAttributes.isLoading = true
       this.usernameInputAttributes.formSubmitted = true
       this.emailInputAttributes.formSubmitted = true
       this.passwordInputAttributes.formSubmitted = true
@@ -218,13 +222,15 @@ export default defineComponent({
       if (!this.passwordInputAttributes.isValid || !this.usernameInputAttributes.isValid || !this.emailInputAttributes.isValid) {
         this.formButtonAttributes.isLoading = false
       } else {
-        this.payloadRequest = {
+        this.request = {
           username: this.usernameInputAttributes.value,
           password: this.passwordInputAttributes.value,
           email: this.emailInputAttributes.value,
-          access: this.accessPermissionsInputAttributes.values
-        }
-        await this.createNewData()
+          access: this.accessPermissionsInputAttributes.values,
+          accountNonLocked: true,
+          enabled: true
+        } as UserCreateRequest
+        await this.doPost()
         this.formButtonAttributes.isLoading = false
       }
     },
