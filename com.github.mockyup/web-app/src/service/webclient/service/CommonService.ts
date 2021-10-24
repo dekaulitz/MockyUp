@@ -1,7 +1,6 @@
 import { StorageKeyType } from '@/service/webclient/model/EnumModel'
 import axios from 'axios'
-
-const host = process.env.NODE_ENV === 'production' ? 'http://localhost:7070' : 'http://localhost:7070'
+const host = process.env.NODE_ENV === 'production' ? process.env.HOST : 'http://localhost:7070'
 export const WebClient = axios.create({
   baseURL: host,
   headers: {

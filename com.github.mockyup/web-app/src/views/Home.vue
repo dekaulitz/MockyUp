@@ -37,9 +37,11 @@
               <span class="fas fa-user"></span> {{ accountUser.username }}
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown1">
-              <li><a class="dropdown-item " href="#">
-                @{{ accountUser.username }}
-              </a></li>
+              <li class="nav-item">
+                <router-link class="dropdown-item " aria-current="page" :to="{name:'AuthProfile'}">
+                  <div class="label-bold">@{{ accountUser.username }}</div>
+                </router-link>
+              </li>
 <!--              <li><a class="dropdown-item" href="#">Another action</a></li>-->
               <li>
                 <hr class="dropdown-divider">

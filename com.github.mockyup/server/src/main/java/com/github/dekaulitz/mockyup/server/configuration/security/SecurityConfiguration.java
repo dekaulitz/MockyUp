@@ -1,6 +1,7 @@
 package com.github.dekaulitz.mockyup.server.configuration.security;
 
 
+import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.AUTH_DETAIL;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECTS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.PROJECT_CONTRACTS;
 import static com.github.dekaulitz.mockyup.server.model.constants.ApplicationConstants.REGEX_PATH;
@@ -46,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     filter.setAuthenticationManager(authenticationManager());
     filter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(new OrRequestMatcher(
         new AntPathRequestMatcher(V1 + USERS + REGEX_PATH),
+        new AntPathRequestMatcher(V1 + AUTH_DETAIL),
         new AntPathRequestMatcher(V1 + USERS),
         new AntPathRequestMatcher(V1 + PROJECTS + REGEX_PATH),
         new AntPathRequestMatcher(V1 + PROJECTS),

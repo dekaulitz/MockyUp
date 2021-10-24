@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
         next()
       }
     },
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue')
   },
   {
     path: '/',
@@ -99,6 +99,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/projects/:id/edit',
         name: 'ProjectsEdit',
         component: () => import(/* webpackChunkName: "about" */ '../views/cms/projects/ProjectsEdit.vue')
+      },
+      {
+        path: '/profile',
+        name: 'AuthProfile',
+        component: () => import(/* webpackChunkName: "about" */ '../views/auth/AuthProfile.vue')
+      },
+      {
+        path: '/profile/edit',
+        name: 'AuthProfileEdit',
+        component: () => import(/* webpackChunkName: "about" */ '../views/auth/AuthProfileEdit.vue')
       }
     ]
   },
