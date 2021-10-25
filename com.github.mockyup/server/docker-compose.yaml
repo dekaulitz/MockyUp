@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mockup:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+      - APPLICATION_HOST=http://localhost:8080
+      - REDIS_HOST=host.docker.internal:6379
+      - MONGO_DATABASE_NAME=mongoDbTest
+      - MONGO_HOST_URL=mongodb://host.docker.internal/mongoDbTest
+      - AUTH_SECRET=RDTF67TY98U091PIO2KLEWDS.ASDY7891023SDhvbjnoijopk123.123213ctyfguiojmsad
+      - AUTH_REFRESH_TIME=10000
+      - AUTH_EXPIRED_TIME=20000
+    ports:
+      - "8080:8080"
