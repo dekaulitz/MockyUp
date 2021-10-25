@@ -27,9 +27,9 @@ public class JwtServiceImpl implements JwtService {
 
   @Value("${com.github.dekaulitz.mockup.auth.secret}")
   private String secret;
-  @Value("${mock.auth.refresh.time}")
+  @Value("${com.github.dekaulitz.mockup.auth.refresh}")
   private Long refreshTime;
-  @Value("${mock.auth.expired.time}")
+  @Value("${com.github.dekaulitz.mockup.auth.expiredTime}")
   private Long expired;
 
   @Autowired

@@ -22,7 +22,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserLogLoginServiceImpl extends BaseCrudServiceImpl<UserLogLoginEntity> implements
+public class UserLogLoginServiceImpl extends
+    BaseCrudServiceImpl<UserLogLoginEntity> implements
     UserLogLoginService {
 
   @Autowired
