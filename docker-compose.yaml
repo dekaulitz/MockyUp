@@ -1,27 +1,24 @@
 version: '3'
 services:
-  mockup:
+  web-server:
     build:
-      context: ./
-      dockerfile: DockerfileMaven
+      context: ./com.github.mockyup/server
+      dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - APPLICATION_NAME=mockup
-      - DATABASE_HOST=mongodb://mongodb:27017/mongoDbTest
       - SERVER_PORT=8080
-      - WEB_LOG_LEVEL=debug
-      - LOG_LEVEL=info
-      - SECRET=RDTF67TY98U091PIO2KLEWDS.ASDY7891023SDhvbjnoijopk123.123213ctyfguiojmsad
-      - REFRESH_TIME=7000
-      - EXPIRED_TIME=8000
+      - APPLICATION_HOST=http://localhost:8080
+      - REDIS_HOST=host.docker.internal:6379
+      - MONGO_DATABASE_NAME=mongoDbTest
+      - MONGO_HOST_URL=mongodb://host.docker.internal/mongoDbTest
+      - AUTH_SECRET=RDTF67TY98U091PIO2KLEWDS.ASDY7891023SDhvbjnoijopk123.123213ctyfguiojmsad
+      - AUTH_REFRESH_TIME=10000
+      - AUTH_EXPIRED_TIME=20000
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-  db:
-    container_name: mongodb
-    image: mongo
+  web-app:
+    build:
+      context: ./com.github.mockyup/web-app
+      dockerfile: Dockerfile
     ports:
-      - 27017-27017
-    environment:
-      MONGO_INITDB_DATABASE: mockyup
+      - "80:80"
