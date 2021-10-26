@@ -1,2 +1,15 @@
 $breadcrumb-divider: quote(">");
 @import "~bootstrap/scss/breadcrumb";
+
+.breadcrumb{
+  .breadcrumb-item{
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 1 auto;
+    & a{
+      text-decoration: none;
+    }
+  }
+}

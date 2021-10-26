@@ -7,7 +7,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
               data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
               aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="fas fa-fire text-white"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -41,12 +41,22 @@
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown1"
                role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="fas fa-user"></span> {{ authProfile.username }}
+              <div class="d-inline-flex justify-content-center align-items-center">
+                <div class="avatar avatar-xs me-2">
+                  <span class="fs-5">{{ $filters.subString(authProfile.username, 0, 1) }}</span>
+                </div>
+                {{ authProfile.username }}
+              </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown1">
               <li class="nav-item">
                 <router-link class="dropdown-item " aria-current="page" :to="{name:'AuthProfile'}">
-                  <div class="label-bold">@{{ authProfile.username }}</div>
+                  <div class="d-inline-flex justify-content-center align-items-center">
+                    <div class="avatar avatar-xs me-2">
+                      <span class="fs-5">{{ $filters.subString(authProfile.username, 0, 1) }}</span>
+                    </div>
+                    <div>{{ authProfile.username }}</div>
+                  </div>
                 </router-link>
               </li>
               <!--              <li><a class="dropdown-item" href="#">Another action</a></li>-->
@@ -86,11 +96,13 @@ import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
 import AlertContainer from '@/shared/alert/AlertContainer.vue'
 
 export default defineComponent({
-  components: { AlertContainer, FooterNavigation },
+  components: {
+    AlertContainer,
+    FooterNavigation
+  },
   mixins: [BaseAccessMixins],
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     authProfile (): AuthResponse {

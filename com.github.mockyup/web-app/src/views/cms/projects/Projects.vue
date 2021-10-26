@@ -21,7 +21,12 @@
         <project-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount"/>
       </div>
     </div>
-    <table class="table table-hover mt-2">
+    <place-holder-container class="mt-2" v-if="placeHolderActive">
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-12"/>
+    </place-holder-container>
+    <table class="table table-hover mt-2" v-if="!placeHolderActive">
       <thead class="border-top">
       <tr>
         <th>Project Name</th>
@@ -68,6 +73,8 @@ import { ProjectService } from '@/service/webclient/service/ProjectService'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
+import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
+import LinePlaceholder from '@/shared/placeholder/LinePlaceholder.vue'
 
 export default defineComponent({
   name: 'Projects',
@@ -91,6 +98,8 @@ export default defineComponent({
     }
   },
   components: {
+    LinePlaceholder,
+    PlaceHolderContainer,
     BreadcrumbContainer,
     FormInputSearch,
     ProjectSortingDropDown,
@@ -98,7 +107,7 @@ export default defineComponent({
     PageContainer
   },
   mounted () {
-    this.getDatas()
+    this.getAllAndCount()
   },
   methods: {
     getDatas () {
