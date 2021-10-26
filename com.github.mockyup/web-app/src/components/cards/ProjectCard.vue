@@ -18,7 +18,7 @@
       <div class="justify-content-start">
         <span class="fw-normal">{{ projectCard.projectTags.join(', ') }}</span>
       </div>
-      <div class="ms-auto text-secondary">
+      <div class="ms-auto text-secondary" v-if="projectCard.updatedDate!==null">
         Last update {{ $filters.localDate(projectCard.updatedDate) }}
       </div>
     </card-body>

@@ -38,7 +38,7 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.enabled ? 'Active' : 'Not Active' }}</td>
-        <td>{{ user.updatedDate }}</td>
+        <td>{{ $filters.localDate(user.updatedDate) }}</td>
         <td>
           <div class="d-flex">
             <router-link class="btn btn-primary p-0 px-2 me-2" :to="{

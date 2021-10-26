@@ -39,6 +39,7 @@ export interface ContractCardInterface {
   private: boolean
   openApiVersion?: string,
   info?: ContractProjectInfo
+  updatedDate?:string
 }
 
 export interface UserCardInterface {

@@ -6,31 +6,24 @@ import store from './store'
 import 'bootstrap'
 import './assets/styles/app.scss'
 import WebClient from '@/service/webclient'
-import moment from 'moment'
-import { AccessData, AccessInterface } from '@/service/helper/AccessHelper'
+import { AccessData } from '@/service/helper/AccessHelper'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en.json'
 
 const app = createApp(App)
 const accessData = AccessData
 
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo('en-US')
 app.use(WebClient)
 app.use(store).use(router).mount('#app')
 
-app.directive('validator', {
-  mounted (el, binding) {
-    console.log(el)
-    console.log(binding)
-  }
-})
 app.config.globalProperties.$filters = {
-  localDate (value: string) {
-    return moment(value).local().format('MMM Do YY HH:mm:ss')
-  },
-  access (access: string): AccessInterface {
-    const translations = accessData
-    if (translations.has(access)) {
-      return translations.get(access)
+  localDate (value: string):any {
+    if (value === undefined) {
+      return value
     }
-    return undefined
+    return timeAgo.format(new Date(value))
   },
   capitalizeFirstLetter (value: string) {
     return value.charAt(0).toUpperCase() + value.slice(1)

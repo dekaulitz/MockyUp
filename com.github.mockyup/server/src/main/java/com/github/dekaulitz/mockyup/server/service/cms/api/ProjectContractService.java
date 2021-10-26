@@ -9,7 +9,9 @@ import com.github.dekaulitz.mockyup.server.model.request.contract.UpdateProjectC
 import com.github.dekaulitz.mockyup.server.model.response.contract.ContractCardResponseModel;
 import com.github.dekaulitz.mockyup.server.service.common.api.BaseCrudService;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface ProjectContractService extends BaseCrudService<ProjectContractEntity> {
 
   ProjectContractEntity createContract(CreateProjectContractRequest createProjectContractRequest,

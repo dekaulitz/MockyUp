@@ -39,7 +39,7 @@
       <tr v-for="(project,index) in data" :key="index">
         <td>{{ project.projectName }}</td>
         <td>{{ project.projectTags.join(',') }}</td>
-        <td>{{ project.updatedDate }}</td>
+        <td>{{ $filters.localDate(project.updatedDate) }}</td>
         <td>
           <div class="d-flex">
             <router-link class="btn btn-primary p-0 px-2 me-2" :to="{
