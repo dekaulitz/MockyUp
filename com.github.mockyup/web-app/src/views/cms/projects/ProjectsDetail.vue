@@ -2,33 +2,45 @@
   <page-container>
     <breadcrumb-container class="border-bottom mb-2"
                           :bread-crumb-attributes="breadCrumbAttributes"/>
-    <div class="d-flex align-items-center holder">
+    <div class="d-flex align-items-center">
       <div class="avatar avatar-md flex-shrink-0 me-3">
         <h1>{{ $filters.subString(data.projectName, 0, 1) }}</h1>
       </div>
       <div>
         <h1 class="page-title mb-1">{{ data.projectName }}</h1>
         <div class="text-secondary additional-info">Project ID : {{ data.id }}</div>
-        <span class="text-secondary additional-info fw-bold"
-              v-if="data.projectTags">{{ data.projectTags.join(',') }}</span>
       </div>
       <div class="ms-auto button-container">
-        <router-link :to="{name:'ContractsCreate'}" class="btn btn-primary btn-sm"  v-if="hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE')"><span
-          class="fas fa-plus-circle"></span> New contract
+        <router-link :to="{name:'ContractsCreate'}" class="btn btn-outline-secondary btn-sm "
+                     v-if="hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE')"><span
+          class="fas fa-plus-circle"></span>New contract
         </router-link>
         <router-link :to="{name:'ProjectsEdit', params:{id:$route.params.id}}"
-                     class="btn btn-primary btn-sm"
+                     class="btn btn-outline-secondary btn-sm"
                      v-if="hasAccessPermissions('PROJECTS_READ_WRITE')"><span
-          class="fas fa-edit"></span> Edit
+          class="fas fa-edit"></span>Edit
         </router-link>
       </div>
     </div>
-    <h5 class="mb-1">Description:</h5>
-    <p v-html="data.projectDescription"></p>
-    <div v-if="!showContractPlaceHolder && hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE','PROJECT_CONTRACTS_READ')">
-      <h5 class="page-title holder mb-2">Contract list</h5>
-      <div v-for="(contract, index) in contractCards" :key="index">
-        <contract-card :contract-card="contract" class="mt-2 radius-none"/>
+    <div class="project- mt-3">
+        <span class="text-secondary additional-info fw-bold"
+              v-if="data.projectTags"><span class="fas fa-tags"/>{{
+            data.projectTags.join(',')
+          }}</span>
+      <span class="text-secondary fas fa-calendar ms-3"/><span class="text-secondary label-bold">Last updated {{$filters.localDate(data.updatedDate)}}</span>
+    </div>
+    <div class="mt-3">
+      <div class="alert alert-secondary text-center info-well d-flex align-content-center justify-content-center" v-if="contractCards.length === 0">
+       <h5>You dont have any contract yet <span class="fas fa-exclamation-circle"></span></h5>
+      </div>
+      <h5 class="mb-1">Description:</h5>
+      <p v-html="data.projectDescription"></p>
+      <div
+        v-if="!showContractPlaceHolder && hasAccessPermissions('PROJECT_CONTRACTS_READ_WRITE','PROJECT_CONTRACTS_READ')">
+        <h5 class="page-title holder mb-2">Contract list</h5>
+        <div v-for="(contract, index) in contractCards" :key="index">
+          <contract-card :contract-card="contract" class="mt-2 radius-none"/>
+        </div>
       </div>
     </div>
   </page-container>

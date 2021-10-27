@@ -15,8 +15,8 @@
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
                     data-bs-target="#yourProjects" type="button" role="tab" aria-controls="home"
-                    aria-selected="true">Your Projects <span
-              class="badge bg-secondary">{{ pagingAttributes.totalData }}</span>
+                    aria-selected="true">Your Projects
+              <span class="badge bg-secondary">{{ pagingAttributes.totalData }}</span>
             </button>
           </li>
           <!--          <li class="nav-item" role="presentation">-->
@@ -37,7 +37,13 @@
                                    @onChange:sort="getAllAndCount"/>
       </div>
     </div>
-    <div class="tab-content" id="myTabContent">
+    <place-holder-container v-if="placeHolderActive">
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-8"/>
+      <line-placeholder class="col-md-3"/>
+    </place-holder-container>
+    <div class="tab-content" id="myTabContent" v-if="!placeHolderActive">
       <div class="tab-pane fade show active" id="yourProjects" role="tabpanel"
            aria-labelledby="home-tab">
         <project-card v-for="(project,index) in data" :key="index" class="mb-2"
@@ -65,6 +71,8 @@ import ProjectCard from '@/components/cards/ProjectCard.vue'
 import PageContainer from '@/pages/PageContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
+import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
+import LinePlaceholder from '@/shared/placeholder/LinePlaceholder.vue'
 
 export default defineComponent({
   name: 'ProjectDashboard',
@@ -89,6 +97,8 @@ export default defineComponent({
     }
   },
   components: {
+    LinePlaceholder,
+    PlaceHolderContainer,
     BreadcrumbContainer,
     PageContainer,
     ProjectCard,

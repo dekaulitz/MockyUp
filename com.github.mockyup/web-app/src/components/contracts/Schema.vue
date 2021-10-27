@@ -16,8 +16,6 @@ import { defineComponent, PropType } from 'vue'
 import { Schema } from '@/service/webclient/model/openapi/embeddable/OpenApiEmbedded'
 import CardContainer from '@/shared/card/CardContainer.vue'
 import CardBody from '@/shared/card/CardBody.vue'
-
-import JsonRefs from 'json-refs'
 import { OpenApiHelper } from '@/service/helper/OpenApiHelper'
 
 export default defineComponent({

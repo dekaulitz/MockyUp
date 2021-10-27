@@ -1,4 +1,3 @@
-
 import { defineComponent } from 'vue'
 import { PageableParam } from '@/service/webclient/model/RequestModel'
 import { PagingAttributes } from '@/shared/pagination'
@@ -36,7 +35,7 @@ export default defineComponent({
           this.validateResponse(reason)
         })
     },
-    deleteById (id:string) {
+    deleteById (id: string) {
       this.service.deleteById(id)
         .then(value => {
           this.getAllAndCount()
@@ -45,8 +44,17 @@ export default defineComponent({
         })
     },
     getAllAndCount () {
-      this.getAll()
-      this.getCount()
+      this.service.getAll(this.parameter)
+        .then(value => {
+          this.data = value
+          this.service.getCount(this.parameter)
+            .then(value => {
+              this.pagingAttributes.totalData = value
+              this.placeHolderActive = false
+            })
+        }).catch(reason => {
+          this.validateResponse(reason)
+        })
     }
   }
 })

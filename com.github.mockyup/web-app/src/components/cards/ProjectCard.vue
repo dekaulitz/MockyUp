@@ -5,20 +5,20 @@
         <span>{{ projectCard.projectName.substr(0, 1).toUpperCase() }}</span>
       </div>
       <div class="flex-row ms-2 project-card-description">
-        <div>
-          <router-link  :to="{
+       <div class="project-title">
+         <router-link  class="text-secondary" :to="{
             name:'ProjectsDetail',
             params:{id:projectCard.id}}"
-          >
-            {{ projectCard.projectName }}
-          </router-link>
-        </div>
+         >
+           {{ projectCard.projectName }}
+         </router-link>
+       </div>
         <small class="card-subtitle">Project ID {{ projectCard.id }}</small>
       </div>
       <div class="justify-content-start">
         <span class="fw-normal">{{ projectCard.projectTags.join(', ') }}</span>
       </div>
-      <div class="ms-auto">
+      <div class="ms-auto text-secondary" v-if="projectCard.updatedDate!==null">
         Last update {{ $filters.localDate(projectCard.updatedDate) }}
       </div>
     </card-body>

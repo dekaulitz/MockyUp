@@ -2,47 +2,79 @@
   left: 25% !important;
 }
 
-.holder{
+.holder {
   padding: 10px 0;
   width: 100%;
   border-bottom: 1px solid #dbdbdb;
 }
+
 .page-container {
   min-height: 650px;
-  h1{
-    &.page-title{
+
+  h1 {
+    &.page-title {
       font-size: 1.4375rem;
       line-height: 1.3;
     }
   }
-  .additional-info{
+
+  .additional-info {
     line-height: 1rem;
     font-size: 0.875rem;
   }
 
-  .page-subtitle{
+  .page-subtitle {
     margin: 1rem 0;
     line-height: 1.3;
     font-size: 1.25em;
     font-weight: 600
   }
-  .page-controller{
+
+  .page-controller {
   }
-  .page-body{
+
+  .page-body {
 
   }
 }
+
 .project-card {
+  font-size: 14px !important;
+
+  .project-title {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 600;
+
+    & a {
+      text-decoration: none;
+    }
+  }
+
   .project-card-description {
     width: 50%;
   }
 }
+
 .container-limited {
-  max-width: 1280px;
+  max-width: 1125px;
 }
-.background-none{
+
+.background-none {
   background: none;
 }
-span.fas{
+
+span.fas {
   margin-right: 0.5rem;
+}
+
+.info-well {
+  background: #fafafa;
+  color: #303030;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+}
+
+.page-container {
+
 }

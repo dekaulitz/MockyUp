@@ -9,16 +9,21 @@
         </router-link>
       </div>
     </div>
-    <div class="holder d-flex align-items-center mb-3">
+    <div class="d-flex align-items-center mt-2">
       <div class="me-auto d-inline-flex">
         <form-input-search class="me-2 flex-shrink-1 input-w-sm input-md" v-model="parameter.userNameOrEmail"/>
-        <button class="btn btn-primary btn-md w-sm" @click="getAllAndCount()"><span class="fas fa-search"/> Search</button>
+        <button class="btn btn-primary btn-md w-sm" @click="getAllAndCount()"><span class="fas fa-search"/>Search</button>
       </div>
       <div class="ms-auto d-inline-flex">
         <user-sorting-drop-down v-model="parameter.sort" @onChange:sort="getAllAndCount()"/>
       </div>
     </div>
-    <table class="table table-hover mt-2">
+    <place-holder-container class="mt-2" v-if="placeHolderActive">
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-12"/>
+      <line-placeholder class="col-md-12"/>
+    </place-holder-container>
+    <table class="table table-hover mt-2" v-if="!placeHolderActive">
       <thead>
       <tr>
         <th>Username</th>
@@ -33,7 +38,7 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.enabled ? 'Active' : 'Not Active' }}</td>
-        <td>{{ user.updatedDate }}</td>
+        <td>{{ $filters.localDate(user.updatedDate) }}</td>
         <td>
           <div class="d-flex">
             <router-link class="btn btn-primary p-0 px-2 me-2" :to="{
@@ -64,6 +69,8 @@ import { UserService } from '@/service/webclient/service/UserService'
 import BreadcrumbContainer from '@/shared/breadcrumb/BreadCrumbContainer.vue'
 import BreadhCrumbMixins from '@/shared/breadcrumb/BreadhCrumbMixins'
 import BaseAccessMixins from '@/shared/base/BaseAccessMixins'
+import PlaceHolderContainer from '@/shared/placeholder/PlaceHolderContainer.vue'
+import LinePlaceholder from '@/shared/placeholder/LinePlaceholder.vue'
 
 export default defineComponent({
   name: 'Users',
@@ -81,6 +88,8 @@ export default defineComponent({
     }
   },
   components: {
+    LinePlaceholder,
+    PlaceHolderContainer,
     BreadcrumbContainer,
     UserSortingDropDown,
     FormInputSearch,
@@ -88,8 +97,7 @@ export default defineComponent({
     PageContainer
   },
   mounted () {
-    this.getAll()
-    this.getCount()
+    this.getAllAndCount()
     this.breadCrumbAttributes = [
       {
         label: 'Users',

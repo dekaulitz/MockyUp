@@ -3,6 +3,7 @@ package com.github.dekaulitz.mockyup.server.model.response.contract;
 import com.github.dekaulitz.mockyup.server.model.common.BaseModel;
 import com.github.dekaulitz.mockyup.server.model.embeddable.document.openapi.OpenApiProjectInfoEmbedded;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,5 @@ public class ContractCardResponseModel extends BaseModel {
   private boolean isPrivate;
   private String openApiVersion;
   private OpenApiProjectInfoEmbedded info;
+  private Date updatedDate;
 }

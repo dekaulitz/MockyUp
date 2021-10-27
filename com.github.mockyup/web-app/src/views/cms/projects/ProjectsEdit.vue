@@ -1,10 +1,10 @@
 <template>
   <page-container>
     <div class="d-flex align-items-center holder mt-2">
-      <h1 class="page-title">Create new project</h1>
+      <h1 class="page-title">Update Project</h1>
       <div class="page-controller ms-auto">
         <form-button class="btn btn-primary btn-md" @click.stop.prevent="updateProject"
-                     :form-button-attribute="formButtonAttributes">Update Project
+                     :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/>Update Project
         </form-button>
       </div>
     </div>
@@ -28,8 +28,6 @@
           </form-group>
         </div>
         <div class="col-3">
-          <card-container>
-            <card-body>
               <h5 class="page-title holder">Additional information</h5>
               <label class="text-break label-bold ">Project tags</label>
               <div class="text-start">
@@ -43,8 +41,6 @@
                 </div>
               </div>
               <input-searching-tags @update:projectTags="getProjectTag"/>
-            </card-body>
-          </card-container>
         </div>
     </div>
   </page-container>
@@ -55,8 +51,6 @@ import { defineComponent } from 'vue'
 
 import PageContainer from '@/pages/PageContainer.vue'
 import { ProjectService } from '@/service/webclient/service/ProjectService'
-import CardContainer from '@/shared/card/CardContainer.vue'
-import CardBody from '@/shared/card/CardBody.vue'
 import FormGroup from '@/shared/form/FormGroup.vue'
 import FormContainer from '@/shared/form/FormContainer.vue'
 import FormInput from '@/shared/form/FormInput.vue'
@@ -111,11 +105,7 @@ export default defineComponent({
     DeleteOnHover,
     PlaceHolderContainer,
     InputSearchingTags,
-    CardBody,
-    CardContainer,
     TextEditor,
-    // AceEditor,
-    // TextInput,
     FormButton,
     FormInput,
     FormContainer,
@@ -131,6 +121,7 @@ export default defineComponent({
   },
   methods: {
     async updateProject () {
+      this.formButtonAttributes.isLoading = true
       this.projectNameInputAttribute.formSubmitted = true
       this.projectDescriptionInputAttribute.formSubmitted = true
       this.request = {

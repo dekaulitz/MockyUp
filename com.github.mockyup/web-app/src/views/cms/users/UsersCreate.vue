@@ -5,8 +5,8 @@
     <div class="d-flex align-items-center holder mt-2">
       <h1 class="page-title">Create new User</h1>
       <div class="page-controller ms-auto">
-        <form-button class="btn btn-primary w-md" @click.stop.prevent="createNewUser"
-                     :form-button-attribute="formButtonAttributes">Submit New User
+        <form-button class="btn btn-primary w-md btn-md" @click.stop.prevent="createNewUser"
+                     :form-button-attribute="formButtonAttributes"><span class="fas fa-save"/>Submit New User
         </form-button>
       </div>
     </div>

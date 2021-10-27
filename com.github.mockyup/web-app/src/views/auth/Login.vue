@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-indigo-800">
     <div class="container-fluid">
-      <router-link class="navbar-brand text-white" to="/"><span class="fas fa-align-left me-3"></span>DevStock | MOCK Service</router-link>
+      <router-link class="navbar-brand text-white" to="/"><span
+        class="fas fa-align-left me-3"></span>DevStock | MOCK Service
+      </router-link>
     </div>
   </nav>
   <div class="d-inline-flex  login-page w-100 ">
@@ -9,8 +11,8 @@
       <div class="container w-100 d-inline-flex">
         <div class="col-md-8">
           <h3>Login Dashboard Mockyup</h3>
-          <p>API Contract and Mock server base on swagger </p>
-          <ul>
+          <p class="text-secondary fs-6">API Contract and Mock server base on swagger </p>
+          <ul class="fs-5">
             <li>As Mock Server</li>
             <li>As API Contract</li>
             <li>As Simplify your collaboration kit</li>
@@ -26,15 +28,17 @@
                 <form-group>
                   <form-container>
                     <alert-container/>
-                    <form-label for="username">Username</form-label>
-                    <form-input id="username" v-model="userNameOrEmailInputAttributes.value"
+                    <form-label for="username" class="label-bold">Username</form-label>
+                    <form-input id="username" class="input-md"
+                                v-model="userNameOrEmailInputAttributes.value"
                                 :input-attributes="userNameOrEmailInputAttributes"
                                 :event-submitted="userNameOrEmailInputAttributes.formSubmitted"
                     />
                   </form-container>
                   <form-container>
-                    <form-label>Password</form-label>
-                    <form-input v-model="passwordInputAttributes.value"
+                    <form-label for="password" class="label-bold">Password</form-label>
+                    <form-input id="password" class="input-md"
+                                v-model="passwordInputAttributes.value"
                                 :input-attributes="passwordInputAttributes"
                                 :event-submitted="passwordInputAttributes.formSubmitted"
                     />
@@ -45,7 +49,7 @@
                                          :event-submitted="rememberMeInputAttributes.formSubmitted"
                                          value=true
                     />
-                    <form-label>Remember me</form-label>
+                    <form-label class="label-bold">Remember me</form-label>
                   </form-container>
                   <form-button class="mt-2 w-100" @click.stop.prevent="doLogin"
                                :form-button-attribute="formButtonAttributes">Sign in
@@ -69,11 +73,7 @@ import FormGroup from '@/shared/form/FormGroup.vue'
 import CardBody from '@/shared/card/CardBody.vue'
 import FormInput from '@/shared/form/FormInput.vue'
 import CardContainer from '@/shared/card/CardContainer.vue'
-import {
-  ButtonAttribute,
-  InputAttribute,
-  InputValidationType
-} from '@/shared/form/InputModel'
+import { ButtonAttribute, InputAttribute, InputValidationType } from '@/shared/form/InputModel'
 import FormButton from '@/shared/form/FormButton.vue'
 import FormHelper from '@/shared/form/FormHelper'
 import FormInputCheckbox from '@/shared/form/FormInputCheckbox.vue'
@@ -84,6 +84,7 @@ import BaseComponent from '@/shared/base/BaseComponent'
 import { StorageService } from '@/service/webclient/service/CommonService'
 import { AuthResponse } from '@/service/webclient/model/ResponseModel'
 import { StorageKeyType } from '@/service/webclient/model/EnumModel'
+
 export default defineComponent({
   mixins: [FormHelper, BaseComponent],
   data () {

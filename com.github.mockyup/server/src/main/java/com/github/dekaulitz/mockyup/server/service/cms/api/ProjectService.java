@@ -10,7 +10,9 @@ import com.github.dekaulitz.mockyup.server.model.request.CreateProjectRequest;
 import com.github.dekaulitz.mockyup.server.model.request.UpdateProjectRequest;
 import com.github.dekaulitz.mockyup.server.service.common.api.BaseCrudService;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface ProjectService extends BaseCrudService<ProjectEntity> {
 
   ProjectEntity createProject(CreateProjectRequest createProjectRequest,

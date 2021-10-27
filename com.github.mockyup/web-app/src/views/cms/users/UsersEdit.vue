@@ -3,7 +3,7 @@
     <breadcrumb-container class="border-bottom mb-2"
                           :bread-crumb-attributes="breadCrumbAttributes"/>
     <div class="d-flex align-items-center holder mt-2">
-      <h1 class="page-title">Edit User</h1>
+      <h1 class="page-title">Update User</h1>
       <div class="page-controller ms-auto">
         <form-button class="btn btn-primary w-md btn-md" @click.stop.prevent="updateUser"
                      :form-button-attribute="formButtonAttributes"><span class="fa fa-save"/> Update

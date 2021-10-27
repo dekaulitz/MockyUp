@@ -1,6 +1,7 @@
 <template>
   <dropdown-container>
-    <dropdown-button id="sortBy" class="btn btn-outline-secondary">{{ defaultSorting }}
+    <dropdown-button id="sortBy" class="btn btn-outline-default btn-md w-sm text-start d-inline-flex">
+      <span>{{ defaultSorting }}</span><span class="ms-auto caret"></span>
     </dropdown-button>
     <dropdown-content-container>
       <dropdown-content-item-container v-for="(attribute,index) in sortingAttributes" :key="index">
