@@ -73,7 +73,7 @@
       </div>
     </div>
   </nav>
-  <div class="container mt-3">
+  <div class="container-fluid container-limited mt-3">
     <alert-container/>
     <router-view v-slot="{ Component }">
       <transition appear mode="out-in" name="fade">

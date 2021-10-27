@@ -6,14 +6,14 @@
       </div>
       <div class="flex-row ms-2 project-card-description">
        <div class="project-title">
-         <router-link  class="text-black" :to="{
+         <router-link  class="text-secondary" :to="{
             name:'ProjectsDetail',
             params:{id:projectCard.id}}"
          >
            {{ projectCard.projectName }}
          </router-link>
        </div>
-        <small class="card-subtitle text-secondary">Project ID {{ projectCard.id }}</small>
+        <small class="card-subtitle">Project ID {{ projectCard.id }}</small>
       </div>
       <div class="justify-content-start">
         <span class="fw-normal">{{ projectCard.projectTags.join(', ') }}</span>

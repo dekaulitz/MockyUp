@@ -115,13 +115,13 @@ export default defineComponent({
   methods: {
     createNewContracts () {
       this.isPrivateFormAttribute.formSubmitted = true
-      this.payloadRequest = {
+      this.request = {
         private: this.isPrivateFormAttribute.value,
         projectId: this.$route.params.id,
         spec: JSON.parse(this.contract)
       } as ContractCreateRequest
       this.formButtonAttributes.isLoading = false
-      this.createNewData()
+      this.doPost()
     },
     initTemplateContract () {
       this.contract = JSON.stringify(defaultContract, null, '\t')

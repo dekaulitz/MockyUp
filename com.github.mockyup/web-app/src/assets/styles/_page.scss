@@ -57,7 +57,7 @@
 }
 
 .container-limited {
-  max-width: 1280px;
+  max-width: 1125px;
 }
 
 .background-none {
@@ -66,4 +66,15 @@
 
 span.fas {
   margin-right: 0.5rem;
+}
+
+.info-well {
+  background: #fafafa;
+  color: #303030;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+}
+
+.page-container {
+
 }
